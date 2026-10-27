@@ -157,23 +157,17 @@ Versión móvil de cada pantalla.
 
 ## 9. Pendientes
 
-Resueltas en esta ronda:
+Resueltas:
 
-- **Descuento**: el cliente ve el descuento y acepta el total con descuento. La cotización agrega una fila de descuento.
+- **Descuento**: el cliente ve el descuento y acepta el total con descuento. Se muestra por medio y en total en la cotización.
 - **Precio por medio**: la cotización muestra precio unitario por medio, como en los archivos.
-- **Brand riders**: pasan por la propuesta, con Sí / No como cualquier medio.
-- **Descarga**: pantalla primero. La descarga en PDF o Excel es opcional.
-- **Vallas sin precio**: el diseño resuelve dos casos, sin precio y con precio. Detalle en `docs/ARQUITECTURA_INFORMACION.md`, sección 4.
+- **Brand riders**: pasan por la propuesta con Sí / No. La cotización incluye solo los que se marcaron Sí.
+- **Descarga**: la pantalla es lo principal. PDF o Excel son opcionales.
+- **Color de campaña**: el portal usa siempre Órbita. El color de campaña solo va en los documentos descargables.
+- **Medios sin responder**: el cliente debe responder todos antes de confirmar.
+- **Precios**: todos los medios tienen precio. Se elimina el caso "Sin precio".
 
-Pendientes (detalle en `docs/ARQUITECTURA_INFORMACION.md`, sección 5):
-
-1. **Color de campaña**: no se contestó. Por defecto, el portal usa siempre Órbita y el color de campaña solo va en los documentos descargables.
-2. **Medios sin responder al confirmar**: ¿cuentan como No incluidos?
-3. **Medios sin precio seleccionables**: ¿el cliente puede marcarlos como Sí?
-4. **Brand riders**: ¿en la cotización ve solo las opciones que marcó?
-5. **Descuento por medio** en la cotización: ¿solo descuento total o también por medio?
-6. **Motivo de rechazo**: se asume que no se pide. Confirmar.
-7. **Radios, espaciados y sombras**: extraer valores exactos de sus colecciones antes de la maqueta.
+Pendientes: ninguna que bloquee. Detalle en `docs/ARQUITECTURA_INFORMACION.md`, sección 5. Siguiente fase: wireframes de baja fidelidad.
 
 ## 10. Plan de trabajo (propuesto)
 

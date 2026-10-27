@@ -50,7 +50,7 @@ Estado de cada medio dentro de la propuesta:
 | Incluido | El cliente lo quiere. | Marcada (Sí) |
 | No incluido | El cliente lo descarta. | Desmarcada (No) |
 
-Regla: "Sin responder" cuenta como pendiente en el contador "X de Y respondidos". Al confirmar, los medios sin responder se consideran **No incluidos**. Esto debe confirmarse (ver sección 5).
+Regla: "Sin responder" cuenta como pendiente en el contador "X de Y respondidos". El cliente debe responder todos los medios antes de confirmar. No hay "No incluido" por omisión.
 
 ## 3. Pantallas por paso
 
@@ -61,13 +61,14 @@ Regla: "Sin responder" cuenta como pendiente en el contador "X de Y respondidos"
 - **Pestañas** por tipo de medio, con contador de elegidos por pestaña.
 - **Tabla por ciudad**: encabezado de ciudad con cantidad de medios y subtotales. Una fila por medio con casilla "¿Lo incluyes?", datos del medio, impactos, audiencia y precios.
 - **Columna de precio** con dos formas (ver sección 4): precio cliente y precio con descuento.
-- **Acciones**: Confirmar selección. Descargar propuesta (opcional).
+- **Acciones**: Confirmar selección (se activa solo cuando todos los medios tienen respuesta). Descargar propuesta (opcional).
 - **Móvil**: la tabla se convierte en tarjetas por medio. La casilla queda al inicio de cada tarjeta. Los datos de audiencia se agrupan en un acordeón.
 
 ### 3.2 Cotización
 
 - **Encabezado** igual que la propuesta, con folio y vigencia en días.
-- **Por tipo de medio**: tabla con ciudad, formato, detalle, clave IMJ, unidades, tiempo de servicio, inicio, fin, precio unitario, contratación mensual, costo de impresión y total. Subtotal del tipo de medio.
+- **Solo medios aprobados**: incluye únicamente los medios marcados como Sí, y los brand riders marcados como Sí.
+- **Por tipo de medio**: tabla con ciudad, formato, detalle, clave IMJ, unidades, tiempo de servicio, inicio, fin, precio unitario, precio con descuento por medio, contratación mensual, costo de impresión y total. Subtotal del tipo de medio.
 - **Cierre de la cotización** (fila por fila, en este orden):
   1. Subtotal general.
   2. Descuento. **Fila nueva**: el template no la tiene, pero se agrega porque el cliente acepta el total con descuento.
@@ -99,24 +100,19 @@ Regla: "Sin responder" cuenta como pendiente en el contador "X de Y respondidos"
 - Filtro por periodo con Date Picker.
 - Estado vacío: "Tus reportes aparecerán aquí cuando se publiquen".
 
-## 4. Estados de precio (vallas y medios sin precio)
+## 4. Precios
 
-Hay dos casos de datos, y el diseño debe resolver ambos:
+- Todos los medios de la propuesta tienen precio. OBP no publica una propuesta con medios sin precio, así que el portal no necesita un estado "Sin precio" para el cliente.
+- En la propuesta, cada medio muestra precio cliente y precio con descuento.
+- En la cotización, cada medio muestra precio unitario y precio con descuento. El resumen muestra el descuento total y el total con IVA.
+- Un cero en métricas de audiencia sigue mostrándose como "Sin dato". No es un precio.
 
-| Caso | Dato | Propuesta | Cotización | Selección |
-|---|---|---|---|---|
-| A. Sin precio | Precio cliente vacío o 0 | "Sin precio" en la columna de precio, en gris. No hay descuento. | Fila con "Sin precio" y total "Por confirmar". No suma al total. | Seleccionable. El resumen muestra "medios sin precio: N". |
-| B. Con precio | Precio cliente y precio con descuento | Precio y precio con descuento. | Precio unitario, descuento y total. | Seleccionable. El resumen suma la inversión. |
+## 5. Decisiones de esta ronda
 
-Notas:
+- **Color de campaña**: el portal usa siempre Órbita. El color de campaña solo aparece en los documentos descargables.
+- **Medios sin responder**: el cliente debe responder todos antes de confirmar. "Confirmar selección" se activa cuando el contador marca "N de N respondidos". No hay "No incluido" por omisión.
+- **Precios**: todos los medios tienen precio. Se elimina el caso "Sin precio" del diseño.
+- **Cotización**: incluye solo los medios marcados como Sí. Los brand riders aparecen solo si el cliente los marcó como Sí.
+- **Descuento**: se muestra por medio en la cotización y también como total.
 
-- La selección de un medio **sin precio** no cambia el total, pero sí cambia el número de medios elegidos. El resumen lo deja visible para que el cliente lo vea.
-- Los "Sin dato" de métricas (impactos, alcance, frecuencia, tiempo de exposición y perfil en cero) se muestran igual que en los templates.
-
-## 5. Preguntas que quedan
-
-1. **Color de campaña**: no contestaste. Propuesta por defecto: el portal usa siempre Órbita (OBP Light o Dark). El color de campaña solo aparece en los documentos descargables. ¿Confirmas?
-2. **Medios sin responder al confirmar**: ¿se consideran No incluidos, o el cliente debe responder todos antes de confirmar?
-3. **Medios sin precio seleccionables**: ¿el cliente puede marcarlos como Sí? La propuesta asume que sí, con aviso de "Precio por confirmar".
-4. **Brand riders**: se asume que aparecen como filas de la propuesta con Sí / No, igual que los demás medios. En la cotización, el cliente ve solo las opciones que marcó. ¿Confirmas?
-5. **Descuento por medio**: el template de propuesta muestra precio cliente y precio con descuento por medio. La cotización muestra solo el descuento total. ¿Confirmas?
+Pendientes: ninguna que bloquee. La siguiente fase son wireframes de baja fidelidad, empezando por propuesta y cotización.
