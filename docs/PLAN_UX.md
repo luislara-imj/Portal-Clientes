@@ -157,14 +157,23 @@ Versión móvil de cada pantalla.
 
 ## 9. Pendientes
 
-1. **Descuento**: la propuesta muestra "inversión con descuento", pero la cotización no tiene esa columna. ¿El cliente ve el descuento en la cotización y el total con descuento es el que acepta?
-2. **Precio por medio**: ¿la cotización muestra precio unitario por medio, o solo subtotales por tipo de medio?
-3. **Brand riders**: ¿pasan por la misma selección de medios, o el cliente solo elige una opción?
-4. **Descarga**: ¿el cliente puede descargar la propuesta y la cotización en PDF o Excel desde el portal, o solo verlas en pantalla?
-5. **Color de campaña**: los templates aplican un color por campaña (por defecto verde `#00D084`). ¿Se refleja en el portal o solo en los documentos descargables?
+Resueltas en esta ronda:
+
+- **Descuento**: el cliente ve el descuento y acepta el total con descuento. La cotización agrega una fila de descuento.
+- **Precio por medio**: la cotización muestra precio unitario por medio, como en los archivos.
+- **Brand riders**: pasan por la propuesta, con Sí / No como cualquier medio.
+- **Descarga**: pantalla primero. La descarga en PDF o Excel es opcional.
+- **Vallas sin precio**: el diseño resuelve dos casos, sin precio y con precio. Detalle en `docs/ARQUITECTURA_INFORMACION.md`, sección 4.
+
+Pendientes (detalle en `docs/ARQUITECTURA_INFORMACION.md`, sección 5):
+
+1. **Color de campaña**: no se contestó. Por defecto, el portal usa siempre Órbita y el color de campaña solo va en los documentos descargables.
+2. **Medios sin responder al confirmar**: ¿cuentan como No incluidos?
+3. **Medios sin precio seleccionables**: ¿el cliente puede marcarlos como Sí?
+4. **Brand riders**: ¿en la cotización ve solo las opciones que marcó?
+5. **Descuento por medio** en la cotización: ¿solo descuento total o también por medio?
 6. **Motivo de rechazo**: se asume que no se pide. Confirmar.
-7. **Vallas sin precio**: en el ejemplo hay vallas con precio 0. ¿Se muestran como "Sin precio" y el cliente aun así las puede seleccionar?
-8. **Radios, espaciados y sombras**: extraer valores exactos de sus colecciones antes de la maqueta.
+7. **Radios, espaciados y sombras**: extraer valores exactos de sus colecciones antes de la maqueta.
 
 ## 10. Plan de trabajo (propuesto)
 
@@ -184,4 +193,4 @@ Notas:
 
 ## 11. Próximo paso
 
-Responder las dudas de la sección 9, sobre todo descuento y precio por medio. Con eso se hace la fase 1: mapa de sitio, reglas de autorización y modelo de datos (sección 4 de `docs/TEMPLATES_REFERENCIA.md`), para validar antes de diseñar pantallas.
+Validar `docs/ARQUITECTURA_INFORMACION.md` (mapa de sitio, estados y pantallas) y responder las preguntas de su sección 5. Con eso se pasa a wireframes de baja fidelidad (fase 2), empezando por propuesta y cotización.
