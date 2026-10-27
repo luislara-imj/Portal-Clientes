@@ -1,13 +1,13 @@
 # Portal de Clientes OBP: plan de acción UI/UX
 
-Estado: **borrador v2**. Decisiones de producto tomadas con el usuario (sección 8). Sin implementación todavía.
+Estado: **borrador v3**. Decisiones de producto tomadas con el usuario (sección 8). Sin implementación todavía.
 
 ## 1. Objetivo y alcance
 
 Maqueta funcional (prototipo en React) para que el cliente siga su campaña sin depender de un ejecutivo. Web y móvil, responsiva.
 
 1. Ver sus campañas y su estatus.
-2. Revisar los medios propuestos y **autorizar o rechazar** cada uno (igual que hoy en el Excel).
+2. Revisar los medios propuestos y **autorizar o rechazar** cada uno, dentro del portal. Hoy esto se hace por Excel; el portal lo reemplaza.
 3. Ver la cotización cuando hay medios autorizados, y **aceptarla con un clic** para arrancar la campaña.
 4. Seguir el **estatus de instalación** por medio.
 5. Consultar **reportes fotográficos** cuando ya esté todo instalado.
@@ -15,125 +15,165 @@ Maqueta funcional (prototipo en React) para que el cliente siga su campaña sin 
 Fuera de alcance del portal:
 
 - Crear campañas. El cliente solo responde a lo que propone OBP.
+- Enviar archivos o propuestas por correo. Todo ocurre en el portal.
 - Configurar reportes (fechas, periodos, datos). Eso vive en otro módulo de OBP; el portal solo muestra el resultado.
-- Subir artes. Es un cambio futuro: el cliente subirá sus artes dentro de su campaña y el módulo de Gestión de artes se adaptará. No sale en esta maqueta.
+- Subir artes. Cambio futuro: el cliente subirá sus artes dentro de su campaña. No sale en esta maqueta.
 
-## 2. Hallazgos de las referencias
+## 2. Sistema de diseño: Órbita
 
-| Referencia (Figma) | Qué aporta | Qué no tomar |
+Los archivos de componentes son del sistema **Órbita** (archivo "Fundations v.2" y un archivo por componente). Accesibles por herramienta: probé 10 de ellos (Fundations, Button, Valorem, Table, Semáforo, Gantt, Stepper, Sidebar/Menu, Lightbox y Table). Los demás los reviso cuando los necesite.
+
+### Tokens verificados (modo **OBP Light**)
+
+| Uso | Token | Valor |
 |---|---|---|
-| **Login SSO** (`x153D1vcXgvoRR804q5Yog`, página "Login OBP") | Pantalla de bienvenida sobre fondo de espectaculares en azul oscuro, tarjeta blanca centrada con logo OBP, campos de correo y contraseña, toggle "Recordarme", botón azul "Iniciar sesión". Estados: "Preparando OBP" (carga), "No pudimos iniciar tu sesión" (error con reintentar), "Error del servidor" (con códigos de error). | Carrusel de pruebas de exploración v1 y v2. |
-| **Listado de campaña** (`I2GCfpGmEh2AHzMDVmXlWK`) | Tablero con KPIs arriba, tabla de campañas con pills de estatus, filtros, modales de confirmación. | Acciones de administrador (editar, carrito, borrar). |
-| **Reportes** (`csTSq9wAK4FjAznrFTQXrz`) | Página "Reporte de campaña" con portada, índice por tipo de medio (Sitios fijos, Camiones, Indoor, Cierre) y fotos por medio. Base: módulo v.3. | Versiones v.2 y v.2.1. |
-| **Gestión de artes** (`7gjDLULAMgeqxTMkzfC1QE`) | Mockups de espectaculares, camiones y mapas de ubicación. Referencia visual del medio. | Flujos internos de producción y carga de arte (por ahora). |
-| **Prototipo** (`eIb7V9BluzRXMJx2EGBYBb`, nodo 543:31890) | Sidebar de OBP y pantalla "Vista campaña / Selector de fase" con tres fases. Unas 20 pantallas "screen pauta" con el detalle de la pauta. | Menú de admin (Carrito, Catálogos, Inventario, Herramientas). |
+| Marca / acción primaria | `color/bg/fill/brand/default` | `#3658c1` |
+| Acción primaria hover / pressed | `brand/hover`, `brand/pressed` | `#3251b1`, `#2d49a1` |
+| Texto de marca / link | `color/text/brand/default`, `text/link/default` | `#2d49a1`, `#3251b1` |
+| Superficie de marca (selección suave) | `bg/surface/brand/default` | `#f1f4fe` |
+| Fondo de página | `color/bg/canvas/default` | `#f7f8fa` |
+| Superficie (tarjetas, tablas) | `bg/surface/default` | `#ffffff` |
+| Texto principal / secundario / terciario | `text/primary`, `text/secondary`, `text/tertiary` | `#313336`, `#585a5e`, `#6c6e73` |
+| Borde por defecto / sutil | `border/default`, `border/subtle` | `#c6c8cc`, `#d4d6d9` |
+| Éxito | `bg/fill/success/default` | `#22c55e` |
+| Advertencia | `bg/fill/warning/default` | `#eab308` |
+| Peligro (rechazar) | `bg/fill/danger/default`, `text/danger/default` | `#ef4444`, `#b83434` |
+| Información | `bg/fill/info/default` | `#06b6d4` |
 
-Lo que la plataforma ya fija y hay que respetar:
+Notas:
 
-- **Marca**: logo "obp" en círculo azul, acento azul, fondo gris claro.
-- **Navegación**: sidebar vertical colapsable con avatar y nombre al pie.
-- **Estatus**: pills de color en tablas, KPIs arriba.
-- **Fases**: la campaña se navega por fases (selector de fase).
+- La colección **Semantic Color** tiene cuatro modos: **OBP Light**, **OBP Dark**, **WIB Light** y **WIB Dark**. El portal usa OBP. Modo oscuro: pendiente de confirmar si se requiere.
+- Tipografía: SF Pro con fallback a Inter en web. Pesos 400, 500, 600 y 700. Hay escala regular y compacta (la compacta es para tablas densas).
+- Radios, espaciados, sombras y z-index están en colecciones separadas; pendiente de extraer los valores exactos.
 
-## 3. Modelo de usuarios y acceso
+### Componentes de Órbita a usar
 
-- **Varios usuarios por empresa cliente, sin roles.** Todos pueden hacer todas las acciones: autorizar, rechazar, aceptar y ver reportes.
-- **Acceso por SSO** con la pantalla de login de OBP de Figma.
-- **Alta de cuentas**: pendiente (ver sección 9).
+| Necesidad del portal | Componente de Órbita | Notas |
+|---|---|---|
+| Navegación lateral | **Sidebar/Menu** | El archivo de Figma es de la versión admin. Adaptar a menú de cliente: Mis campañas, y lo que aplique. |
+| Encabezado | **Header** | Con avatar y nombre de usuario. |
+| Logo | **Logo** | Versión OBP. |
+| Lista de medios (autorizar / rechazar) | **Table** + **Switch** o **Checkbox** | Lista compacta con casilla por fila, como el Excel de hoy. |
+| Paginación de tablas | **Pagination** | Si la lista de medios o campañas es larga. |
+| Filtros | **Filtros** | Por estatus, periodo, tipo de medio. |
+| Campañas en listado | **Cards** o **Table** | Según densidad; probar ambos en wireframe. |
+| Estatus de campaña y medio | **Semáforo** y **Badge** / **Tag** | Semáforo para salud de la campaña; Badge o Tag para estatus por medio. |
+| Selector de fases | **Stepper** | Horizontal en escritorio, vertical en móvil. Estados: seleccionado, completado, pendiente y error. |
+| Línea de tiempo de instalación | **Gantt** | Muestra el avance de instalación por medio en el tiempo. |
+| Confirmaciones (aceptar cotización) | **Modal** | Un clic con confirmación. |
+| Mensajes de resultado | **Toast** y **Notification** | Tras autorizar o aceptar. |
+| Alertas en línea | **Alerts** | Por ejemplo, medios pendientes de revisión. |
+| Botones | **Button** | Variantes primary, secondary, tertiary, danger. Estados: default, hover, pressed, focus, disabled, loading. |
+| Acordeones (detalle de cotización o medio) | **Accordion** | Opcional. |
+| Breadcrumbs | **Breadcrumbs** | Campaña > Fase. |
+| Pestañas dentro de una fase | **Tabs** | Por ejemplo, Medios / Cotización. |
+| Fechas (periodo de reportes) | **Date Picker** | Filtro de periodo en reportes. |
+| Carga o espera | **Spinner / Loader** y **Progress bar** | Estados de carga y avance. |
+| Fotos de reportes | **Pictures** y **Lightbox** | Galería con visor y navegación entre fotos. |
+| Información contextual | **Tooltip** y **Popover** | Por ejemplo, explicar un estatus. |
 
-## 4. Mapa de flujo del cliente
+Componentes que hoy no se necesitan para el cliente: File Uploader (artes, fuera de alcance), Wysiwyg, Emoji picker, Color picker.
+
+## 3. Referencias de producto (Figma de OBP)
+
+| Referencia | Qué aporta | Qué no tomar |
+|---|---|---|
+| **Login SSO** (`x153D1vcXgvoRR804q5Yog`) | Pantalla de acceso sobre fondo de espectaculares, tarjeta con correo, contraseña, "Recordarme" y botón. Estados de carga, error de sesión y error de servidor. | Exploraciones antiguas (v1 y v2). |
+| **Listado de campaña** (`I2GCfpGmEh2AHzMDVmXlWK`) | Tablero con KPIs, tabla con estatus, filtros y modales. | Acciones de administrador. |
+| **Reportes** (`csTSq9wAK4FjAznrFTQXrz`) | Reporte de campaña con portada e índice por tipo de medio (sitios fijos, camiones, indoor, cierre). Base: v.3. | v.2 y v.2.1. |
+| **Gestión de artes** (`7gjDLULAMgeqxTMkzfC1QE`) | Mockups de espectaculares, camiones y mapas. Referencia visual del medio. | Flujo interno de carga de arte. |
+| **Prototipo** (`eIb7V9BluzRXMJx2EGBYBb`, nodo 543:31890) | Selector de fase con tres fases y pantallas de pauta. | Menú de admin (Carrito, Catálogos, Inventario, Herramientas). |
+
+## 4. Modelo de usuarios y acceso
+
+- **Varios usuarios por empresa cliente, sin roles.** Todos pueden hacer todas las acciones.
+- **Alta de cuentas**: OBP entrega a cada cliente un usuario y contraseña.
+- **Acceso**: formulario de correo y contraseña, con la pantalla de login de Órbita. No hay botón de SSO adicional.
+
+## 5. Mapa de flujo del cliente
 
 ```
-Login (SSO)
+Login (correo y contraseña)
  └─ Mis campañas (listado con estatus)
-     └─ Detalle de campaña  [selector de fases]
+     └─ Detalle de campaña  [Stepper de fases]
          ├─ 1. Propuesta de medios
-         │     └─ Lista de medios con casilla de autorizar; quitar la casilla = rechazar
+         │     └─ Tabla con casilla por medio; desmarcar = rechazar
+         │     └─ Confirmar selección
          ├─ 2. Cotización (visible cuando hay medios autorizados)
          │     └─ Aceptar y arrancar campaña (un clic con confirmación)
-         ├─ 3. Instalación: estatus por medio
-         └─ 4. Reportes: resultado de los reportes configurados por OBP
+         ├─ 3. Instalación: estatus por medio (Gantt / lista)
+         └─ 4. Reportes: lista de reportes publicados y galería de fotos
 ```
 
-Reglas de estado de la campaña (propuesta, a validar):
+Estados de la campaña (propuesta, a validar):
 
 - **Propuesta**: hay medios por revisar.
-- **En revisión**: el cliente ya respondió algunos medios.
-- **Cotizada**: hay medios autorizados, cotización disponible.
+- **En revisión**: el cliente ya confirmó su selección parcial.
+- **Cotizada**: hay medios autorizados y cotización disponible.
 - **Aprobada / En instalación**: el cliente aceptó la cotización.
 - **Instalada**: todos los medios aceptados están instalados.
 - **En reporte**: se publican reportes.
 
-## 5. Decisiones de UX clave
+## 6. Decisiones de UX clave
 
-**Autorización simple, como el Excel de hoy.** El cliente ve una lista de medios, cada uno con casilla marcada. Desmarcar = rechazar. No hay motivo obligatorio. Lo que el cliente deja marcado es lo que se cotiza. Sin tarjetas grandes ni modales por medio: la vista es una tabla compacta con miniatura, tipo, ubicación, periodo y, si aplica, precio. Un botón "Confirmar selección" cierra la revisión.
+**Autorización simple, como el Excel de hoy.** Tabla con una fila por medio y casilla marcada. Desmarcar es rechazar. No hay motivo obligatorio. Lo que queda marcado es lo que se cotiza. Un botón "Confirmar selección" cierra la revisión.
 
-**Cotización.** Se muestra solo cuando hay medios autorizados. Formato según el template del cliente (pendiente, ver sección 9). Aceptación: un clic con confirmación, sin firma ni pago.
+**Cotización.** Visible solo cuando hay medios autorizados. Formato según el template de OBP (pendiente de revisar). Aceptación: un clic con confirmación, sin firma ni pago.
 
-**Reportes.** Lista de reportes ya publicados, con periodo y tipo. La frecuencia (mensual, quincenal, semanal, completo o parcial) la define OBP en otro módulo. El portal solo presenta el resultado: el diseño debe soportar cualquier periodo, no uno fijo.
+**Reportes.** Lista de reportes publicados con periodo y tipo. La frecuencia (mensual, quincenal, semanal, completo o parcial) la define OBP en otro módulo. El diseño debe soportar cualquier periodo, no uno fijo.
 
-## 6. Pantallas (primera versión)
+## 7. Pantallas (primera versión)
 
-1. **Login SSO** con estados de carga, error de sesión y error de servidor.
-2. **Mis campañas**: tabla o tarjetas con estatus, fechas, próxima acción pendiente y KPIs arriba.
-3. **Detalle de campaña**: encabezado y selector de fases.
-4. **Propuesta de medios**: lista con casilla por medio, contador "X de Y autorizados", botón Confirmar selección.
-5. **Cotización**: resumen de medios autorizados, total (y precio por medio si el template lo pide), descarga PDF, botón "Aceptar y arrancar campaña" con confirmación.
-6. **Instalación**: estatus por medio (por instalar, en instalación, instalado, con incidencia) y fecha.
-7. **Reportes**: lista de reportes publicados, galería de fotos por tipo de medio, filtro por periodo.
+1. **Login**: formulario de Órbita, con estados de carga y error.
+2. **Mis campañas**: lista con estatus, fechas, próxima acción pendiente y KPIs arriba.
+3. **Detalle de campaña**: encabezado, breadcrumbs y Stepper de fases.
+4. **Propuesta de medios**: tabla con casilla por medio, contador "X de Y autorizados", filtros y Confirmar selección.
+5. **Cotización**: resumen de medios autorizados, total (y precio por medio si el template lo pide), descarga PDF y "Aceptar y arrancar campaña" con Modal.
+6. **Instalación**: Gantt o lista por medio con estatus (por instalar, en instalación, instalado, con incidencia).
+7. **Reportes**: lista de reportes publicados, galería con Lightbox y filtro por periodo con Date Picker.
 
-Versiones móvil de cada pantalla.
-
-## 7. Componentes OBP a reutilizar
-
-Pendiente de confirmar contra el archivo de componentes. Esperado:
-
-- Sidebar, header de página y selector de fases.
-- Tabla con pills de estatus y casillas, filtros, paginación.
-- Tarjetas de KPI.
-- Modal de confirmación.
-- Botones primario, secundario y de peligro.
-- Galería de imágenes y visor de fotos.
-- Gráficas: consultar la skill `dataviz` antes de especificarlas.
+Versión móvil de cada pantalla.
 
 ## 8. Decisiones tomadas
 
 | Tema | Decisión |
 |---|---|
 | Usuarios | Varios por cliente, sin roles. Todos hacen todo. |
-| Acceso | SSO, con el diseño de login de OBP. |
-| Autorización | Medio por medio, con casilla; desmarcar = rechazar. Sin motivo obligatorio. |
+| Alta de cuentas | OBP entrega usuario y contraseña al cliente. |
+| Acceso | Correo y contraseña, sin SSO adicional. |
+| Autorización | Medio por medio con casilla; desmarcar = rechazar. Sin motivo obligatorio. Todo en el portal, sin Excel ni correo. |
 | Aceptación | Un clic con confirmación. Sin firma ni pago. |
 | Artes | Fuera del portal por ahora. Futuro: el cliente sube su arte dentro de su campaña. |
 | Reportes | Solo consulta. La configuración vive en otro módulo de OBP. |
 | Plataforma | Web y móvil, responsiva. |
 | Stack | React, para maqueta funcional. |
-| Creación de campañas | No. El cliente solo responde a propuestas de OBP. |
+| Sistema de diseño | Órbita, modo OBP Light. |
+| Creación de campañas | No. |
 
 ## 9. Pendientes
 
-1. **Templates de cotización y del Excel de autorización**: el usuario dijo que los compartiría, pero no llegaron. Hacen falta para definir si el cliente ve precio por medio o solo total, y el formato del PDF.
-2. **Alta de cuentas**: ¿OBP las crea y el cliente solo entra por SSO, o el cliente da de alta a sus usuarios?
-3. **Login**: el diseño de SSO muestra correo y contraseña. ¿El SSO es un botón adicional en la misma pantalla o es solo ese formulario?
+1. **Templates de cotización y del Excel**: el mensaje solo trae los links de componentes. Los templates no llegaron. Hacen falta para definir si el cliente ve precio por medio o solo total, y el formato del PDF.
+2. **WIB**: el sistema tiene modos OBP y WIB. ¿WIB es otra marca de la plataforma que también usará este portal? Si no, el portal usa solo OBP.
+3. **Modo oscuro**: ¿se requiere para el portal de clientes?
 4. **Motivo de rechazo**: se asume que no se pide. Confirmar.
-5. **Arte del medio**: confirmado fuera del portal por ahora, solo se deja documentado.
+5. **Radios, espaciados y sombras**: extraer valores exactos de sus colecciones antes de la maqueta.
 
 ## 10. Plan de trabajo (propuesto)
 
 | Fase | Entregable | Dependencia |
 |---|---|---|
 | 0. Pendientes | Templates y respuestas de la sección 9 | Usuario |
-| 1. Arquitectura de información | Mapa de sitio, estados de campaña, reglas de autorización | Fase 0 (parcial) |
-| 2. Wireframes de flujo | Pantallas de la sección 6 en baja fidelidad, validar con el usuario | Fase 1 |
-| 3. Diseño visual | Alta fidelidad con componentes OBP, web y móvil | Fase 2 y librería OBP |
-| 4. Maqueta React | Flujo completo clicable: autorizar, cotizar, aceptar, instalar, reportar | Fase 3 |
+| 1. Arquitectura de información | Mapa de sitio, estados de campaña y reglas de autorización | Fase 0 (parcial) |
+| 2. Wireframes de flujo | Pantallas de la sección 7 en baja fidelidad, validar con el usuario | Fase 1 |
+| 3. Diseño visual | Alta fidelidad con Órbita, web y móvil | Fase 2 |
+| 4. Maqueta React | Flujo completo clicable: login, autorizar, cotizar, aceptar, instalar, reportar | Fase 3 |
 | 5. Revisión | Estados (vacío, cargando, error), tokens y criterios de aceptación | Fase 4 |
 
 Notas:
 
-- No hay delegación a workers todavía. El diseño lo decide el orquestador; la maqueta React se separa en tareas con brief cuando el diseño esté aprobado.
-- La carpeta de componentes OBP sigue sin acceso: se necesita el file key o link del archivo de la librería.
+- No hay delegación a workers todavía. El diseño lo decide el orquestador. La maqueta React se separa en tareas con brief cuando el diseño esté aprobado.
+- Los archivos de Órbita son de solo lectura en esta etapa: no se modifican.
 
 ## 11. Próximo paso
 
-Compartir los templates (sección 9.1) y el archivo de componentes OBP. Con eso se hace la fase 1 y se presenta el mapa de flujo para validar antes de diseñar pantallas.
+Compartir los templates y resolver WIB y modo oscuro (sección 9). Con eso se hace la fase 1: mapa de sitio y reglas de autorización, para validar antes de diseñar pantallas.
