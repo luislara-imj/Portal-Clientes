@@ -42,7 +42,7 @@ Los archivos de componentes son del sistema **Órbita** (archivo "Fundations v.2
 
 Notas:
 
-- La colección **Semantic Color** tiene cuatro modos: **OBP Light**, **OBP Dark**, **WIB Light** y **WIB Dark**. El portal usa OBP. Modo oscuro: pendiente de confirmar si se requiere.
+- La colección **Semantic Color** tiene modos OBP y WIB. El portal usa solo **OBP Light** y **OBP Dark**. WIB queda fuera.
 - Tipografía: SF Pro con fallback a Inter en web. Pesos 400, 500, 600 y 700. Hay escala regular y compacta (la compacta es para tablas densas).
 - Radios, espaciados, sombras y z-index están en colecciones separadas; pendiente de extraer los valores exactos.
 
@@ -147,16 +147,24 @@ Versión móvil de cada pantalla.
 | Reportes | Solo consulta. La configuración vive en otro módulo de OBP. |
 | Plataforma | Web y móvil, responsiva. |
 | Stack | React, para maqueta funcional. |
-| Sistema de diseño | Órbita, modo OBP Light. |
+| Sistema de diseño | Órbita, modos OBP Light y OBP Dark. WIB fuera. |
+| Tema | Claro y oscuro. |
 | Creación de campañas | No. |
+| Propuesta | Reemplaza el Excel de selección. Pestañas por tipo de medio, agrupadas por ciudad, con "¿Lo incluyes?" (Sí / No) por medio. Detalle en `docs/TEMPLATES_REFERENCIA.md`. |
+| Cotización | Se muestra al cliente cuando hay medios seleccionados. Sin la tarifa prorrateada oculta: el cliente ve el total. |
+| Brand riders | Dos opciones cotizadas por separado; el cliente elige una. |
+| Derrotero | Solo camiones. Consulta de recorridos por ruta. |
 
 ## 9. Pendientes
 
-1. **Templates de cotización y del Excel**: el mensaje solo trae los links de componentes. Los templates no llegaron. Hacen falta para definir si el cliente ve precio por medio o solo total, y el formato del PDF.
-2. **WIB**: el sistema tiene modos OBP y WIB. ¿WIB es otra marca de la plataforma que también usará este portal? Si no, el portal usa solo OBP.
-3. **Modo oscuro**: ¿se requiere para el portal de clientes?
-4. **Motivo de rechazo**: se asume que no se pide. Confirmar.
-5. **Radios, espaciados y sombras**: extraer valores exactos de sus colecciones antes de la maqueta.
+1. **Descuento**: la propuesta muestra "inversión con descuento", pero la cotización no tiene esa columna. ¿El cliente ve el descuento en la cotización y el total con descuento es el que acepta?
+2. **Precio por medio**: ¿la cotización muestra precio unitario por medio, o solo subtotales por tipo de medio?
+3. **Brand riders**: ¿pasan por la misma selección de medios, o el cliente solo elige una opción?
+4. **Descarga**: ¿el cliente puede descargar la propuesta y la cotización en PDF o Excel desde el portal, o solo verlas en pantalla?
+5. **Color de campaña**: los templates aplican un color por campaña (por defecto verde `#00D084`). ¿Se refleja en el portal o solo en los documentos descargables?
+6. **Motivo de rechazo**: se asume que no se pide. Confirmar.
+7. **Vallas sin precio**: en el ejemplo hay vallas con precio 0. ¿Se muestran como "Sin precio" y el cliente aun así las puede seleccionar?
+8. **Radios, espaciados y sombras**: extraer valores exactos de sus colecciones antes de la maqueta.
 
 ## 10. Plan de trabajo (propuesto)
 
@@ -176,4 +184,4 @@ Notas:
 
 ## 11. Próximo paso
 
-Compartir los templates y resolver WIB y modo oscuro (sección 9). Con eso se hace la fase 1: mapa de sitio y reglas de autorización, para validar antes de diseñar pantallas.
+Responder las dudas de la sección 9, sobre todo descuento y precio por medio. Con eso se hace la fase 1: mapa de sitio, reglas de autorización y modelo de datos (sección 4 de `docs/TEMPLATES_REFERENCIA.md`), para validar antes de diseñar pantallas.
