@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login · Portal de clientes OBP</title>
+<style>
+  /* Tokens de Órbita (docs/CATALOGO_FIGMA.md, sección 3) */
+  :root {
+    --brand: #3658c1;
+    --brand-text: #2d49a1;
+    --brand-icon: #627dd0;
+    --brand-disabled: #b8c5ee;
+    --brand-surface: #f1f4fe;
+    --text-primary: #313336;
+    --text-secondary: #585a5e;
+    --text-tertiary: #6c6e73;
+    --text-on-color: #ffffff;
+    --icon-default: #4d5054;
+    --border: #c6c8cc;
+    --border-subtle: #d4d6d9;
+    --canvas: #f7f8fa;
+    --hover: #f0f1f2;
+    --surface: #ffffff;
+    --danger: #d43c3c;
+    --danger-surface: #fef1f1;
+    --danger-border: #b83434;
+    --shadow-3: 0 4px 8px -2px #00000033;
+    --shadow-5: 0 16px 24px -8px #0000004d;
+    --font: "SF Pro Text", "SF Pro Display", -apple-system, "Inter", "Raleway", "Open Sans", "Lato", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; min-height: 100%; }
+
+  body {
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 23px;
+    letter-spacing: 0.5px;
+    color: var(--text-primary);
+    background: var(--canvas);
+  }
+
+  /* Fondo de espectaculares: placeholder con degradado de marca */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background:
+      linear-gradient(160deg, #1d2f70 0%, #3658c1 45%, #627dd0 100%);
+    z-index: 0;
+  }
+
+  .backdrop::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 15%, #ffffff22, transparent 50%);
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: var(--shadow-5);
+    padding: 40px 32px 32px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--brand-text);
+  }
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--brand);
+    color: var(--text-on-color);
+    display: grid;
+    place-items: center;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  h1 {
+    margin: 0 0 4px;
+    font-size: 30px;
+    line-height: 37.5px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    margin: 0 0 24px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 20.5px;
+  }
+
+  /* Alertas */
+  .alert {
+    display: none;
+    gap: 10px;
+    align-items: flex-start;
+    border: 1px solid var(--danger-border);
+    background: var(--danger-surface);
+    color: var(--danger);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    line-height: 20.5px;
+    margin-bottom: 20px;
+  }
+
+  .alert.is-visible { display: flex; }
+
+  .alert strong { display: block; color: var(--text-primary); font-weight: 600; }
+
+  .alert-icon {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--danger);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    margin-top: 2px;
+  }
+
+  /* Campos */
+  form { display: flex; flex-direction: column; gap: 20px; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  label {
+    font-size: 14px;
+    line-height: 20.5px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .input {
+    height: 48px;
+    width: 100%;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    font: inherit;
+    font-size: 16px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+
+  .input::placeholder { color: var(--text-tertiary); }
+
+  .input:hover { background: var(--hover); }
+
+  .input:focus {
+    border-color: var(--brand-icon);
+    box-shadow: 0 0 0 3px var(--brand-surface);
+    background: var(--surface);
+  }
+
+  .input[aria-invalid="true"] {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px var(--danger-surface);
+  }
+
+  .password-wrap { position: relative; }
+
+  .password-wrap .input { padding-right: 64px; }
+
+  .toggle-pass {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 40px;
+    padding: 0 10px;
+    border: 0;
+    background: transparent;
+    color: var(--brand-text);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .toggle-pass:hover { background: var(--hover); }
+
+  .field-error {
+    display: none;
+    font-size: 12px;
+    line-height: 17.5px;
+    color: var(--danger);
+  }
+
+  .field-error.is-visible { display: block; }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: -4px;
+  }
+
+  .check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    line-height: 20.5px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .check input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--brand);
+    cursor: pointer;
+  }
+
+  /* Botón primario */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    width: 100%;
+    border: 0;
+    border-radius: 8px;
+    background: var(--brand);
+    color: var(--text-on-color);
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-3);
+    transition: background .15s;
+  }
+
+  .btn:hover { background: var(--brand-text); }
+
+  .btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--brand-surface), 0 0 0 5px var(--brand-icon);
+  }
+
+  .btn:disabled {
+    background: var(--brand-disabled);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .spinner {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ffffff55;
+    border-top-color: var(--text-on-color);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+
+  .btn.is-loading .spinner { display: inline-block; }
+  .btn.is-loading .btn-label { opacity: .85; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .footer-note {
+    margin: 24px 0 0;
+    text-align: center;
+    font-size: 12px;
+    line-height: 17.5px;
+    color: var(--text-tertiary);
+  }
+
+  /* Control de demo (no forma parte del diseño) */
+  .demo-bar {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px;
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: var(--shadow-5);
+    max-width: calc(100% - 32px);
+  }
+
+  .demo-bar span {
+    align-self: center;
+    padding: 0 8px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+
+  .demo-bar button {
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    background: var(--surface);
+    font: inherit;
+    font-size: 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .demo-bar button.is-active {
+    border-color: var(--brand);
+    color: var(--brand-text);
+    background: var(--brand-surface);
+  }
+
+  @media (max-width: 480px) {
+    .card { padding: 32px 20px 24px; }
+    h1 { font-size: 28px; line-height: 34px; }
+  }
+</style>
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true"></div>
+
+  <main class="page">
+    <section class="card" aria-labelledby="titulo">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">OBP</div>
+        <span>Portal de clientes</span>
+      </div>
+
+      <h1 id="titulo">Inicia sesión</h1>
+      <p class="subtitle">Accede para revisar tus campañas, autorizar medios y consultar reportes.</p>
+
+      <div class="alert" id="alert" role="alert">
+        <span class="alert-icon" aria-hidden="true">!</span>
+        <div>
+          <strong id="alert-title">Correo o contraseña incorrectos</strong>
+          <span id="alert-text">Revisa tus datos e inténtalo de nuevo.</span>
+        </div>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="email">Correo electrónico</label>
+          <input class="input" id="email" name="email" type="email" autocomplete="username"
+                 placeholder="nombre@empresa.com" required>
+          <span class="field-error" id="email-error">Ingresa un correo válido.</span>
+        </div>
+
+        <div class="field">
+          <label for="password">Contraseña</label>
+          <div class="password-wrap">
+            <input class="input" id="password" name="password" type="password" autocomplete="current-password"
+                   placeholder="Tu contraseña" required>
+            <button type="button" class="toggle-pass" id="toggle-pass" aria-controls="password">Mostrar</button>
+          </div>
+          <span class="field-error" id="password-error">Ingresa tu contraseña.</span>
+        </div>
+
+        <div class="row">
+          <label class="check">
+            <input type="checkbox" id="remember" name="remember">
+            Recordarme
+          </label>
+        </div>
+
+        <button class="btn" id="submit" type="submit">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="btn-label" id="submit-label">Iniciar sesión</span>
+        </button>
+      </form>
+
+      <p class="footer-note">Tu usuario y contraseña te los entrega OBP.</p>
+    </section>
+  </main>
+
+  <!-- Control de demo: cambia el estado visual de la pantalla para revisión -->
+  <div class="demo-bar" role="group" aria-label="Estados de la maqueta">
+    <span>Estado:</span>
+    <button type="button" data-state="normal" class="is-active">Normal</button>
+    <button type="button" data-state="loading">Cargando</button>
+    <button type="button" data-state="error">Error de sesión</button>
+    <button type="button" data-state="server">Error de servidor</button>
+  </div>
+
+  <script>
+    const form = document.getElementById('login-form');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const submit = document.getElementById('submit');
+    const submitLabel = document.getElementById('submit-label');
+    const alertBox = document.getElementById('alert');
+    const alertTitle = document.getElementById('alert-title');
+    const alertText = document.getElementById('alert-text');
+    const togglePass = document.getElementById('toggle-pass');
+    const demoButtons = document.querySelectorAll('.demo-bar button');
+
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const messages = {
+      error: {
+        title: 'Correo o contraseña incorrectos',
+        text: 'Revisa tus datos e inténtalo de nuevo.'
+      },
+      server: {
+        title: 'No pudimos iniciar sesión',
+        text: 'Hay un problema en el servidor. Intenta de nuevo en unos minutos.'
+      }
+    };
+
+    function setState(state) {
+      demoButtons.forEach(b => b.classList.toggle('is-active', b.dataset.state === state));
+      submit.classList.remove('is-loading');
+      submit.disabled = false;
+      submitLabel.textContent = 'Iniciar sesión';
+      hideAlert();
+      if (state === 'loading') {
+        submit.classList.add('is-loading');
+        submit.disabled = true;
+        submitLabel.textContent = 'Entrando...';
+      } else if (state === 'error' || state === 'server') {
+        showAlert(messages[state].title, messages[state].text);
+      }
+    }
+
+    function showAlert(title, text) {
+      alertTitle.textContent = title;
+      alertText.textContent = text;
+      alertBox.classList.add('is-visible');
+    }
+
+    function hideAlert() {
+      alertBox.classList.remove('is-visible');
+    }
+
+    function validate() {
+      const emailOk = EMAIL_RE.test(email.value.trim());
+      const passOk = password.value.length > 0;
+
+      document.getElementById('email-error').classList.toggle('is-visible', !emailOk);
+      document.getElementById('password-error').classList.toggle('is-visible', !passOk);
+      email.setAttribute('aria-invalid', String(!emailOk));
+      password.setAttribute('aria-invalid', String(!passOk));
+
+      return emailOk && passOk;
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!validate()) {
+        const first = email.getAttribute('aria-invalid') === 'true' ? email : password;
+        first.focus();
+        return;
+      }
+      setState('loading');
+      setTimeout(() => { window.location.href = 'mis-campanas.html'; }, 1500);
+    });
+
+    email.addEventListener('input', () => { if (email.getAttribute('aria-invalid') === 'true') validate(); });
+    password.addEventListener('input', () => { if (password.getAttribute('aria-invalid') === 'true') validate(); });
+
+    togglePass.addEventListener('click', () => {
+      const show = password.type === 'password';
+      password.type = show ? 'text' : 'password';
+      togglePass.textContent = show ? 'Ocultar' : 'Mostrar';
+      togglePass.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    });
+
+    demoButtons.forEach(b => b.addEventListener('click', () => setState(b.dataset.state)));
+  </script>
+</body>
+</html>

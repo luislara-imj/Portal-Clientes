@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cotización · Portal OBP</title>
+<style>
+  :root {
+    --bg-canvas: #f7f8fa;
+    --bg-surface: #ffffff;
+    --bg-brand-soft: #f1f4fe;
+    --brand: #3658c1;
+    --brand-hover: #3251b1;
+    --brand-pressed: #2d49a1;
+    --text-brand: #2d49a1;
+    --text-link: #3251b1;
+    --text-primary: #313336;
+    --text-secondary: #585a5e;
+    --text-tertiary: #6c6e73;
+    --border-default: #c6c8cc;
+    --border-subtle: #d4d6d9;
+    --success: #22c55e;
+    --warning: #eab308;
+    --danger: #ef4444;
+    --danger-text: #b83434;
+    --info: #06b6d4;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 2px rgba(20, 24, 40, .06), 0 1px 3px rgba(20, 24, 40, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg-canvas: #111318;
+      --bg-surface: #1a1d24;
+      --bg-brand-soft: #222a47;
+      --brand: #5b7be0;
+      --brand-hover: #6d8ae6;
+      --brand-pressed: #4a68d0;
+      --text-brand: #a9bcf5;
+      --text-link: #a9bcf5;
+      --text-primary: #eceef2;
+      --text-secondary: #b9bcc4;
+      --text-tertiary: #9a9da6;
+      --border-default: #4a4e58;
+      --border-subtle: #2e323b;
+      --danger-text: #f08a8a;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg-canvas: #111318;
+    --bg-surface: #1a1d24;
+    --bg-brand-soft: #222a47;
+    --brand: #5b7be0;
+    --brand-hover: #6d8ae6;
+    --brand-pressed: #4a68d0;
+    --text-brand: #a9bcf5;
+    --text-link: #a9bcf5;
+    --text-primary: #eceef2;
+    --text-secondary: #b9bcc4;
+    --text-tertiary: #9a9da6;
+    --border-default: #4a4e58;
+    --border-subtle: #2e323b;
+    --danger-text: #f08a8a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: "SF Pro Text", "SF Pro Display", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  button { font: inherit; cursor: pointer; }
+  a { color: var(--text-link); }
+
+  .app { min-height: 100vh; }
+
+  /* Encabezado superior */
+  .main { min-width: 0; }
+  .topbar {
+    height: 56px; width: 100%;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 28px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-subtle);
+  }
+  .topbar-brand { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+  .topbar .spacer { flex: 1; }
+  .user-name { font-weight: 600; }
+  .logout { color: var(--text-link); font-size: 13px; text-decoration: none; }
+  .logout:hover { text-decoration: underline; }
+  @media (max-width: 599px) {
+    .topbar .user-name { display: none; }
+  }
+  .theme-toggle {
+    background: none; border: 1px solid var(--border-default); color: var(--text-secondary);
+    border-radius: var(--radius-sm); padding: 6px 10px;
+  }
+
+  .content { padding: 28px; max-width: 1200px; }
+
+  /* Breadcrumbs */
+  .crumbs { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px; flex-wrap: wrap; }
+  .crumbs a { text-decoration: none; color: var(--text-link); }
+  .crumbs a:hover { text-decoration: underline; }
+  .crumbs span[aria-current="page"] { color: var(--text-secondary); }
+
+  h1 { font-size: 26px; margin: 0; font-weight: 700; }
+  h2 { font-size: 16px; margin: 0 0 10px; font-weight: 600; }
+
+  /* Encabezado de campaña */
+  .camp-head {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 18px 20px; margin-bottom: 16px;
+    display: flex; gap: 16px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap;
+  }
+  .camp-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .folio { font-size: 12px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; margin-top: 4px; }
+  .facts {
+    display: grid; grid-template-columns: repeat(3, minmax(140px, 1fr)); gap: 12px 24px;
+    margin-top: 14px; width: 100%;
+  }
+  .fact-label { font-size: 12px; color: var(--text-tertiary); font-weight: 500; }
+  .fact-value { font-size: 14px; color: var(--text-primary); font-weight: 500; margin-top: 2px; }
+
+  /* Badges */
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    border: 1px solid transparent; white-space: nowrap;
+  }
+  .badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .b-action { color: #8a5a00; background: #fdf6d6; }
+  .b-brand { color: var(--text-brand); background: var(--bg-brand-soft); }
+  .b-ok { color: #15733f; background: #e4f8ec; }
+  .b-neutral { color: var(--text-secondary); background: var(--bg-canvas); border-color: var(--border-subtle); }
+  .b-info { color: #08707f; background: #dff7fb; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .b-action { color: #f5d46b; background: #3a3112; }
+    :root:not([data-theme="light"]) .b-ok { color: #7fe3a5; background: #15331f; }
+    :root:not([data-theme="light"]) .b-info { color: #7fe6f5; background: #0f3a42; }
+  }
+  :root[data-theme="dark"] .b-action { color: #f5d46b; background: #3a3112; }
+  :root[data-theme="dark"] .b-ok { color: #7fe3a5; background: #15331f; }
+  :root[data-theme="dark"] .b-info { color: #7fe6f5; background: #0f3a42; }
+
+  /* Botones */
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 14px; border-radius: var(--radius-sm); border: 1px solid var(--brand);
+    background: var(--brand); color: #fff; font-weight: 600; text-decoration: none; white-space: nowrap;
+  }
+  .cta:hover { background: var(--brand-hover); }
+  .cta:active { background: var(--brand-pressed); }
+  .cta.secondary { background: transparent; color: var(--text-brand); }
+  .cta[aria-disabled="true"] { opacity: .5; pointer-events: none; }
+
+  /* Stepper */
+  .stepper {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 18px 20px; margin-bottom: 16px;
+  }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .step { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 0 8px; }
+  .step::before {
+    content: ""; position: absolute; top: 15px; left: -50%; right: 50%; height: 2px;
+    background: var(--border-subtle); z-index: 0;
+  }
+  .step:first-child::before { display: none; }
+  .step.done:not(:first-child)::before, .step.current:not(:first-child)::before { background: var(--brand); }
+  .dot {
+    position: relative; z-index: 1;
+    width: 32px; height: 32px; border-radius: 50%;
+    display: grid; place-items: center; font-weight: 600; font-size: 13px;
+    border: 2px solid var(--border-default); background: var(--bg-surface); color: var(--text-tertiary);
+  }
+  .step.done .dot { background: var(--success); border-color: var(--success); color: #fff; }
+  .step.current .dot { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .step.locked .dot { background: var(--bg-canvas); }
+  .step-name { font-weight: 600; font-size: 13px; color: var(--text-primary); }
+  .step.locked .step-name { color: var(--text-tertiary); }
+  .step-state { font-size: 12px; color: var(--text-tertiary); }
+  .step.current .step-state { color: var(--text-brand); font-weight: 600; }
+
+  /* Layout de dos columnas */
+  .grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .panel {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px;
+  }
+  .panel + .panel { margin-top: 16px; }
+
+  .next-step {
+    border-left: 4px solid var(--brand);
+    background: var(--bg-brand-soft); border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .next-step p { margin: 4px 0 12px; color: var(--text-secondary); }
+  .next-step strong { color: var(--text-primary); }
+
+  .counter { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-secondary); margin-top: 12px; }
+  .bar { flex: 1; height: 6px; background: var(--border-subtle); border-radius: 999px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--brand); }
+
+  /* Fases */
+  .phase-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .phase {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
+    padding: 12px 14px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+  }
+  .phase.locked { color: var(--text-tertiary); background: var(--bg-canvas); }
+  .phase-num {
+    width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 12px; font-weight: 600; background: var(--bg-canvas); color: var(--text-secondary);
+  }
+  .phase.current .phase-num { background: var(--brand); color: #fff; }
+  .phase.done .phase-num { background: var(--success); color: #fff; }
+  .phase-title { font-weight: 600; }
+  .phase-desc { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .phase.locked .phase-desc { color: var(--text-tertiary); }
+  .lock-note { font-size: 12px; color: var(--text-tertiary); margin-top: 4px; }
+
+  /* Datos de la campaña */
+  .dl { display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; margin: 0; font-size: 13px; }
+  .dl dt { color: var(--text-tertiary); }
+  .dl dd { margin: 0; color: var(--text-primary); font-weight: 500; }
+
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Cotización: tablas por tipo de medio (mismo estilo que la vista de tabla de mis-campanas.html) */
+  .page-title { margin-bottom: 16px; }
+  .camp-head h2 { font-size: 20px; margin: 0; }
+  .panel h2 .muted { font-weight: 500; color: var(--text-tertiary); font-size: 13px; }
+  .table-scroll {
+    overflow-x: auto; position: relative; background: var(--bg-surface);
+    border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+  }
+  .tbl { width: 100%; border-collapse: collapse; min-width: 1180px; font-size: 13px; }
+  .tbl th {
+    text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary);
+    text-transform: uppercase; letter-spacing: .4px; white-space: nowrap;
+    padding: 10px 12px; background: var(--bg-canvas); border-bottom: 1px solid var(--border-subtle);
+  }
+  .tbl td { padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); vertical-align: top; }
+  .tbl tfoot td { border-bottom: 0; font-weight: 600; background: var(--bg-canvas); }
+  .tbl .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .tbl .nowrap { white-space: nowrap; }
+  .tbl .detalle { min-width: 220px; color: var(--text-secondary); }
+  .totales dd { text-align: right; font-variant-numeric: tabular-nums; }
+  .totales .grand { font-size: 16px; font-weight: 700; padding-top: 10px; border-top: 1px solid var(--border-subtle); }
+  .panel ul { margin: 0 0 12px; padding-left: 20px; color: var(--text-secondary); }
+  .panel > p { margin: 0 0 8px; }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    .topbar { padding: 0 16px; }
+    .content { padding: 20px 16px; }
+    .grid { grid-template-columns: 1fr; }
+    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    h1 { font-size: 22px; }
+  }
+  @media (max-width: 560px) {
+    .steps { grid-template-columns: 1fr; gap: 14px; }
+    .step { flex-direction: row; text-align: left; padding: 0; gap: 12px; }
+    .step::before { display: none; }
+    .step-text { display: flex; flex-direction: column; }
+    .cta { width: 100%; }
+    .facts { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-brand">OBP · Clientes</div>
+      <div class="spacer"></div>
+      <button class="theme-toggle" id="themeBtn" aria-label="Cambiar tema">Tema</button>
+      <span class="user-name"></span>
+      <a class="logout" id="resetDatos" href="#" hidden>Restablecer datos</a>
+      <a class="logout" href="login.html">Cerrar sesión</a>
+    </header>
+
+    <section class="content">
+      <nav class="crumbs" aria-label="Ruta">
+        <a href="mis-campanas.html">Mis campañas</a>
+        <span aria-hidden="true">›</span>
+        <a href="detalle-campana.html" id="crumbCamp">Detalle de campaña</a>
+        <span aria-hidden="true">›</span>
+        <span aria-current="page">Cotización</span>
+      </nav>
+      <h1 class="page-title">Cotización</h1>
+      <div id="cotiz"></div>
+    </section>
+  </main>
+</div>
+
+<script src="datos.js"></script>
+<script src="estado.js"></script>
+<script>
+  // Campaña según ?id (datos.js) y su cotización en OBP_COTIZACIONES (datos.js).
+  // Alpina (JRA-0021) tiene su cotización en la app React (COTIZACION_REACT_URL).
+  // Las demás se muestran solo si el estado (estado.js) es "Cotización lista" o posterior y hay datos.
+  obpPintarComun();
+  const ALPINA = "JRA-0021-ALPINA-ALPINA_LECHE-NOV-2026";
+  const camp = obpCampanaDeUrl();
+  const $id = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+  const mxn = (n) => `$${Math.round(n).toLocaleString("en-US")} MXN`;
+  // URL de la app React conservando el id de la campaña.
+  const reactHref = (codigo) => {
+    const base = window.COTIZACION_REACT_URL || "";
+    return `${base}${base.includes("?") ? "&" : "?"}id=${encodeURIComponent(codigo)}`;
+  };
+
+  function encabezado(c, cot) {
+    return `
+      <div class="camp-head">
+        <div>
+          <div class="camp-title"><h2>${esc(c.nombre)}</h2></div>
+          <div class="folio">${esc(c.codigo)}</div>
+        </div>
+        <div class="facts">
+          <div><div class="fact-label">Cliente</div><div class="fact-value">${esc(cot ? cot.cliente : `${OBP_DATA.cliente.nombre} · ${OBP_DATA.cliente.empresa}`)}</div></div>
+          <div><div class="fact-label">Vigencia</div><div class="fact-value">${esc(cot ? cot.vigencia : `${c.inicio} – ${c.fin}`)}</div></div>
+          <div><div class="fact-label">Folio</div><div class="fact-value">${esc(cot ? cot.folio : c.codigo)}</div></div>
+        </div>
+      </div>`;
+  }
+
+  function tablaTipo(t) {
+    const filas = t.lineas.map((l) => `
+            <tr>
+              <td class="nowrap">${esc(l.ciudad)}</td>
+              <td>${esc(l.formato)}</td>
+              <td class="detalle">${esc(l.detalle)}</td>
+              <td class="nowrap">${esc(l.clave)}</td>
+              <td class="num">${l.unidades}</td>
+              <td class="nowrap">${esc(l.tiempo)}</td>
+              <td class="nowrap">${esc(l.inicio)}</td>
+              <td class="nowrap">${esc(l.fin)}</td>
+              <td class="num">${mxn(l.precioUnitario)}</td>
+              <td class="num">${mxn(l.precioDescuento)}</td>
+              <td class="num">${mxn(l.total)}</td>
+            </tr>`).join("");
+    const n = t.lineas.length;
+    return `
+      <div class="panel">
+        <h2>${esc(t.tipo)} <span class="muted">· ${n} ${n === 1 ? "medio" : "medios"}</span></h2>
+        <div class="table-scroll">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th scope="col">Ciudad</th>
+                <th scope="col">Formato</th>
+                <th scope="col">Detalle</th>
+                <th scope="col">Clave IMJ</th>
+                <th scope="col" class="num">Unidades</th>
+                <th scope="col">Tiempo de servicio</th>
+                <th scope="col">Inicio</th>
+                <th scope="col">Fin</th>
+                <th scope="col" class="num">Precio unitario</th>
+                <th scope="col" class="num">Precio con descuento</th>
+                <th scope="col" class="num">Total</th>
+              </tr>
+            </thead>
+            <tbody>${filas}</tbody>
+            <tfoot>
+              <tr><td colspan="10">Subtotal ${esc(t.tipo)}</td><td class="num">${mxn(t.subtotal)}</td></tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>`;
+  }
+
+  function cotizacionHtml(c, cot) {
+    return `
+      ${encabezado(c, cot)}
+      ${cot.tipos.map(tablaTipo).join("")}
+      <div class="panel">
+        <h2>Total de la cotización</h2>
+        <dl class="dl totales">
+          <dt>Subtotal</dt><dd>${mxn(cot.subtotal)}</dd>
+          <dt>Descuento (${cot.descuentoPct}%)</dt><dd>−${mxn(cot.descuento)}</dd>
+          <dt>Subtotal con descuento</dt><dd>${mxn(cot.subtotalConDescuento)}</dd>
+          <dt>IVA (${cot.ivaPct}%)</dt><dd>${mxn(cot.iva)}</dd>
+          <dt class="grand">Total con IVA</dt><dd class="grand">${mxn(cot.total)}</dd>
+        </dl>
+      </div>
+      <div class="panel">
+        <h2>Tu campaña incluye</h2>
+        <ul>${cot.incluye.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
+        <p><strong>Condiciones de pago:</strong> ${esc(cot.condicionesPago)}</p>
+      </div>`;
+  }
+
+  const cont = $id("cotiz");
+  const crumbCamp = $id("crumbCamp");
+  if (!camp) {
+    // Sin id (o id desconocido): sin migaja de campaña.
+    crumbCamp.nextElementSibling.hidden = true;
+    crumbCamp.hidden = true;
+    cont.innerHTML = `
+      <div class="panel">
+        <h2>Campaña no encontrada</h2>
+        <p>No existe una campaña con ese código.</p>
+        <p><a href="mis-campanas.html">Volver a Mis campañas</a></p>
+      </div>`;
+  } else {
+    const detalle = `detalle-campana.html?id=${encodeURIComponent(camp.codigo)}`;
+    crumbCamp.textContent = camp.nombre;
+    crumbCamp.href = detalle;
+    document.title = `Cotización · ${camp.nombre} · Portal OBP`;
+    const regreso = `<p><a href="${detalle}">Volver al detalle de campaña</a></p>`;
+
+    const e = window.OBP_ESTADO && OBP_ESTADO.obtenerCampana(camp.codigo);
+    const estado = (e && e.estado) || camp.estado;
+    const lista = OBP_ESTADOS.indexOf(estado) >= OBP_ESTADOS.indexOf("Cotización lista");
+    const cot = (window.OBP_COTIZACIONES || {})[camp.codigo];
+
+    if (camp.codigo === ALPINA) {
+      cont.innerHTML = `
+        ${encabezado(camp, null)}
+        <div class="panel">
+          <div class="next-step">
+            <strong>La cotización de esta campaña está en la aplicación de cotización.</strong>
+            <p>Se abre en una pestaña nueva.</p>
+            <a class="cta" href="${esc(reactHref(camp.codigo))}" target="_blank" rel="noopener">Abrir cotización</a>
+          </div>
+        </div>
+        ${regreso}`;
+    } else if (cot && lista) {
+      cont.innerHTML = cotizacionHtml(camp, cot) + regreso;
+    } else {
+      cont.innerHTML = `
+        ${encabezado(camp, null)}
+        <div class="panel">
+          <h2>Esta cotización aún no está lista</h2>
+          <p>Te avisaremos cuando la cotización de esta campaña esté disponible.</p>
+          <p><a href="${detalle}">Volver al detalle de campaña</a></p>
+        </div>`;
+    }
+  }
+
+  // Maqueta: los enlaces "#" no navegan.
+  document.addEventListener("click", (e) => {
+    if (e.target.closest('a[href="#"]')) e.preventDefault();
+  });
+
+  // Tema (solo para revisar la maqueta; por defecto sigue el sistema)
+  document.getElementById("themeBtn").addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.hasAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+</script>
+</body>
+</html>

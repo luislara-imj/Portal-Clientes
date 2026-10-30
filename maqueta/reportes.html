@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reportes · Portal OBP</title>
+<style>
+  :root {
+    --bg-canvas: #f7f8fa;
+    --bg-surface: #ffffff;
+    --bg-brand-soft: #f1f4fe;
+    --brand: #3658c1;
+    --brand-hover: #3251b1;
+    --brand-pressed: #2d49a1;
+    --text-brand: #2d49a1;
+    --text-link: #3251b1;
+    --text-primary: #313336;
+    --text-secondary: #585a5e;
+    --text-tertiary: #6c6e73;
+    --text-locked: #6c6e73;
+    --border-default: #c6c8cc;
+    --border-subtle: #d4d6d9;
+    --success: #22c55e;
+    --warning: #eab308;
+    --danger: #ef4444;
+    --danger-text: #b83434;
+    --info: #06b6d4;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 2px rgba(20, 24, 40, .06), 0 1px 3px rgba(20, 24, 40, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg-canvas: #111318;
+      --bg-surface: #1a1d24;
+      --bg-brand-soft: #222a47;
+      --brand: #5b7be0;
+      --brand-hover: #6d8ae6;
+      --brand-pressed: #4a68d0;
+      --text-brand: #a9bcf5;
+      --text-link: #a9bcf5;
+      --text-primary: #eceef2;
+      --text-secondary: #b9bcc4;
+      --text-tertiary: #9a9da6;
+      --text-locked: #6b6e76;
+      --border-default: #4a4e58;
+      --border-subtle: #2e323b;
+      --danger-text: #f08a8a;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg-canvas: #111318;
+    --bg-surface: #1a1d24;
+    --bg-brand-soft: #222a47;
+    --brand: #5b7be0;
+    --brand-hover: #6d8ae6;
+    --brand-pressed: #4a68d0;
+    --text-brand: #a9bcf5;
+    --text-link: #a9bcf5;
+    --text-primary: #eceef2;
+    --text-secondary: #b9bcc4;
+    --text-tertiary: #9a9da6;
+    --text-locked: #6b6e76;
+    --border-default: #4a4e58;
+    --border-subtle: #2e323b;
+    --danger-text: #f08a8a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: "SF Pro Text", "SF Pro Display", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  button { font: inherit; cursor: pointer; }
+  a { color: var(--text-link); }
+
+  .app { min-height: 100vh; }
+
+  /* Encabezado superior */
+  .main { min-width: 0; }
+  .topbar {
+    height: 56px; width: 100%;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 28px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-subtle);
+  }
+  .topbar-brand { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+  .topbar .spacer { flex: 1; }
+  .user-name { font-weight: 600; }
+  .logout { color: var(--text-link); font-size: 13px; text-decoration: none; }
+  .logout:hover { text-decoration: underline; }
+  @media (max-width: 599px) {
+    .topbar .user-name { display: none; }
+  }
+  .theme-toggle {
+    background: none; border: 1px solid var(--border-default); color: var(--text-secondary);
+    border-radius: var(--radius-sm); padding: 6px 10px;
+  }
+
+  .content { padding: 28px; max-width: 1200px; }
+
+  /* Breadcrumbs */
+  .crumbs { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px; flex-wrap: wrap; }
+  .crumbs a { text-decoration: none; color: var(--text-link); overflow-wrap: anywhere; }
+  .crumbs a:hover { text-decoration: underline; }
+  .crumbs span[aria-current="page"] { color: var(--text-secondary); }
+
+  h1 { font-size: 26px; margin: 0 0 16px; font-weight: 700; }
+  h2 { font-size: 16px; margin: 0 0 12px; font-weight: 600; }
+  h3 { font-size: 15px; margin: 0; font-weight: 600; }
+
+  /* Encabezado de campaña */
+  .camp-head {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 18px 20px; margin-bottom: 16px;
+  }
+  .camp-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .camp-name { font-size: 20px; font-weight: 700; margin: 0; }
+  .folio { font-size: 12px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; margin-top: 4px; overflow-wrap: anywhere; }
+  .facts {
+    display: grid; grid-template-columns: repeat(3, minmax(140px, 1fr)); gap: 12px 24px;
+    margin: 14px 0 0; width: 100%;
+  }
+  .facts dd { margin: 0; }
+  .fact-label { font-size: 12px; color: var(--text-tertiary); font-weight: 500; }
+  .fact-value { font-size: 14px; color: var(--text-primary); font-weight: 500; margin-top: 2px; }
+
+  /* Badges */
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    border: 1px solid transparent; white-space: nowrap;
+  }
+  .badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .b-action { color: #8a5a00; background: #fdf6d6; }
+  .b-brand { color: var(--text-brand); background: var(--bg-brand-soft); }
+  .b-ok { color: #15733f; background: #e4f8ec; }
+  .b-neutral { color: var(--text-secondary); background: var(--bg-canvas); border-color: var(--border-subtle); }
+  .b-info { color: #08707f; background: #dff7fb; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .b-action { color: #f5d46b; background: #3a3112; }
+    :root:not([data-theme="light"]) .b-ok { color: #7fe3a5; background: #15331f; }
+    :root:not([data-theme="light"]) .b-info { color: #7fe6f5; background: #0f3a42; }
+  }
+  :root[data-theme="dark"] .b-action { color: #f5d46b; background: #3a3112; }
+  :root[data-theme="dark"] .b-ok { color: #7fe3a5; background: #15331f; }
+  :root[data-theme="dark"] .b-info { color: #7fe6f5; background: #0f3a42; }
+
+  /* Botones */
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 14px; border-radius: var(--radius-sm); border: 1px solid var(--brand);
+    background: var(--brand); color: #fff; font-weight: 600; text-decoration: none; white-space: nowrap;
+  }
+  .cta:hover { background: var(--brand-hover); }
+  .cta:active { background: var(--brand-pressed); }
+  .cta.secondary { background: transparent; color: var(--text-brand); }
+  .cta:disabled { background: var(--bg-canvas); border-color: var(--border-subtle); color: var(--text-locked); cursor: not-allowed; }
+
+  .panel {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px;
+  }
+  .panel + .panel { margin-top: 16px; }
+
+  /* Aviso de bloqueo / vacío */
+  .notice { display: flex; gap: 12px; align-items: flex-start; }
+  .notice svg { flex: none; color: var(--text-tertiary); margin-top: 1px; }
+  .notice p { margin: 0 0 6px; }
+  .notice p:last-child { margin-bottom: 0; }
+  .empty { color: var(--text-secondary); margin: 0 0 12px; }
+
+  /* KPIs */
+  .kpis {
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin: 0;
+  }
+  .kpi { border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 14px; min-width: 0; }
+  .kpi dt { font-size: 12px; color: var(--text-tertiary); font-weight: 500; }
+  .kpi dd { margin: 4px 0 0; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .kpi dd.nodata { font-size: 14px; font-weight: 500; color: var(--text-tertiary); }
+  .kpi .kpi-sub { display: block; font-size: 12px; font-weight: 400; color: var(--text-tertiary); margin-top: 2px; }
+
+  /* Listado de reportes */
+  .rep-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .rep-card {
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center;
+    padding: 14px 16px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+  }
+  .rep-icon {
+    width: 36px; height: 36px; border-radius: var(--radius-sm); display: grid; place-items: center;
+    background: var(--bg-brand-soft); color: var(--text-brand);
+  }
+  .rep-top { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .rep-meta { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .rep-progress { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 12px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+  .bar { flex: 1; max-width: 320px; height: 6px; background: var(--border-subtle); border-radius: 999px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--brand); }
+  .rep-action { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .lock-note { font-size: 12px; }
+
+  /* Reporte bloqueado: texto #6c6e73 (Figma, Fase 3 - Reportes) */
+  .rep-card.locked { background: var(--bg-canvas); }
+  .rep-card.locked, .rep-card.locked .rep-meta, .rep-card.locked .rep-progress, .rep-card.locked .badge { color: var(--text-locked); }
+  .rep-card.locked .rep-icon { background: transparent; border: 1px solid var(--border-subtle); color: var(--text-locked); }
+  .rep-card.locked .bar > i { background: var(--text-locked); }
+
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    .topbar { padding: 0 16px; }
+    .content { padding: 20px 16px; }
+    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    h1 { font-size: 22px; }
+  }
+  @media (max-width: 560px) {
+    .facts { grid-template-columns: 1fr; }
+    .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .rep-card { grid-template-columns: auto minmax(0, 1fr); }
+    .rep-action { grid-column: 1 / -1; align-items: stretch; }
+    .cta { width: 100%; }
+    .bar { max-width: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-brand">OBP · Clientes</div>
+      <div class="spacer"></div>
+      <button class="theme-toggle" id="themeBtn" aria-label="Cambiar tema">Tema</button>
+      <span class="user-name"></span>
+      <a class="logout" id="resetDatos" href="#" hidden>Restablecer datos</a>
+      <a class="logout" href="login.html">Cerrar sesión</a>
+    </header>
+
+    <section class="content">
+      <nav class="crumbs" aria-label="Ruta">
+        <a href="mis-campanas.html">Mis campañas</a>
+        <span aria-hidden="true">›</span>
+        <a href="detalle-campana.html" id="crumbCamp">Detalle de campaña</a>
+        <span aria-hidden="true">›</span>
+        <span aria-current="page">Reportes</span>
+      </nav>
+      <h1>Reportes</h1>
+      <div id="vista"></div>
+    </section>
+  </main>
+</div>
+
+<script src="datos.js"></script>
+<script src="estado.js"></script>
+<script>
+  // Reportes de una campaña (?id=CODIGO). El estado (fase y periodos publicados) sale de OBP_ESTADO;
+  // nombre, fechas y datos de los reportes salen de OBP_DATA y OBP_REPORTES (datos.js).
+  obpPintarComun();
+  const $id = (x) => document.getElementById(x);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+  const codigo = new URLSearchParams(location.search).get("id");
+  const SIN_DATO = "Sin dato";
+  const CON_REPORTES = ["Instalada", "En reporte"];
+  const badgeClass = {
+    "Propuesta lista": "b-action", "En selección": "b-action", "Cotización lista": "b-action",
+    "Selección confirmada": "b-brand", "Aceptada": "b-brand",
+    "En instalación": "b-info", "Instalada": "b-ok", "En reporte": "b-ok"
+  };
+  const nf = new Intl.NumberFormat("es-MX");
+  const nf1 = new Intl.NumberFormat("es-MX", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const esNum = (n) => typeof n === "number" && isFinite(n);
+  const fechaDMA = (iso) => {
+    const p = String(iso || "").split("-");
+    return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : SIN_DATO;
+  };
+  const capital = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  const etiqueta = (r) => r.tipo === "inicial" ? "Inicial" : r.tipo === "final" ? "Final" : capital(r.periodo);
+  const ICON_DOC = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 13h8M8 17h5"/></svg>';
+  const ICON_LOCK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+
+  function kpi(label, valor, sub) {
+    if (valor === null) return `<div class="kpi"><dt>${esc(label)}</dt><dd class="nodata">${SIN_DATO}</dd></div>`;
+    return `<div class="kpi"><dt>${esc(label)}</dt><dd>${esc(valor)}${sub ? `<span class="kpi-sub">${esc(sub)}</span>` : ""}</dd></div>`;
+  }
+
+  function tarjeta(r, publicado, i) {
+    const nombre = r.nombre || `Reporte de ${r.periodo}`;
+    const periodo = r.inicio && r.fin ? `${r.inicio} – ${r.fin}` : SIN_DATO;
+    const avance = publicado && esNum(r.avance) ? Math.max(0, Math.min(100, Math.round(r.avance))) : 0;
+    const avanceTxt = publicado && !esNum(r.avance) ? SIN_DATO : `${avance}%`;
+    const barra = `
+            <div class="rep-progress">
+              <div class="bar" role="progressbar" aria-valuenow="${avance}" aria-valuemin="0" aria-valuemax="100" aria-label="Avance del ${esc(nombre)}"><i style="width:${avance}%"></i></div>
+              <span>${avanceTxt}</span>
+            </div>`;
+    if (publicado) {
+      const href = `reporte.html?id=${encodeURIComponent(codigo)}&periodo=${encodeURIComponent(r.periodo)}`;
+      return `
+        <li class="rep-card">
+          <div class="rep-icon">${ICON_DOC}</div>
+          <div>
+            <div class="rep-top"><h3>${esc(nombre)}</h3><span class="badge b-brand">${esc(etiqueta(r))}</span></div>
+            <div class="rep-meta">Periodo: ${esc(periodo)} · Publicado el ${esc(fechaDMA(r.publicacion))}</div>${barra}
+          </div>
+          <div class="rep-action"><a class="cta" href="${href}" aria-label="Ver ${esc(nombre)}">Ver reporte</a></div>
+        </li>`;
+    }
+    const nota = `rep-nota-${i}`;
+    return `
+        <li class="rep-card locked">
+          <div class="rep-icon">${ICON_LOCK}</div>
+          <div>
+            <div class="rep-top"><h3>${esc(nombre)}</h3><span class="badge b-neutral">${esc(etiqueta(r))}</span></div>
+            <div class="rep-meta">Periodo: ${esc(periodo)} · Se publica el ${esc(fechaDMA(r.publicacion))}</div>${barra}
+          </div>
+          <div class="rep-action">
+            <button class="cta" type="button" disabled aria-describedby="${nota}">Ver reporte</button>
+            <span class="lock-note" id="${nota}">Disponible cuando se publique</span>
+          </div>
+        </li>`;
+  }
+
+  function render() {
+    const vista = $id("vista");
+    const base = codigo ? obpCampana(codigo) : null;
+    if (!base) {
+      vista.innerHTML = `
+        <div class="panel">
+          <h2>Campaña no encontrada</h2>
+          <p>No existe una campaña con ese código.</p>
+          <p><a href="mis-campanas.html">Volver a Mis campañas</a></p>
+        </div>`;
+      return;
+    }
+    const est = (window.OBP_ESTADO && OBP_ESTADO.obtenerCampana(base.codigo)) || {};
+    const camp = Object.assign({}, base, est);
+    const detalle = `detalle-campana.html?id=${encodeURIComponent(camp.codigo)}`;
+    document.title = `Reportes · ${camp.nombre} · Portal OBP`;
+    $id("crumbCamp").textContent = camp.nombre;
+    $id("crumbCamp").href = detalle;
+
+    const head = `
+      <div class="camp-head">
+        <div class="camp-title">
+          <h2 class="camp-name">${esc(camp.nombre)}</h2>
+          <span class="badge ${badgeClass[camp.estado] || "b-neutral"}"><span class="sr">Estado: </span>${esc(camp.estado)}</span>
+        </div>
+        <div class="folio">${esc(camp.codigo)}</div>
+        <dl class="facts">
+          <div><dt class="fact-label">Periodo</dt><dd class="fact-value">${esc(camp.inicio)} – ${esc(camp.fin)}</dd></div>
+        </dl>
+      </div>`;
+
+    // Bloqueo general: sin reportes fuera de Instalada / En reporte.
+    if (CON_REPORTES.indexOf(camp.estado) === -1) {
+      vista.innerHTML = head + `
+      <div class="panel notice">
+        ${ICON_LOCK}
+        <div>
+          <p><strong>Los reportes se publican cuando la campaña está instalada.</strong></p>
+          <p><a href="${detalle}">Ir al detalle de la campaña</a></p>
+        </div>
+      </div>`;
+      return;
+    }
+
+    const datos = (window.OBP_REPORTES || {})[camp.codigo] || {};
+    const k = datos.kpis || {};
+    const publicados = Array.isArray(camp.reportes) ? camp.reportes : [];
+    // Reportes de datos.js; si el estado publica un periodo sin datos, se lista con "Sin dato".
+    const lista = (datos.reportes || []).slice();
+    publicados.forEach((p) => { if (!lista.some((r) => r.periodo === p)) lista.push({ periodo: p }); });
+    const orden = (r) => r.inicio ? obpFechaOrden(r.inicio) : "9999";
+    lista.sort((a, b) => orden(a) < orden(b) ? -1 : orden(a) > orden(b) ? 1 : 0);
+    const nPublicados = lista.filter((r) => publicados.indexOf(r.periodo) !== -1).length;
+
+    const frecuencia = esNum(k.impactos) && esNum(k.alcance) && k.alcance > 0 ? nf1.format(k.impactos / k.alcance) : null;
+    const t = k.testigos;
+    const testigos = t && esNum(t.entregados) && esNum(t.total) && t.total > 0
+      ? [`${Math.round((t.entregados / t.total) * 100)}%`, `${t.entregados} de ${t.total} medios`] : null;
+    const resumen = `
+      <section class="panel" aria-labelledby="tResumen">
+        <h2 id="tResumen">Resumen</h2>
+        <dl class="kpis">
+          ${kpi("Impactos totales", esNum(k.impactos) ? nf.format(k.impactos) : null)}
+          ${kpi("Alcance total", esNum(k.alcance) ? nf.format(k.alcance) : null)}
+          ${kpi("Frecuencia promedio", frecuencia)}
+          ${kpi("Medios en ejecución", esNum(camp.instalados) && camp.instalados > 0 ? nf.format(camp.instalados) : null)}
+          ${testigos ? kpi("Avance de testigos", testigos[0], testigos[1]) : kpi("Avance de testigos", null)}
+        </dl>
+      </section>`;
+
+    const listado = `
+      <section class="panel" aria-labelledby="tListado">
+        <h2 id="tListado">Listado cronológico de reportes</h2>
+        ${nPublicados === 0 ? '<p class="empty">Tus reportes aparecerán aquí cuando se publiquen.</p>' : ""}
+        ${lista.length ? `<ul class="rep-list">${lista.map((r, i) => tarjeta(r, publicados.indexOf(r.periodo) !== -1, i)).join("")}
+        </ul>` : ""}
+      </section>`;
+
+    vista.innerHTML = head + resumen + listado;
+  }
+
+  render();
+  window.addEventListener("obp-estado-cambio", render);
+
+  // Maqueta: los enlaces "#" no navegan.
+  document.addEventListener("click", (e) => {
+    if (e.target.closest('a[href="#"]')) e.preventDefault();
+  });
+
+  // Tema (solo para revisar la maqueta; por defecto sigue el sistema)
+  $id("themeBtn").addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.hasAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+</script>
+</body>
+</html>

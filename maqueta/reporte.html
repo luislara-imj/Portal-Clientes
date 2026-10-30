@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reporte · Portal OBP</title>
+<style>
+  :root {
+    --bg-canvas: #f7f8fa;
+    --bg-surface: #ffffff;
+    --bg-brand-soft: #f1f4fe;
+    --brand: #3658c1;
+    --brand-hover: #3251b1;
+    --brand-pressed: #2d49a1;
+    --text-brand: #2d49a1;
+    --text-link: #3251b1;
+    --text-primary: #313336;
+    --text-secondary: #585a5e;
+    --text-tertiary: #6c6e73;
+    --border-default: #c6c8cc;
+    --border-subtle: #d4d6d9;
+    --photo-ph: #e3e5e8;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 2px rgba(20, 24, 40, .06), 0 1px 3px rgba(20, 24, 40, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg-canvas: #111318;
+      --bg-surface: #1a1d24;
+      --bg-brand-soft: #222a47;
+      --brand: #5b7be0;
+      --brand-hover: #6d8ae6;
+      --brand-pressed: #4a68d0;
+      --text-brand: #a9bcf5;
+      --text-link: #a9bcf5;
+      --text-primary: #eceef2;
+      --text-secondary: #b9bcc4;
+      --text-tertiary: #9a9da6;
+      --border-default: #4a4e58;
+      --border-subtle: #2e323b;
+      --photo-ph: #2a2e36;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg-canvas: #111318;
+    --bg-surface: #1a1d24;
+    --bg-brand-soft: #222a47;
+    --brand: #5b7be0;
+    --brand-hover: #6d8ae6;
+    --brand-pressed: #4a68d0;
+    --text-brand: #a9bcf5;
+    --text-link: #a9bcf5;
+    --text-primary: #eceef2;
+    --text-secondary: #b9bcc4;
+    --text-tertiary: #9a9da6;
+    --border-default: #4a4e58;
+    --border-subtle: #2e323b;
+    --photo-ph: #2a2e36;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: "SF Pro Text", "SF Pro Display", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  body.lb-open { overflow: hidden; }
+  button { font: inherit; cursor: pointer; }
+  a { color: var(--text-link); }
+
+  .app { min-height: 100vh; }
+
+  /* Encabezado superior */
+  .main { min-width: 0; }
+  .topbar {
+    height: 56px; width: 100%;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 28px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-subtle);
+  }
+  .topbar-brand { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+  .topbar .spacer { flex: 1; }
+  .user-name { font-weight: 600; }
+  .logout { color: var(--text-link); font-size: 13px; text-decoration: none; }
+  .logout:hover { text-decoration: underline; }
+  @media (max-width: 599px) {
+    .topbar .user-name { display: none; }
+  }
+  .theme-toggle {
+    background: none; border: 1px solid var(--border-default); color: var(--text-secondary);
+    border-radius: var(--radius-sm); padding: 6px 10px;
+  }
+
+  .content { padding: 28px; max-width: 1200px; }
+
+  /* Breadcrumbs */
+  .crumbs { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px; flex-wrap: wrap; }
+  .crumbs a { text-decoration: none; color: var(--text-link); overflow-wrap: anywhere; }
+  .crumbs a:hover { text-decoration: underline; }
+  .crumbs span[aria-current="page"] { color: var(--text-secondary); }
+
+  h1 { font-size: 26px; margin: 0; font-weight: 700; }
+  h2 { font-size: 18px; margin: 0 0 12px; font-weight: 600; }
+
+  /* Botones */
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 14px; border-radius: var(--radius-sm); border: 1px solid var(--brand);
+    background: var(--brand); color: #fff; font-weight: 600; text-decoration: none; white-space: nowrap;
+  }
+  .cta:hover { background: var(--brand-hover); }
+  .cta:active { background: var(--brand-pressed); }
+  .cta.secondary { background: transparent; color: var(--text-brand); }
+  .cta.secondary:hover { background: var(--bg-brand-soft); }
+
+  .panel {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px;
+  }
+
+  /* Barra del visor */
+  .viewer-head { display: flex; gap: 12px 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 16px; }
+  .viewer-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .download-note { font-size: 13px; color: var(--text-secondary); }
+  .download-note:empty { display: none; }
+
+  /* Documento del reporte */
+  .report { display: grid; gap: 16px; }
+  .cover {
+    background: var(--brand); color: #fff; border-radius: var(--radius);
+    padding: 48px 32px; box-shadow: var(--shadow);
+  }
+  .cover-eyebrow { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .12em; opacity: .9; }
+  .cover h2 { font-size: 32px; margin: 8px 0 16px; font-weight: 700; color: #fff; overflow-wrap: anywhere; }
+  .pill {
+    display: inline-block; padding: 6px 14px; border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, .6); font-weight: 600; font-size: 13px;
+  }
+
+  .toc ol { margin: 0; padding: 0; list-style: none; display: flex; gap: 10px; flex-wrap: wrap; }
+  .toc a {
+    display: inline-flex; gap: 8px; align-items: baseline; padding: 8px 12px;
+    border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); text-decoration: none; font-weight: 600;
+  }
+  .toc a:hover { background: var(--bg-brand-soft); }
+  .toc .count { font-weight: 400; font-size: 12px; color: var(--text-tertiary); }
+
+  .rsec { scroll-margin-top: 16px; }
+  .rsec-head { display: flex; gap: 8px; align-items: baseline; margin-bottom: 12px; }
+  .rsec-head h2 { margin: 0; }
+  .rsec-head .count { font-size: 13px; color: var(--text-tertiary); }
+  .fichas { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+  .ficha {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+  }
+  .ficha-body { display: grid; grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr); gap: 20px; padding: 18px 20px; }
+  .ficha-dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 16px; margin: 0; font-size: 13px; align-content: start; }
+  .ficha-dl dt { color: var(--text-tertiary); }
+  .ficha-dl dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+  .ficha-dl .coords { display: block; font-weight: 400; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+  .ficha-foot {
+    background: var(--bg-brand-soft); color: var(--text-brand);
+    padding: 8px 20px; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere;
+  }
+
+  .fotos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .fotos figure { margin: 0; }
+  .foto-btn {
+    display: block; width: 100%; padding: 0; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+    background: var(--photo-ph); color: var(--text-tertiary); overflow: hidden;
+  }
+  .foto-btn:hover { border-color: var(--brand); }
+  .foto-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .ph { display: grid; place-items: center; aspect-ratio: 4 / 3; padding: 8px; font-size: 13px; font-weight: 500; text-align: center; }
+  .fotos figcaption { font-size: 12px; color: var(--text-secondary); margin-top: 6px; }
+
+  .thanks { text-align: center; padding: 40px 20px; }
+  .thanks h2 { font-size: 28px; margin-bottom: 8px; }
+  .thanks p { margin: 0; color: var(--text-secondary); }
+
+  /* Visor de fotos */
+  .lb {
+    position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px;
+    background: rgba(10, 12, 18, .82);
+  }
+  .lb[hidden] { display: none; }
+  .lb-box {
+    width: 100%; max-width: 900px; background: var(--bg-surface); color: var(--text-primary);
+    border-radius: var(--radius); padding: 16px; display: grid; gap: 12px;
+  }
+  .lb-head { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; }
+  .lb-head h2 { margin: 0; font-size: 16px; }
+  .lb-count { margin: 2px 0 0; font-size: 12px; color: var(--text-tertiary); overflow-wrap: anywhere; }
+  .lb-close {
+    flex: none; width: 36px; height: 36px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default); background: transparent; color: var(--text-primary); font-size: 20px; line-height: 1;
+  }
+  .lb-img {
+    display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 3; max-height: 62vh;
+    background: var(--photo-ph); color: var(--text-tertiary); border-radius: var(--radius-sm); font-size: 20px; font-weight: 500;
+  }
+  .lb-nav { display: flex; justify-content: space-between; gap: 10px; }
+
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    .topbar { padding: 0 16px; }
+    .content { padding: 20px 16px; }
+    h1 { font-size: 22px; }
+    .ficha-body { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .cover { padding: 32px 20px; }
+    .cover h2 { font-size: 24px; }
+    .ficha-body { padding: 16px; }
+    .ficha-foot { padding: 8px 16px; }
+    .fotos { gap: 8px; }
+    .ph { font-size: 11px; padding: 4px; }
+    .viewer-actions { width: 100%; }
+    .lb-nav .cta { flex: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-brand">OBP · Clientes</div>
+      <div class="spacer"></div>
+      <button class="theme-toggle" id="themeBtn" aria-label="Cambiar tema">Tema</button>
+      <span class="user-name"></span>
+      <a class="logout" id="resetDatos" href="#" hidden>Restablecer datos</a>
+      <a class="logout" href="login.html">Cerrar sesión</a>
+    </header>
+
+    <section class="content">
+      <nav class="crumbs" aria-label="Ruta">
+        <a href="mis-campanas.html">Mis campañas</a>
+        <span aria-hidden="true">›</span>
+        <a href="detalle-campana.html" id="crumbCamp">Detalle de campaña</a>
+        <span aria-hidden="true">›</span>
+        <a href="reportes.html" id="crumbReportes">Reportes</a>
+        <span aria-hidden="true">›</span>
+        <span aria-current="page" id="crumbActual">Reporte</span>
+      </nav>
+      <div id="vista"></div>
+    </section>
+  </main>
+</div>
+
+<!-- Visor de fotos (fuera de .app para poder volver inerte el resto de la página) -->
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+  <div class="lb-box">
+    <div class="lb-head">
+      <div>
+        <h2 id="lbTitle"></h2>
+        <p class="lb-count" id="lbCount" aria-live="polite"></p>
+      </div>
+      <button class="lb-close" id="lbClose" type="button" aria-label="Cerrar visor de fotos">×</button>
+    </div>
+    <div class="lb-img" id="lbImg" aria-hidden="true"></div>
+    <div class="lb-nav">
+      <button class="cta secondary" id="lbPrev" type="button">‹ Anterior</button>
+      <button class="cta secondary" id="lbNext" type="button">Siguiente ›</button>
+    </div>
+  </div>
+</div>
+
+<script src="datos.js"></script>
+<script src="estado.js"></script>
+<script>
+  // Visor de un reporte (?id=CODIGO&periodo=NOMBRE). Solo se muestra si el periodo está publicado
+  // (OBP_ESTADO) y la campaña está en Instalada / En reporte. Fichas y fotos: OBP_REPORTES (datos.js).
+  obpPintarComun();
+  const $id = (x) => document.getElementById(x);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+  const params = new URLSearchParams(location.search);
+  const codigo = params.get("id");
+  const periodo = params.get("periodo");
+  const SIN_DATO = "Sin dato";
+  const CON_REPORTES = ["Instalada", "En reporte"];
+  const VISTAS = ["Vista corta", "Vista media", "Vista larga"];
+  const LADOS = ["Posterior", "Lateral derecho", "Lateral izquierdo"];
+
+  // Campos de cada ficha: [etiqueta, campo]. "ubicacion+coords" junta dirección y coordenadas.
+  const TIPOS = [
+    { campo: "sitios", titulo: "Sitios fijos", ancla: "sitios", pies: VISTAS, filas: [
+      ["Plaza", "plaza"], ["Campaña", "campana"], ["Tipo de anuncio", "tipoAnuncio"], ["Tipo de medio", "tipoMedio"],
+      ["Medidas", "medidas"], ["Iluminación", "iluminacion"], ["Ubicación", "ubicacion+coords"]] },
+    { campo: "camiones", titulo: "Camiones", ancla: "camiones", pies: LADOS, filas: [
+      ["Plaza", "plaza"], ["Campaña", "campana"], ["Tipo de exhibición", "tipoExhibicion"], ["Versión", "version"],
+      ["Recorrido", "recorrido"], ["Ruta", "ruta"], ["Placas", "placas"], ["Eco", "eco"]] },
+    { campo: "indoor", titulo: "Indoor", ancla: "indoor", pies: VISTAS, filas: [
+      ["Tipo de medio", "tipoMedio"], ["Indoor padre", "indoorPadre"], ["Ubicación", "ubicacion"],
+      ["Nivel y zona", "nivelZona"], ["Medidas", "medidas"], ["Coordenadas", "coordenadas"]] }
+  ];
+
+  // Galerías del reporte en pantalla: [{ clave, pies: [..] }]; las fotos guardan su índice en data-g / data-f.
+  let galerias = [];
+
+  const valor = (v) => v === undefined || v === null || v === "" ? SIN_DATO : v;
+
+  function ficha(m, tipo, n, total) {
+    const filas = tipo.filas.map(([etiqueta, campo]) => {
+      let dd = esc(valor(m[campo]));
+      if (campo === "ubicacion+coords") {
+        dd = `${esc(valor(m.ubicacion))}<span class="coords">${esc(valor(m.coordenadas))}</span>`;
+      }
+      return `<dt>${esc(etiqueta)}</dt><dd>${dd}</dd>`;
+    }).join("");
+    const pies = (Array.isArray(m.fotos) && m.fotos.length ? m.fotos.map((f) => f.pie) : tipo.pies).map((p) => valor(p));
+    const clave = valor(m.clave);
+    const g = galerias.push({ clave, pies }) - 1;
+    const fotos = pies.map((pie, f) => `
+                <li><figure>
+                  <button class="foto-btn" type="button" data-g="${g}" data-f="${f}" aria-label="Ampliar foto ${esc(pie)} de ${esc(clave)}">
+                    <span class="ph" aria-hidden="true">${esc(pie)}</span>
+                  </button>
+                  <figcaption>${esc(pie)}</figcaption>
+                </figure></li>`).join("");
+    return `
+          <li class="ficha">
+            <h3 class="sr">${esc(tipo.titulo)}: medio ${n} de ${total}, clave ${esc(clave)}</h3>
+            <div class="ficha-body">
+              <dl class="ficha-dl">${filas}</dl>
+              <ul class="fotos" aria-label="Fotos de ${esc(clave)}">${fotos}
+              </ul>
+            </div>
+            <div class="ficha-foot">Clave IMJ: ${esc(clave)}</div>
+          </li>`;
+  }
+
+  function aviso(titulo, texto, href, enlace) {
+    return `
+      <h1>${esc(titulo)}</h1>
+      <div class="panel" style="margin-top:16px">
+        <p>${esc(texto)}</p>
+        <p><a href="${href}">${esc(enlace)}</a></p>
+      </div>`;
+  }
+
+  function render() {
+    cerrarVisor(false);
+    galerias = [];
+    const vista = $id("vista");
+    const base = codigo ? obpCampana(codigo) : null;
+    if (!base) {
+      vista.innerHTML = aviso("Campaña no encontrada", "No existe una campaña con ese código.", "mis-campanas.html", "Volver a Mis campañas");
+      return;
+    }
+    const est = (window.OBP_ESTADO && OBP_ESTADO.obtenerCampana(base.codigo)) || {};
+    const camp = Object.assign({}, base, est);
+    const q = `?id=${encodeURIComponent(camp.codigo)}`;
+    $id("crumbCamp").textContent = camp.nombre;
+    $id("crumbCamp").href = `detalle-campana.html${q}`;
+    $id("crumbReportes").href = `reportes.html${q}`;
+
+    const datos = (window.OBP_REPORTES || {})[camp.codigo] || {};
+    const rep = (datos.reportes || []).find((r) => r.periodo === periodo) || null;
+    const nombre = (rep && rep.nombre) || (periodo ? `Reporte de ${periodo}` : "Reporte");
+    $id("crumbActual").textContent = nombre;
+    document.title = `${nombre} · ${camp.nombre} · Portal OBP`;
+
+    const publicado = CON_REPORTES.indexOf(camp.estado) !== -1 && Array.isArray(camp.reportes) && camp.reportes.indexOf(periodo) !== -1;
+    if (!publicado) {
+      vista.innerHTML = aviso(nombre, "Este reporte aún no está publicado.", `reportes.html${q}`, "Volver a los reportes");
+      return;
+    }
+    if (!rep) {
+      vista.innerHTML = aviso(nombre, `${SIN_DATO}: no hay información cargada para este reporte.`, `reportes.html${q}`, "Volver a los reportes");
+      return;
+    }
+
+    const rango = rep.inicio && rep.fin ? `${rep.inicio} – ${rep.fin}` : SIN_DATO;
+    const indice = TIPOS.map((t) => {
+      const n = (rep[t.campo] || []).length;
+      return `<li><a href="#${t.ancla}">${esc(t.titulo)} <span class="count">${n} ${n === 1 ? "medio" : "medios"}</span></a></li>`;
+    }).join("");
+    const secciones = TIPOS.map((t) => {
+      const lista = rep[t.campo] || [];
+      return `
+      <section class="rsec" id="${t.ancla}" aria-labelledby="t-${t.ancla}">
+        <div class="rsec-head"><h2 id="t-${t.ancla}">${esc(t.titulo)}</h2><span class="count">${lista.length} ${lista.length === 1 ? "medio" : "medios"}</span></div>
+        ${lista.length
+          ? `<ul class="fichas">${lista.map((m, i) => ficha(m, t, i + 1, lista.length)).join("")}
+        </ul>`
+          : `<div class="panel"><p>${SIN_DATO}</p></div>`}
+      </section>`;
+    }).join("");
+
+    vista.innerHTML = `
+      <div class="viewer-head">
+        <h1>${esc(nombre)}</h1>
+        <div class="viewer-actions">
+          <span class="download-note" id="descargaAviso" role="status"></span>
+          <button class="cta secondary" type="button" id="btnDescargar">Descargar</button>
+        </div>
+      </div>
+      <article class="report" aria-label="${esc(nombre)}">
+        <section class="cover" aria-labelledby="tPortada">
+          <p class="cover-eyebrow">REPORTE DE CAMPAÑA</p>
+          <h2 id="tPortada">${esc(camp.nombre)}</h2>
+          <span class="pill"><span class="sr">Periodo: </span>${esc(rango)}</span>
+        </section>
+        <nav class="panel toc" aria-labelledby="tIndice">
+          <h2 id="tIndice">Índice</h2>
+          <ol>${indice}</ol>
+        </nav>
+        ${secciones}
+        <section class="panel thanks" aria-labelledby="tGracias">
+          <h2 id="tGracias">Gracias</h2>
+          <p>IMJ Media · imjmedia.com.mx</p>
+        </section>
+      </article>`;
+  }
+
+  // --- Visor de fotos: flechas para navegar, Escape o X para cerrar, foco atrapado ---
+  const lb = $id("lb");
+  let lbG = 0, lbF = 0, lbOrigen = null;
+
+  function pintarVisor() {
+    const gal = galerias[lbG];
+    const pie = gal.pies[lbF];
+    $id("lbTitle").textContent = pie;
+    $id("lbImg").textContent = pie;
+    $id("lbCount").textContent = `Foto ${lbF + 1} de ${gal.pies.length} · ${gal.clave}`;
+  }
+  function abrirVisor(g, f, origen) {
+    lbG = g; lbF = f; lbOrigen = origen || null;
+    pintarVisor();
+    lb.hidden = false;
+    $id("app").inert = true;
+    document.body.classList.add("lb-open");
+    $id("lbClose").focus();
+  }
+  function cerrarVisor(devolverFoco) {
+    if (lb.hidden) return;
+    lb.hidden = true;
+    $id("app").inert = false;
+    document.body.classList.remove("lb-open");
+    if (devolverFoco !== false && lbOrigen && document.contains(lbOrigen)) lbOrigen.focus();
+    lbOrigen = null;
+  }
+  function mover(delta) {
+    const n = galerias[lbG].pies.length;
+    lbF = (lbF + delta + n) % n;
+    pintarVisor();
+  }
+
+  $id("lbClose").addEventListener("click", () => cerrarVisor());
+  $id("lbPrev").addEventListener("click", () => mover(-1));
+  $id("lbNext").addEventListener("click", () => mover(1));
+  document.addEventListener("keydown", (e) => {
+    if (lb.hidden) return;
+    if (e.key === "Escape") { e.preventDefault(); cerrarVisor(); return; }
+    if (e.key === "ArrowLeft") { e.preventDefault(); mover(-1); return; }
+    if (e.key === "ArrowRight") { e.preventDefault(); mover(1); return; }
+    if (e.key === "Tab") {
+      const focos = [$id("lbClose"), $id("lbPrev"), $id("lbNext")];
+      const i = focos.indexOf(document.activeElement);
+      e.preventDefault();
+      const sig = i === -1 ? 0 : (i + (e.shiftKey ? -1 : 1) + focos.length) % focos.length;
+      focos[sig].focus();
+    }
+  });
+
+  $id("vista").addEventListener("click", (e) => {
+    const foto = e.target.closest(".foto-btn");
+    if (foto) { abrirVisor(Number(foto.dataset.g), Number(foto.dataset.f), foto); return; }
+    if (e.target.closest("#btnDescargar")) {
+      $id("descargaAviso").textContent = "La descarga estará disponible en la versión final.";
+    }
+  });
+
+  render();
+  window.addEventListener("obp-estado-cambio", render);
+
+  // Maqueta: los enlaces "#" no navegan.
+  document.addEventListener("click", (e) => {
+    if (e.target.closest('a[href="#"]')) e.preventDefault();
+  });
+
+  // Tema (solo para revisar la maqueta; por defecto sigue el sistema)
+  $id("themeBtn").addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.hasAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+</script>
+</body>
+</html>

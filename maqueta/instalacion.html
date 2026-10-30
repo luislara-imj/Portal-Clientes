@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instalación · Portal OBP</title>
+<style>
+  :root {
+    --bg-canvas: #f7f8fa;
+    --bg-surface: #ffffff;
+    --bg-brand-soft: #f1f4fe;
+    --brand: #3658c1;
+    --brand-hover: #3251b1;
+    --brand-pressed: #2d49a1;
+    --text-brand: #2d49a1;
+    --text-link: #3251b1;
+    --text-primary: #313336;
+    --text-secondary: #585a5e;
+    --text-tertiary: #6c6e73;
+    --border-default: #c6c8cc;
+    --border-subtle: #d4d6d9;
+    --success: #22c55e;
+    --warning: #eab308;
+    --danger: #ef4444;
+    --danger-text: #b83434;
+    --info: #06b6d4;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 2px rgba(20, 24, 40, .06), 0 1px 3px rgba(20, 24, 40, .08);
+    /* Tarjetas de selección (Figma, fase 2) */
+    --card-bg: #ffffff;
+    --card-text: #313336;
+    --card-sel-bg: #2d49a1;
+    --card-act-border: #627dd0;
+    --card-act-text: #2d49a1;
+    /* Panel de línea de tiempo */
+    --tl-bg: #3658c1;
+    --tl-card: #2d49a1;
+    --tl-ring: #627dd0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg-canvas: #111318;
+      --bg-surface: #1a1d24;
+      --bg-brand-soft: #222a47;
+      --brand: #5b7be0;
+      --brand-hover: #6d8ae6;
+      --brand-pressed: #4a68d0;
+      --text-brand: #a9bcf5;
+      --text-link: #a9bcf5;
+      --text-primary: #eceef2;
+      --text-secondary: #b9bcc4;
+      --text-tertiary: #9a9da6;
+      --border-default: #4a4e58;
+      --border-subtle: #2e323b;
+      --danger-text: #f08a8a;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+      --card-bg: #1a1d24;
+      --card-text: #eceef2;
+      --card-act-text: #a9bcf5;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg-canvas: #111318;
+    --bg-surface: #1a1d24;
+    --bg-brand-soft: #222a47;
+    --brand: #5b7be0;
+    --brand-hover: #6d8ae6;
+    --brand-pressed: #4a68d0;
+    --text-brand: #a9bcf5;
+    --text-link: #a9bcf5;
+    --text-primary: #eceef2;
+    --text-secondary: #b9bcc4;
+    --text-tertiary: #9a9da6;
+    --border-default: #4a4e58;
+    --border-subtle: #2e323b;
+    --danger-text: #f08a8a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+    --card-bg: #1a1d24;
+    --card-text: #eceef2;
+    --card-act-text: #a9bcf5;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: "SF Pro Text", "SF Pro Display", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  button { font: inherit; cursor: pointer; }
+  a { color: var(--text-link); }
+
+  .app { min-height: 100vh; }
+
+  /* Encabezado superior */
+  .main { min-width: 0; }
+  .topbar {
+    height: 56px; width: 100%;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 28px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-subtle);
+  }
+  .topbar-brand { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+  .topbar .spacer { flex: 1; }
+  .user-name { font-weight: 600; }
+  .logout { color: var(--text-link); font-size: 13px; text-decoration: none; }
+  .logout:hover { text-decoration: underline; }
+  @media (max-width: 599px) {
+    .topbar .user-name { display: none; }
+  }
+  .theme-toggle {
+    background: none; border: 1px solid var(--border-default); color: var(--text-secondary);
+    border-radius: var(--radius-sm); padding: 6px 10px;
+  }
+
+  .content { padding: 28px; max-width: 1200px; }
+
+  /* Breadcrumbs */
+  .crumbs { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px; flex-wrap: wrap; }
+  .crumbs a { text-decoration: none; color: var(--text-link); }
+  .crumbs a:hover { text-decoration: underline; }
+  .crumbs span[aria-current="page"] { color: var(--text-secondary); }
+
+  h1 { font-size: 26px; margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+  h2 { font-size: 16px; margin: 0 0 10px; font-weight: 600; }
+
+  /* Encabezado de campaña */
+  .camp-head {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 18px 20px; margin-bottom: 16px;
+    display: flex; gap: 16px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap;
+  }
+  .camp-main { min-width: 0; flex: 1 1 320px; }
+  .camp-name-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .camp-name { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+  .owner { text-align: right; }
+  .fact-label { font-size: 12px; color: var(--text-tertiary); font-weight: 500; }
+  .fact-value { font-size: 14px; color: var(--text-primary); font-weight: 500; margin-top: 2px; }
+  .camp-progress { width: 100%; }
+  .counter { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-secondary); }
+  .counter strong { color: var(--text-primary); }
+  .bar { flex: 1; height: 6px; background: var(--border-subtle); border-radius: 999px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--brand); }
+
+  /* Badges de estado de campaña */
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    border: 1px solid transparent; white-space: nowrap;
+  }
+  .badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .b-action { color: #8a5a00; background: #fdf6d6; }
+  .b-brand { color: var(--text-brand); background: var(--bg-brand-soft); }
+  .b-ok { color: #15733f; background: #e4f8ec; }
+  .b-neutral { color: var(--text-secondary); background: var(--bg-canvas); border-color: var(--border-subtle); }
+  .b-info { color: #08707f; background: #dff7fb; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .b-action { color: #f5d46b; background: #3a3112; }
+    :root:not([data-theme="light"]) .b-ok { color: #7fe3a5; background: #15331f; }
+    :root:not([data-theme="light"]) .b-info { color: #7fe6f5; background: #0f3a42; }
+  }
+  :root[data-theme="dark"] .b-action { color: #f5d46b; background: #3a3112; }
+  :root[data-theme="dark"] .b-ok { color: #7fe3a5; background: #15331f; }
+  :root[data-theme="dark"] .b-info { color: #7fe6f5; background: #0f3a42; }
+
+  /* Estatus por medio (tokens Órbita) */
+  .st {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap;
+  }
+  .st-por { background: #f0f1f2; color: #585a5e; }
+  .st-en { background: #e3e9fc; color: #2d49a1; }
+  .st-ok, .st-inc { background: #ffffff; color: #313336; }
+  .st-ok::before, .st-inc::before { content: ""; width: 8px; height: 8px; border-radius: 50%; }
+  .st-ok::before { background: #22c55e; }
+  .st-inc::before { background: #eab308; }
+
+  /* Avisos */
+  .panel {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px;
+  }
+  .panel p { margin: 0 0 8px; }
+  .panel p:last-child { margin-bottom: 0; }
+
+  /* Tres columnas */
+  .cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .col {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; min-width: 0;
+  }
+  .col h2 { margin: 0 0 12px; }
+  .col-toggle {
+    width: 100%; display: flex; align-items: center; gap: 8px; text-align: left;
+    background: none; border: 0; padding: 0; color: var(--text-primary); font-weight: 600; font-size: 16px;
+  }
+  .col-toggle:disabled { cursor: default; }
+  .col-sel { font-weight: 500; font-size: 13px; color: var(--text-tertiary); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chev { margin-left: auto; display: none; transition: transform .15s; }
+  .col-body { display: grid; gap: 10px; }
+  .group-title { font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: .04em; margin: 6px 0 -2px; }
+  .group-title:first-child { margin-top: 0; }
+  .empty { color: var(--text-tertiary); font-size: 13px; padding: 12px; border-radius: var(--radius-sm); background: var(--bg-canvas); }
+
+  .card {
+    width: 100%; text-align: left; display: grid; gap: 8px;
+    padding: 12px 14px; border-radius: var(--radius-sm);
+    background: var(--card-bg); color: var(--card-text);
+    border: 1px solid var(--border-subtle);
+  }
+  .card:focus-visible, .col-toggle:focus-visible, .tl-close:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .card-title { font-weight: 600; }
+  .card-sub { font-size: 12px; color: var(--text-tertiary); }
+  .card.is-act { border-color: var(--card-act-border); color: var(--card-act-text); }
+  .card.is-rest { background: var(--card-bg); color: var(--card-text); }
+  .card.is-sel { background: var(--card-sel-bg); border-color: var(--card-sel-bg); color: #ffffff; }
+  .card.is-sel .card-sub, .card.is-sel .dir { color: rgba(255, 255, 255, .85); }
+  .pct-row { display: flex; align-items: center; gap: 10px; }
+  .mini-bar { flex: 1; height: 6px; border-radius: 999px; background: var(--border-subtle); overflow: hidden; }
+  .mini-bar > i { display: block; height: 100%; background: var(--brand); }
+  .card.is-sel .mini-bar { background: rgba(255, 255, 255, .3); }
+  .card.is-sel .mini-bar > i { background: #ffffff; }
+  .pct { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .clave { font-weight: 700; overflow-wrap: anywhere; }
+  .dir { font-size: 13px; color: var(--text-tertiary); }
+  .site-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+
+  .placeholder {
+    padding: 12px 14px; border-radius: var(--radius-sm);
+    border: 1px dashed var(--border-default); color: var(--text-tertiary); font-weight: 600;
+  }
+
+  /* Panel lateral: Línea de tiempo */
+  .tl-panel {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 20;
+    width: 472px; max-width: 100%; overflow-y: auto;
+    background: var(--tl-bg); color: #ffffff;
+    border-radius: 16px 0 0 16px;
+    padding: 24px; box-shadow: -8px 0 24px rgba(20, 24, 40, .18);
+  }
+  .tl-panel[hidden] { display: none; }
+  .tl-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .tl-kicker { font-size: 13px; font-weight: 600; opacity: .85; margin: 0 0 4px; }
+  .tl-panel h2 { font-size: 20px; margin: 0; overflow-wrap: anywhere; }
+  .tl-close {
+    flex: none; width: 36px; height: 36px; display: grid; place-items: center;
+    background: transparent; border: 1px solid rgba(255, 255, 255, .5); border-radius: 50%; color: #ffffff;
+  }
+  .tl-close:focus-visible { outline-color: #ffffff; }
+  .tl-meta { margin: 12px 0 0; display: grid; gap: 4px; font-size: 14px; }
+  .tl-dates span + span { margin-left: 16px; }
+  .tl-steps { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 16px; }
+  .tl-step { position: relative; display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; align-items: center; }
+  .tl-step:not(:last-child)::before {
+    content: ""; position: absolute; left: 18px; top: 50%; height: calc(100% + 16px);
+    border-left: 2px dotted rgba(255, 255, 255, .7); z-index: 0;
+  }
+  .tl-num {
+    position: relative; z-index: 1;
+    width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+    background: #ffffff; border: 3px solid var(--tl-ring); color: var(--tl-bg); font-weight: 700;
+  }
+  .tl-card {
+    background: var(--tl-card); border-radius: 12px; padding: 16px;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center;
+  }
+  .tl-name { font-weight: 600; }
+  .tl-dur { font-size: 13px; opacity: .85; grid-column: 1; }
+  .tl-mark { grid-column: 2; grid-row: 1 / span 2; display: grid; place-items: center; width: 22px; height: 22px; }
+  .tl-mark .now { width: 10px; height: 10px; border-radius: 50%; background: #ffffff; }
+  .tl-alert { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin-top: 6px; }
+  .tl-alert::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #eab308; flex: none; }
+
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Mobile: columnas apiladas, cada una es un acordeón */
+  @media (max-width: 900px) {
+    .topbar { padding: 0 16px; }
+    .content { padding: 20px 16px; }
+    h1 { font-size: 22px; }
+    .cols { grid-template-columns: 1fr; gap: 12px; }
+    .col h2 { margin: 0; }
+    .col-body { margin-top: 12px; }
+    .col.collapsed .col-body { display: none; }
+    .chev { display: inline-block; }
+    .col:not(.collapsed) .chev { transform: rotate(180deg); }
+    .owner { text-align: left; }
+  }
+  @media (max-width: 560px) {
+    .tl-panel { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-brand">OBP · Clientes</div>
+      <div class="spacer"></div>
+      <button class="theme-toggle" id="themeBtn" aria-label="Cambiar tema">Tema</button>
+      <span class="user-name"></span>
+      <a class="logout" id="resetDatos" href="#" hidden>Restablecer datos</a>
+      <a class="logout" href="login.html">Cerrar sesión</a>
+    </header>
+
+    <section class="content">
+      <nav class="crumbs" aria-label="Ruta">
+        <a href="mis-campanas.html">Mis campañas</a>
+        <span aria-hidden="true" id="crumbSep">›</span>
+        <a href="detalle-campana.html" id="crumbCamp">Detalle de campaña</a>
+        <span aria-hidden="true">›</span>
+        <span aria-current="page">Instalación</span>
+      </nav>
+      <div id="vista"></div>
+    </section>
+  </main>
+</div>
+
+<aside class="tl-panel" id="tlPanel" role="dialog" aria-labelledby="tlTitulo" hidden></aside>
+
+<script src="datos.js"></script>
+<script src="estado.js"></script>
+<script>
+  // Fase 2 · Ejecución (instalación). Campaña según ?id.
+  // Sitios: OBP_ESTADO.obtenerCampana(id).sitios si existe; si no, OBP_INSTALACION[id] (datos.js).
+  obpPintarComun();
+
+  const TIPOS = ["Sitios fijos", "Camiones", "Indoor"];
+  const PLAZAS = ["CDMX", "ZMG", "MTY"];
+  const FASE_ACTIVA = ["Aceptada", "En instalación", "Instalada", "En reporte"];
+  const PASOS = [
+    "Recepción de arte de cliente",
+    "Envío y autorización de prueba de color",
+    "Envío y autorización de dummies",
+    "Proceso de impresión",
+    "Envío por paquetería",
+    "Instalación",
+    "Reporte inicial"
+  ];
+  const BADGE_CAMPANA = {
+    "Propuesta lista": "b-action", "En selección": "b-action", "Cotización lista": "b-action",
+    "Selección confirmada": "b-brand", "Aceptada": "b-brand",
+    "En instalación": "b-info", "Instalada": "b-ok", "En reporte": "b-ok"
+  };
+  const ESTATUS_CLASE = { "Por instalar": "st-por", "En instalación": "st-en", "Instalado": "st-ok", "Con incidencia": "st-inc" };
+
+  const id = new URLSearchParams(location.search).get("id");
+  const sel = { tipo: null, plaza: null, sitio: null };
+  const abiertas = { tipo: true, plaza: false, sitio: false }; // acordeones en móvil
+
+  const $ = (s) => document.getElementById(s);
+  function esc(v) {
+    return String(v == null ? "" : v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+  function pct(a, b) { return b ? Math.round((a / b) * 100) : 0; }
+  function fecha(v) {
+    if (!v) return "Por definir";
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+    return m ? `${m[3]}/${m[2]}/${m[1]}` : String(v);
+  }
+  function instalados(lista) { return lista.filter((s) => s.estatus === "Instalado").length; }
+
+  // Pasos completados y paso actual (1..7) según el estatus del sitio.
+  function avanceSitio(estatus) {
+    if (estatus === "Instalado") return { hechos: 7, actual: 0 };
+    if (estatus === "En instalación" || estatus === "Con incidencia") return { hechos: 5, actual: 6 };
+    return { hechos: 0, actual: 1 }; // Por instalar
+  }
+
+  function leerCampana() {
+    const datos = id ? obpCampana(id) : null;
+    const est = id && window.OBP_ESTADO ? OBP_ESTADO.obtenerCampana(id) : null;
+    if (!datos && !est) return null;
+    let sitios = null;
+    if (est && Array.isArray(est.sitios)) sitios = est.sitios;
+    else if (window.OBP_INSTALACION && Array.isArray(OBP_INSTALACION[id])) sitios = OBP_INSTALACION[id];
+    return {
+      codigo: id,
+      nombre: (datos && datos.nombre) || (est && est.nombre) || id,
+      estado: (est && est.estado) || (datos && datos.estado) || "",
+      responsable: (datos && datos.responsable) || (est && est.responsable) || "Por asignar",
+      sitios: sitios || []
+    };
+  }
+
+  function barra(valor, clase) {
+    return `<span class="${clase}" aria-hidden="true"><i style="width:${valor}%"></i></span>`;
+  }
+
+  function encabezado(c, conAvance) {
+    let avance = "";
+    if (conAvance) {
+      const total = c.sitios.length, ok = instalados(c.sitios), p = pct(ok, total);
+      avance = `<div class="camp-progress"><div class="counter">
+          <span><strong>${ok} de ${total}</strong> medios instalados</span>
+          ${barra(p, "bar")}<span>${p}%</span></div></div>`;
+    }
+    return `<div class="camp-head">
+        <div class="camp-main">
+          <h1>${esc(c.codigo)}</h1>
+          <div class="camp-name-row">
+            <span class="camp-name">${esc(c.nombre)}</span>
+            <span class="badge ${BADGE_CAMPANA[c.estado] || "b-neutral"}">${esc(c.estado)}</span>
+          </div>
+        </div>
+        <div class="owner">
+          <div class="fact-label">Responsable comercial</div>
+          <div class="fact-value">${esc(c.responsable)}</div>
+        </div>
+        ${avance}
+      </div>`;
+  }
+
+  // Clase de una tarjeta según la columna: elegida, activa sin elegir o resto.
+  function claseCard(valorElegido, valor) {
+    if (valorElegido == null) return "is-act";
+    return valorElegido === valor ? "is-sel" : "is-rest";
+  }
+
+  function cardAvance(col, valor, lista, elegido) {
+    const total = lista.length, ok = instalados(lista), p = pct(ok, total);
+    const cls = claseCard(elegido, valor);
+    const cuerpo = total
+      ? `<span class="pct-row">${barra(p, "mini-bar")}<span class="pct">${p}%</span></span>
+         <span class="card-sub">${ok} de ${total} instalados</span>`
+      : `<span class="card-sub">Sin medios en este tipo</span>`;
+    return `<button type="button" class="card ${cls}" data-col="${col}" data-valor="${esc(valor)}" aria-pressed="${cls === "is-sel"}">
+        <span class="card-title">${esc(valor)}</span>${cuerpo}</button>`;
+  }
+
+  function cardSitio(s) {
+    const cls = claseCard(sel.sitio, s.id);
+    const p = Math.round((avanceSitio(s.estatus).hechos / PASOS.length) * 100);
+    return `<button type="button" class="card site ${cls}" data-col="sitio" data-valor="${esc(s.id)}" aria-pressed="${cls === "is-sel"}">
+        <span class="clave">${esc(s.clave)}</span>
+        <span class="dir">${esc(s.direccion)}</span>
+        <span class="site-foot"><span class="st ${ESTATUS_CLASE[s.estatus] || "st-por"}">${esc(s.estatus || "Por instalar")}</span>
+        <span class="pct">${p}%</span></span></button>`;
+  }
+
+  function columna(clave, titulo, resumen, cuerpo) {
+    const abierta = abiertas[clave];
+    return `<section class="col${abierta ? "" : " collapsed"}" data-colsec="${clave}">
+        <h2><button type="button" class="col-toggle" data-toggle="${clave}" aria-expanded="${abierta}" aria-controls="col-${clave}">
+          <span>${titulo}</span>${resumen ? `<span class="col-sel">· ${esc(resumen)}</span>` : ""}
+          <svg class="chev" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button></h2>
+        <div class="col-body" id="col-${clave}">${cuerpo}</div>
+      </section>`;
+  }
+
+  function columnas(sitios) {
+    // Tipo de medio
+    const colTipo = TIPOS.map((t) => cardAvance("tipo", t, sitios.filter((s) => s.tipo === t), sel.tipo)).join("");
+
+    // Plaza
+    let colPlaza;
+    const delTipo = sel.tipo ? sitios.filter((s) => s.tipo === sel.tipo) : [];
+    if (!sel.tipo) colPlaza = `<div class="placeholder">+ Plaza</div>`;
+    else if (!delTipo.length) colPlaza = `<p class="empty">Sin medios en este tipo</p>`;
+    else {
+      const plazas = PLAZAS.filter((p) => delTipo.some((s) => s.plaza === p))
+        .concat(delTipo.map((s) => s.plaza).filter((p, i, a) => p && PLAZAS.indexOf(p) < 0 && a.indexOf(p) === i));
+      colPlaza = plazas.map((p) => cardAvance("plaza", p, delTipo.filter((s) => s.plaza === p), sel.plaza)).join("");
+    }
+
+    // Sitio, agrupado por subtipo
+    let colSitio;
+    if (!sel.plaza) colSitio = `<div class="placeholder">+ Sitio</div>`;
+    else {
+      const lista = delTipo.filter((s) => s.plaza === sel.plaza);
+      const grupos = [];
+      lista.forEach((s) => {
+        const g = s.subtipo || "Otros";
+        let grupo = grupos.find((x) => x.nombre === g);
+        if (!grupo) { grupo = { nombre: g, sitios: [] }; grupos.push(grupo); }
+        grupo.sitios.push(s);
+      });
+      colSitio = grupos.map((g) => `<div class="group-title">${esc(g.nombre)}</div>${g.sitios.map(cardSitio).join("")}`).join("");
+    }
+
+    const sitioSel = sel.sitio ? sitios.find((s) => s.id === sel.sitio) : null;
+    return `<div class="cols">
+        ${columna("tipo", "Tipo de medio", sel.tipo, colTipo)}
+        ${columna("plaza", "Plaza", sel.plaza, colPlaza)}
+        ${columna("sitio", "Sitio", sitioSel && sitioSel.clave, colSitio)}
+      </div>`;
+  }
+
+  function render() {
+    const vista = $("vista");
+    const c = leerCampana();
+    if (!c) {
+      $("crumbCamp").hidden = true;
+      $("crumbSep").hidden = true;
+      cerrarPanel(false);
+      vista.innerHTML = `<h1>Campaña no encontrada</h1>
+        <div class="panel" style="margin-top:16px"><p>No encontramos la campaña indicada.</p>
+        <p><a href="mis-campanas.html">Volver a Mis campañas</a></p></div>`;
+      return;
+    }
+    const detalle = `detalle-campana.html?id=${encodeURIComponent(c.codigo)}`;
+    $("crumbCamp").textContent = c.nombre;
+    $("crumbCamp").href = detalle;
+
+    if (FASE_ACTIVA.indexOf(c.estado) < 0) {
+      cerrarPanel(false);
+      vista.innerHTML = encabezado(c, false) + `<div class="panel">
+          <p>Esta fase se activa cuando se acepta la cotización.</p>
+          <p><a href="${detalle}">Ver detalle de campaña</a></p></div>`;
+      return;
+    }
+    if (!c.sitios.length) {
+      cerrarPanel(false);
+      vista.innerHTML = encabezado(c, false) + `<div class="panel"><p>Sin medios aún.</p></div>`;
+      return;
+    }
+
+    // Descarta selecciones que ya no existen (p. ej. tras un cambio de estado).
+    if (sel.sitio && !c.sitios.some((s) => s.id === sel.sitio)) sel.sitio = null;
+    vista.innerHTML = encabezado(c, true) + columnas(c.sitios);
+    sincronizarToggles();
+    if (sel.sitio) pintarPanel(c.sitios.find((s) => s.id === sel.sitio));
+    else cerrarPanel(false);
+  }
+
+  // Línea de tiempo del sitio elegido.
+  function pintarPanel(s) {
+    const av = avanceSitio(s.estatus);
+    const pasos = PASOS.map((nombre, i) => {
+      const n = i + 1;
+      const hecho = n <= av.hechos, actual = n === av.actual;
+      let marca = "";
+      if (hecho) marca = `<span class="tl-mark"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sr">Completado</span></span>`;
+      else if (actual) marca = `<span class="tl-mark"><span class="now" aria-hidden="true"></span><span class="sr">Paso actual</span></span>`;
+      const alerta = actual && s.estatus === "Con incidencia" ? `<div class="tl-alert" role="note">Hay una incidencia en este medio</div>` : "";
+      return `<li class="tl-step"${actual ? ' aria-current="step"' : ""}>
+          <span class="tl-num" aria-hidden="true">${n}</span>
+          <div class="tl-card"><span class="tl-name"><span class="sr">Paso ${n}: </span>${esc(nombre)}</span>
+            <span class="tl-dur">1 día hábil</span>${marca}${alerta}</div></li>`;
+    }).join("");
+    const dias = s.diasEstimados != null ? `${esc(s.diasEstimados)} días` : "Por definir";
+    const panel = $("tlPanel");
+    panel.innerHTML = `<div class="tl-top">
+        <div><p class="tl-kicker">Línea de tiempo</p><h2 id="tlTitulo">${esc(s.clave)}</h2></div>
+        <button type="button" class="tl-close" id="tlClose" aria-label="Cerrar línea de tiempo">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button></div>
+      <div class="tl-meta">
+        <div class="tl-dates"><span>Inicio: ${fecha(s.inicio)}</span><span>Fin: ${fecha(s.fin)}</span></div>
+        <div>Tiempo estimado: ${dias}</div>
+      </div>
+      <ol class="tl-steps">${pasos}</ol>`;
+    const estabaOculto = panel.hidden;
+    panel.hidden = false;
+    $("tlClose").addEventListener("click", () => cerrarPanel(true));
+    if (estabaOculto) $("tlClose").focus();
+  }
+
+  function cerrarPanel(deseleccionar) {
+    const panel = $("tlPanel");
+    if (panel.hidden) return;
+    panel.hidden = true;
+    panel.innerHTML = "";
+    if (deseleccionar && sel.sitio) {
+      const previo = sel.sitio;
+      sel.sitio = null;
+      render();
+      const card = document.querySelector(`.card[data-col="sitio"][data-valor="${CSS.escape(previo)}"]`);
+      if (card) card.focus();
+    }
+  }
+
+  // Acordeones: solo en móvil; en escritorio el encabezado no se pliega.
+  const movil = matchMedia("(max-width: 900px)");
+  function sincronizarToggles() {
+    document.querySelectorAll(".col-toggle").forEach((b) => { b.disabled = !movil.matches; });
+  }
+  if (movil.addEventListener) movil.addEventListener("change", sincronizarToggles);
+
+  document.addEventListener("click", (e) => {
+    if (e.target.closest('a[href="#"]')) { e.preventDefault(); return; }
+    const t = e.target.closest("[data-toggle]");
+    if (t) {
+      const k = t.dataset.toggle;
+      abiertas[k] = !abiertas[k];
+      render();
+      document.querySelector(`[data-toggle="${k}"]`).focus();
+      return;
+    }
+    const card = e.target.closest(".card[data-col]");
+    if (!card) return;
+    const col = card.dataset.col, valor = card.dataset.valor;
+    if (col === "tipo") {
+      if (sel.tipo !== valor) { sel.tipo = valor; sel.plaza = null; sel.sitio = null; }
+      abiertas.plaza = true;
+    } else if (col === "plaza") {
+      if (sel.plaza !== valor) { sel.plaza = valor; sel.sitio = null; }
+      abiertas.sitio = true;
+    } else if (col === "sitio") {
+      sel.sitio = valor;
+      $("tlPanel").hidden = true; // fuerza el foco al botón de cerrar al abrir
+    }
+    render();
+    if (col !== "sitio") {
+      const misma = document.querySelector(`.card[data-col="${col}"][data-valor="${CSS.escape(valor)}"]`);
+      if (misma) misma.focus();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !$("tlPanel").hidden) cerrarPanel(true);
+  });
+
+  window.addEventListener("obp-estado-cambio", render);
+
+  // Tema (solo para revisar la maqueta; por defecto sigue el sistema)
+  $("themeBtn").addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.hasAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+
+  render();
+</script>
+</body>
+</html>

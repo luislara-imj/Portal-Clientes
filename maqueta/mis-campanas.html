@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mis campañas · Portal OBP</title>
+<style>
+  :root {
+    --bg-canvas: #f7f8fa;
+    --bg-surface: #ffffff;
+    --bg-brand-soft: #f1f4fe;
+    --brand: #3658c1;
+    --brand-hover: #3251b1;
+    --brand-pressed: #2d49a1;
+    --text-brand: #2d49a1;
+    --text-link: #3251b1;
+    --text-primary: #313336;
+    --text-secondary: #585a5e;
+    --text-tertiary: #6c6e73;
+    --border-default: #c6c8cc;
+    --border-subtle: #d4d6d9;
+    --success: #22c55e;
+    --warning: #eab308;
+    --danger: #ef4444;
+    --danger-text: #b83434;
+    --info: #06b6d4;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 2px rgba(20, 24, 40, .06), 0 1px 3px rgba(20, 24, 40, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg-canvas: #111318;
+      --bg-surface: #1a1d24;
+      --bg-brand-soft: #222a47;
+      --brand: #5b7be0;
+      --brand-hover: #6d8ae6;
+      --brand-pressed: #4a68d0;
+      --text-brand: #a9bcf5;
+      --text-link: #a9bcf5;
+      --text-primary: #eceef2;
+      --text-secondary: #b9bcc4;
+      --text-tertiary: #9a9da6;
+      --border-default: #4a4e58;
+      --border-subtle: #2e323b;
+      --danger-text: #f08a8a;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg-canvas: #111318;
+    --bg-surface: #1a1d24;
+    --bg-brand-soft: #222a47;
+    --brand: #5b7be0;
+    --brand-hover: #6d8ae6;
+    --brand-pressed: #4a68d0;
+    --text-brand: #a9bcf5;
+    --text-link: #a9bcf5;
+    --text-primary: #eceef2;
+    --text-secondary: #b9bcc4;
+    --text-tertiary: #9a9da6;
+    --border-default: #4a4e58;
+    --border-subtle: #2e323b;
+    --danger-text: #f08a8a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: "SF Pro Text", "SF Pro Display", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  button { font: inherit; cursor: pointer; }
+
+  .app { min-height: 100vh; }
+
+  /* Encabezado superior */
+  .main { min-width: 0; }
+  .topbar {
+    height: 56px; width: 100%;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 28px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-subtle);
+  }
+  .topbar-brand { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+  .topbar .spacer { flex: 1; }
+  .user-name { font-weight: 600; }
+  .logout { color: var(--text-link); font-size: 13px; text-decoration: none; }
+  .logout:hover { text-decoration: underline; }
+  @media (max-width: 599px) {
+    .topbar .user-name { display: none; }
+  }
+  .theme-toggle {
+    background: none; border: 1px solid var(--border-default); color: var(--text-secondary);
+    border-radius: var(--radius-sm); padding: 6px 10px;
+  }
+
+  .content { padding: 28px; width: 100%; }
+  .page-head { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  h1 { font-size: 26px; margin: 0; font-weight: 700; }
+  .page-sub { color: var(--text-secondary); margin: 4px 0 0; }
+
+  /* Toolbar */
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .search {
+    flex: 1; min-width: 200px; padding: 9px 12px;
+    border: 1px solid var(--border-default); border-radius: var(--radius-sm);
+    background: var(--bg-surface); color: var(--text-primary);
+  }
+  .segmented {
+    display: inline-flex; border: 1px solid var(--border-default);
+    border-radius: 999px; overflow: hidden; background: var(--bg-surface);
+  }
+  .segmented button {
+    background: transparent; border: 0; color: var(--text-secondary);
+    padding: 7px 14px; font-size: 13px; font-weight: 500; white-space: nowrap;
+  }
+  .segmented button + button { border-left: 1px solid var(--border-subtle); }
+  .segmented button[aria-pressed="true"] { background: var(--brand); color: #fff; }
+  select.sort {
+    padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-default);
+    background: var(--bg-surface); color: var(--text-primary);
+  }
+
+  /* Campaign cards */
+  .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 0; overflow: hidden;
+    display: flex; flex-direction: column;
+    text-decoration: none; color: inherit;
+    position: relative; min-width: 0;
+  }
+  .card:hover { border-color: var(--brand); }
+  .card-link { color: inherit; text-decoration: none; }
+  .card-link::after { content: ""; position: absolute; inset: 0; }
+  .card-art { width: 100%; aspect-ratio: 5 / 2; display: block; margin: 0; }
+  .card-art svg { width: 100%; height: 100%; display: block; }
+  .card-art.pending {
+    background: var(--bg-canvas); border-bottom: 1px dashed var(--border-default);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; padding: 12px; text-align: center;
+  }
+  .art-empty-title { font-weight: 600; color: var(--text-secondary); }
+  .art-empty-text { font-size: 12px; color: var(--text-tertiary); }
+  .card-body { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 16px 18px; min-width: 0; flex: 1; }
+  .card-name {
+    font-size: 16px; margin: 0; font-weight: 600; max-width: 100%;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .card-body .progress { align-self: stretch; }
+  .card-foot { margin-top: auto; align-self: stretch; }
+  .card-foot .cta { width: 100%; position: relative; z-index: 1; }
+  .folio { font-size: 12px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
+  .progress { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--text-tertiary); }
+  .progress-label { display: flex; justify-content: space-between; gap: 8px; }
+  .bar { flex: 1; height: 6px; background: var(--border-subtle); border-radius: 999px; overflow: hidden; }
+  .progress .bar { flex: none; }
+  .bar > i { display: block; height: 100%; background: var(--brand); }
+
+  /* Badges */
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    border: 1px solid transparent; white-space: nowrap;
+  }
+  .badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .b-action { color: #8a5a00; background: #fdf6d6; }
+  .b-brand { color: var(--text-brand); background: var(--bg-brand-soft); }
+  .b-ok { color: #15733f; background: #e4f8ec; }
+  .b-neutral { color: var(--text-secondary); background: var(--bg-canvas); border-color: var(--border-subtle); }
+  .b-info { color: #08707f; background: #dff7fb; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .b-action { color: #f5d46b; background: #3a3112; }
+    :root:not([data-theme="light"]) .b-ok { color: #7fe3a5; background: #15331f; }
+    :root:not([data-theme="light"]) .b-info { color: #7fe6f5; background: #0f3a42; }
+  }
+  :root[data-theme="dark"] .b-action { color: #f5d46b; background: #3a3112; }
+  :root[data-theme="dark"] .b-ok { color: #7fe3a5; background: #15331f; }
+  :root[data-theme="dark"] .b-info { color: #7fe6f5; background: #0f3a42; }
+
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 14px; border-radius: var(--radius-sm); border: 1px solid var(--brand);
+    background: var(--brand); color: #fff; font-weight: 600; text-decoration: none; white-space: nowrap;
+  }
+  .cta:hover { background: var(--brand-hover); }
+  .cta:active { background: var(--brand-pressed); }
+  .cta.secondary { background: transparent; color: var(--text-brand); }
+
+  .empty {
+    text-align: center; padding: 40px 16px; color: var(--text-secondary);
+    background: var(--bg-surface); border: 1px dashed var(--border-default); border-radius: var(--radius);
+  }
+
+  .section-title { font-size: 13px; color: var(--text-tertiary); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; margin: 22px 0 10px; }
+
+  /* Toggle de vista */
+  .view-toggle {
+    display: inline-flex; border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm); overflow: hidden;
+  }
+  .view-toggle button {
+    background: var(--bg-surface); border: 0; color: var(--text-secondary);
+    padding: 8px 12px; font-weight: 500;
+  }
+  .view-toggle button + button { border-left: 1px solid var(--border-default); }
+  .view-toggle button[aria-pressed="true"] { background: var(--brand); color: #fff; }
+
+  /* Vista de tabla */
+  .table-scroll {
+    overflow-x: auto; position: relative; background: var(--bg-surface);
+    border: 1px solid var(--border-subtle); border-radius: var(--radius); box-shadow: var(--shadow);
+  }
+  .tbl { width: 100%; border-collapse: collapse; min-width: 1080px; }
+  .tbl th {
+    text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary);
+    text-transform: uppercase; letter-spacing: .4px; white-space: nowrap;
+    padding: 12px 14px; background: var(--bg-canvas); border-bottom: 1px solid var(--border-subtle);
+  }
+  .tbl td { padding: 14px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; }
+  .tbl tbody tr:last-child td { border-bottom: 0; }
+  .tbl td:first-child, .tbl th:first-child { min-width: 220px; }
+  .tbl tbody tr { cursor: pointer; }
+  .tbl tbody tr:hover { background: var(--bg-brand-soft); }
+  .tname { font-weight: 600; color: var(--text-primary); text-decoration: none; }
+  .tname:hover { color: var(--text-brand); }
+  .nowrap { white-space: nowrap; color: var(--text-secondary); }
+  .muted { color: var(--text-tertiary); }
+  .pct { font-size: 12px; color: var(--text-tertiary); margin-left: 8px; }
+  .bar.sm { display: inline-block; vertical-align: middle; width: 120px; max-width: none; flex: none; }
+  .act { text-align: right; }
+  .cta.sm { padding: 6px 10px; font-size: 13px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    .topbar { padding: 0 16px; }
+    .content { padding: 20px 16px; }
+    h1 { font-size: 22px; }
+  }
+  @media (max-width: 560px) {
+    .list { grid-template-columns: 1fr; }
+    .search { min-width: 0; width: 100%; }
+    .segmented { width: 100%; overflow-x: auto; }
+    .segmented button { flex: 1 0 auto; padding: 7px 6px; font-size: 12px; }
+    select.sort { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-brand">OBP · Clientes</div>
+      <div class="spacer"></div>
+      <button class="theme-toggle" id="themeBtn" aria-label="Cambiar tema">Tema</button>
+      <span class="user-name"></span>
+      <a class="logout" id="resetDatos" href="#" hidden>Restablecer datos</a>
+      <a class="logout" href="login.html">Cerrar sesión</a>
+    </header>
+
+    <section class="content">
+      <div class="page-head">
+        <div>
+          <h1>Mis campañas</h1>
+          <p class="page-sub">Revisa el avance de cada campaña y responde lo que esté pendiente.</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input class="search" id="search" type="search" placeholder="Buscar por nombre o código" aria-label="Buscar campaña">
+        <div class="segmented" id="statusFilter" role="group" aria-label="Estatus">
+          <button data-status="all" aria-pressed="true">Todas</button>
+          <button data-status="propuestas" aria-pressed="false">Propuestas</button>
+          <button data-status="cotizacion" aria-pressed="false">Cotización</button>
+          <button data-status="reportes" aria-pressed="false">Reportes</button>
+        </div>
+        <div class="view-toggle" role="group" aria-label="Vista">
+          <button data-view="cards" aria-pressed="true">Tarjetas</button>
+          <button data-view="table" aria-pressed="false">Tabla</button>
+        </div>
+        <select class="sort" id="sort" aria-label="Ordenar">
+          <option value="vigencia">Próximo vencimiento</option>
+          <option value="nombre">Nombre</option>
+          <option value="reciente">Más reciente</option>
+        </select>
+      </div>
+
+      <div class="list" id="list"></div>
+      <div class="empty" id="empty" hidden>No hay campañas con esos filtros.</div>
+    </section>
+  </main>
+</div>
+
+<script src="datos.js"></script>
+<script src="estado.js"></script>
+<script>
+  // Datos: window.OBP_DATA (datos.js). Estados según docs/ARQUITECTURA_INFORMACION.md, sección 2.
+  // Salud de la tarjeta según el estado de la campaña.
+  const healthByStatus = {
+    "Propuesta lista": "action",
+    "En selección": "warn",
+    "Selección confirmada": "ok",
+    "Cotización lista": "action",
+    "Aceptada": "ok",
+    "En instalación": "ok",
+    "Instalada": "ok",
+    "En reporte": "idle"
+  };
+  // Estado guardado (estado.js) sobre los datos de ejemplo: estado siempre; respondidos, medios, instalados
+  // y reportes solo si la campaña ya los trae (la semilla rellena con 0 / [] los que no aplican).
+  // Si el estado cambió a "Cotización lista", el siguiente paso es la cotización (mismo texto que en datos.js).
+  const ctaPorEstado = { "Cotización lista": "Ver cotización" };
+  function conEstado(c) {
+    const e = window.OBP_ESTADO && OBP_ESTADO.obtenerCampana(c.codigo);
+    if (!e) return c;
+    const r = Object.assign({}, c, { estado: e.estado || c.estado });
+    ["respondidos", "medios", "instalados", "reportes"].forEach((k) => {
+      if (c[k] !== undefined && e[k] !== undefined) r[k] = e[k];
+    });
+    if (r.estado !== c.estado && ctaPorEstado[r.estado]) r.nextCta = ctaPorEstado[r.estado];
+    return r;
+  }
+  // Arte de la campaña: viene de c.arte en datos.js.
+  const campaigns = OBP_DATA.campanas.map(conEstado).map((c) => ({
+    id: c.codigo, folio: c.codigo, name: c.nombre,
+    vigencia: `${c.inicio} – ${c.fin}`, vigenciaSort: obpFechaOrden(c.inicio),
+    status: c.estado, health: healthByStatus[c.estado] || "ok",
+    nextCta: c.nextCta, medios: c.medios, respondidos: c.respondidos,
+    progress: c.instalados !== undefined ? Math.round((c.instalados / c.medios) * 100) : null,
+    art: { status: c.arte.estado === "cargado" ? "uploaded" : "pending", format: c.arte.formato, tone: c.arte.tono }
+  }));
+
+  const badgeClass = {
+    "Propuesta lista": "b-action",
+    "En selección": "b-action",
+    "Cotización lista": "b-action",
+    "Selección confirmada": "b-brand",
+    "Aceptada": "b-brand",
+    "En instalación": "b-info",
+    "Instalada": "b-ok",
+    "En reporte": "b-ok"
+  };
+  // Step al que lleva el botón de cada campaña (según nextCta).
+  const ctaHref = {
+    "Revisar propuesta": "propuesta-medios.html",
+    "Continuar propuesta": "propuesta-medios.html",
+    "Ver cotización": "cotizacion.html",
+    "Ver instalación": "instalacion.html",
+    "Ver reportes": "reportes.html"
+  };
+  // Alpina (JRA-0021): su cotización vive en la app React (datos.js: COTIZACION_REACT_URL), en pestaña nueva.
+  const CTA_REACT = { "JRA-0021-ALPINA-ALPINA_LECHE-NOV-2026": "Ver cotización" };
+  const enReact = (c) => CTA_REACT[c.id] === c.nextCta && !!window.COTIZACION_REACT_URL;
+  const detailHref = (c) => `detalle-campana.html?id=${encodeURIComponent(c.id)}`;
+  const stepHref = (c) => {
+    const id = `id=${encodeURIComponent(c.id)}`;
+    if (enReact(c)) {
+      const base = window.COTIZACION_REACT_URL;
+      return `${base}${base.includes("?") ? "&" : "?"}${id}`;
+    }
+    return `${ctaHref[c.nextCta]}?${id}`;
+  };
+  // Atributos del enlace del botón: href y, si va a la app React, pestaña nueva.
+  const stepAttrs = (c) => `href="${stepHref(c)}"${enReact(c) ? ' target="_blank" rel="noopener"' : ""}`;
+
+  // Filtro de estatus: valor del segmented -> estatus incluidos (null = sin filtro).
+  const statusGroups = {
+    all: null,
+    propuestas: ["Propuesta lista", "En selección"],
+    cotizacion: ["Cotización lista"],
+    reportes: ["Instalada", "En reporte"]
+  };
+
+  const state = { status: "all", query: "", sort: "vigencia", view: "cards" };
+  const $ = (s) => document.querySelector(s);
+
+  // Avance de la tarjeta: respondidos si existen; si no, instalados según progress.
+  function cardProgress(c) {
+    if (c.respondidos !== undefined) {
+      return { pct: Math.round((c.respondidos / c.medios) * 100), label: `${c.respondidos} de ${c.medios} medios` };
+    }
+    if (c.progress !== null && c.progress !== undefined) {
+      const done = Math.round((c.progress / 100) * c.medios);
+      return { pct: c.progress, label: `${done} de ${c.medios} instalados` };
+    }
+    return null;
+  }
+
+  const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+
+  // Paletas del arte simulado (tone 0..3): [inicio, fin] del degradado.
+  const artTones = [
+    ["#3658c1", "#2d49a1"],
+    ["#0f766e", "#115e59"],
+    ["#b45309", "#92400e"],
+    ["#1f2937", "#111827"]
+  ];
+
+  // Parte el nombre en hasta 2 líneas de ~18 caracteres; si sobra, trunca con "…".
+  function artLines(name, max = 18) {
+    const lines = [];
+    let cur = "";
+    for (const word of name.split(/\s+/)) {
+      const next = cur ? `${cur} ${word}` : word;
+      if (next.length <= max) { cur = next; continue; }
+      if (cur) lines.push(cur);
+      cur = word;
+    }
+    if (cur) lines.push(cur);
+    const out = lines.slice(0, 2).map((l) => (l.length > max ? `${l.slice(0, max - 1)}…` : l));
+    if (lines.length > 2) out[1] = `${out[1].slice(0, max - 1).trimEnd()}…`;
+    return out;
+  }
+
+  // Arte de la tarjeta: SVG simulado si ya se subió; si no, estado vacío.
+  function artHtml(c) {
+    if (c.art.status !== "uploaded") {
+      return `
+            <div class="card-art pending">
+              <div class="art-empty-title">Arte pendiente</div>
+              <div class="art-empty-text">Se mostrará aquí cuando se suba el arte.</div>
+            </div>`;
+    }
+    const [from, to] = artTones[c.art.tone] || artTones[0];
+    const gid = `art-g-${c.id.replace(/[^A-Za-z0-9_-]/g, "")}`;
+    const lines = artLines(c.name);
+    const y0 = lines.length > 1 ? 50 : 66;
+    const title = lines.map((l, i) => `<tspan x="20" y="${y0 + i * 30}">${esc(l)}</tspan>`).join("");
+    // viewBox 5:2, igual que .card-art, para que el texto no se recorte.
+    return `
+            <div class="card-art">
+              <svg viewBox="0 0 320 128" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(`Arte de ${c.name}`)}">
+                <defs>
+                  <linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="${from}"/>
+                    <stop offset="1" stop-color="${to}"/>
+                  </linearGradient>
+                </defs>
+                <rect width="320" height="128" fill="url(#${gid})"/>
+                <circle cx="268" cy="30" r="90" fill="#ffffff" fill-opacity=".12"/>
+                <circle cx="268" cy="30" r="50" fill="#ffffff" fill-opacity=".08"/>
+                <text fill="#ffffff" font-size="26" font-weight="700" font-family="inherit">${title}</text>
+              </svg>
+            </div>`;
+  }
+
+  function tableHtml(list) {
+    const rows = list.map((c) => {
+      const answered = c.respondidos !== undefined
+        ? `${c.respondidos} de ${c.medios} respondidos`
+        : `${c.medios} medios`;
+      const progress = c.progress !== null
+        ? `<div class="bar sm" role="progressbar" aria-valuenow="${c.progress}" aria-valuemin="0" aria-valuemax="100" aria-label="Avance"><i style="width:${c.progress}%"></i></div><span class="pct">${c.progress}%</span>`
+        : `<span class="muted">—</span>`;
+      return `
+        <tr data-href="${detailHref(c)}">
+          <td><a class="tname" href="${detailHref(c)}">${c.name}</a><div class="folio">${c.folio}</div></td>
+          <td><span class="badge ${badgeClass[c.status] || "b-neutral"}">${c.status}</span></td>
+          <td class="nowrap">${c.vigencia}</td>
+          <td class="nowrap">${answered}</td>
+          <td>${progress}</td>
+          <td class="act"><a class="cta sm ${c.health === "action" ? "" : "secondary"}" ${stepAttrs(c)}>${c.nextCta}</a></td>
+        </tr>`;
+    }).join("");
+    return `
+      <div class="table-scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th scope="col">Campaña</th>
+              <th scope="col">Estatus</th>
+              <th scope="col">Vigencia</th>
+              <th scope="col">Medios</th>
+              <th scope="col">Avance</th>
+              <th scope="col"><span class="sr">Acción</span></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  }
+
+  function render() {
+    const q = state.query.trim().toLowerCase();
+    const allowed = statusGroups[state.status] || null;
+    let list = campaigns.filter((c) =>
+      (!allowed || allowed.includes(c.status)) &&
+      (!q || c.name.toLowerCase().includes(q) || c.folio.toLowerCase().includes(q))
+    );
+
+    list = list.slice().sort((a, b) => {
+      if (state.sort === "nombre") return a.name.localeCompare(b.name, "es");
+      if (state.sort === "reciente") return b.vigenciaSort.localeCompare(a.vigenciaSort);
+      return a.vigenciaSort.localeCompare(b.vigenciaSort);
+    });
+
+    $("#list").className = state.view === "table" ? "" : "list";
+    $("#list").innerHTML = state.view === "table" ? tableHtml(list) : list.map((c) => {
+      const p = cardProgress(c);
+      const progress = p ? `
+            <div class="progress">
+              <div class="progress-label"><span>${p.label}</span><span>${p.pct}%</span></div>
+              <div class="bar" role="progressbar" aria-valuenow="${p.pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Avance: ${p.label}"><i style="width:${p.pct}%"></i></div>
+            </div>` : "";
+      return `
+        <article class="card">
+          ${artHtml(c)}
+          <div class="card-body">
+            <span class="badge ${badgeClass[c.status] || "b-neutral"}">${c.status}</span>
+            <h2 class="card-name"><a class="card-link" href="${detailHref(c)}" aria-label="${c.name}, ${c.status}">${c.name}</a></h2>
+            ${progress}
+            <div class="card-foot">
+              <a class="cta ${c.health === "action" ? "" : "secondary"}" ${stepAttrs(c)}>${c.nextCta}</a>
+            </div>
+          </div>
+        </article>`;
+    }).join("");
+
+    $("#empty").hidden = list.length > 0;
+  }
+
+  document.querySelectorAll("#statusFilter button").forEach((btn) => btn.addEventListener("click", () => {
+    state.status = btn.dataset.status;
+    document.querySelectorAll("#statusFilter button").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    render();
+  }));
+  $("#search").addEventListener("input", (e) => { state.query = e.target.value; render(); });
+  $("#sort").addEventListener("change", (e) => { state.sort = e.target.value; render(); });
+  document.querySelectorAll(".view-toggle button").forEach((btn) => btn.addEventListener("click", () => {
+    state.view = btn.dataset.view;
+    document.querySelectorAll(".view-toggle button").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    render();
+  }));
+
+  // Fila de tabla clicable hacia el detalle (salvo clics en links o botones).
+  $("#list").addEventListener("click", (e) => {
+    if (e.target.closest("a, button")) return;
+    const row = e.target.closest("tr[data-href]");
+    if (row) location.href = row.dataset.href;
+  });
+
+  // Links de la maqueta: no navegan.
+  document.addEventListener("click", (e) => {
+    if (e.target.closest('a[href="#"]')) e.preventDefault();
+  });
+
+  // Tema (solo para revisar la maqueta; por defecto sigue el sistema)
+  $("#themeBtn").addEventListener("click", () => {
+    const root = document.documentElement;
+    const dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.hasAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+
+  obpPintarComun();
+  render();
+</script>
+</body>
+</html>

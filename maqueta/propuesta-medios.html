@@ -1,0 +1,1476 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propuesta de medios · Portal OBP</title>
+<style>
+  :root {
+    --bg-canvas: #f7f8fa;
+    --bg-surface: #ffffff;
+    --bg-brand-soft: #f1f4fe;
+    --bg-selected: #eef7f1;
+    --brand: #3658c1;
+    --brand-hover: #3251b1;
+    --brand-pressed: #2d49a1;
+    --text-brand: #2d49a1;
+    --text-link: #3251b1;
+    --text-primary: #313336;
+    --text-secondary: #585a5e;
+    --text-tertiary: #6c6e73;
+    --border-default: #c6c8cc;
+    --border-subtle: #d4d6d9;
+    --success: #22c55e;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 2px rgba(20, 24, 40, .06), 0 1px 3px rgba(20, 24, 40, .08);
+    /* Ilustraciones de medios (única excepción de color: solo en estas variables) */
+    --illus-bg: #e9ebee;
+    --illus-frame: #6c6e73;
+    --illus-screen: #34b1cf;
+    --illus-detail: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg-canvas: #111318;
+      --bg-surface: #1a1d24;
+      --bg-brand-soft: #222a47;
+      --bg-selected: #15331f;
+      --brand: #5b7be0;
+      --brand-hover: #6d8ae6;
+      --brand-pressed: #4a68d0;
+      --text-brand: #a9bcf5;
+      --text-link: #a9bcf5;
+      --text-primary: #eceef2;
+      --text-secondary: #b9bcc4;
+      --text-tertiary: #9a9da6;
+      --border-default: #4a4e58;
+      --border-subtle: #2e323b;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+      --illus-bg: #262a32;
+      --illus-frame: #9a9da6;
+      --illus-screen: #2f93ae;
+      --illus-detail: #eceef2;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg-canvas: #111318;
+    --bg-surface: #1a1d24;
+    --bg-brand-soft: #222a47;
+    --bg-selected: #15331f;
+    --brand: #5b7be0;
+    --brand-hover: #6d8ae6;
+    --brand-pressed: #4a68d0;
+    --text-brand: #a9bcf5;
+    --text-link: #a9bcf5;
+    --text-primary: #eceef2;
+    --text-secondary: #b9bcc4;
+    --text-tertiary: #9a9da6;
+    --border-default: #4a4e58;
+    --border-subtle: #2e323b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+    --illus-bg: #262a32;
+    --illus-frame: #9a9da6;
+    --illus-screen: #2f93ae;
+    --illus-detail: #eceef2;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: "SF Pro Text", "SF Pro Display", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  button { font: inherit; cursor: pointer; }
+  a { color: var(--text-link); }
+
+  .app { min-height: 100vh; }
+
+  /* Encabezado superior */
+  .main { min-width: 0; }
+  .topbar {
+    height: 56px; width: 100%;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 28px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-subtle);
+  }
+  .topbar-brand { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+  .topbar .spacer { flex: 1; }
+  .user-name { font-weight: 600; }
+  .logout { color: var(--text-link); font-size: 13px; text-decoration: none; }
+  .logout:hover { text-decoration: underline; }
+  @media (max-width: 599px) {
+    .topbar .user-name { display: none; }
+  }
+
+  .content { padding: 28px; width: 100%; }
+
+  .crumbs { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px; flex-wrap: wrap; }
+  .crumbs a { text-decoration: none; color: var(--text-link); }
+  .crumbs a:hover { text-decoration: underline; }
+  .crumbs span[aria-current="page"] { color: var(--text-secondary); }
+
+  h1 { font-size: 26px; margin: 0; font-weight: 700; }
+  h2 { font-size: 16px; margin: 0 0 10px; font-weight: 600; }
+
+  .card {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 18px 20px; margin-bottom: 16px;
+  }
+
+  /* Encabezado (a todo el ancho) */
+  .prop-head { min-width: 0; }
+  .title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .prop-code { font-size: 14px; color: var(--text-secondary); font-variant-numeric: tabular-nums; margin-top: 4px; overflow-wrap: anywhere; }
+  .facts { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin: 0; }
+  .fact-label { font-size: 12px; color: var(--text-tertiary); font-weight: 500; }
+  .fact-value { font-size: 14px; color: var(--text-primary); font-weight: 500; margin: 2px 0 0; overflow-wrap: anywhere; }
+
+  /* Badges */
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    border: 1px solid transparent; white-space: nowrap;
+  }
+  .badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .b-action { color: #8a5a00; background: #fdf6d6; }
+  .b-brand { color: var(--text-brand); background: var(--bg-brand-soft); }
+  .b-neutral { color: var(--text-secondary); background: var(--bg-canvas); border-color: var(--border-subtle); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .b-action { color: #f5d46b; background: #3a3112; }
+  }
+  :root[data-theme="dark"] .b-action { color: #f5d46b; background: #3a3112; }
+
+  /* Etiqueta de subtipo (sin punto) */
+  .tag {
+    display: inline-block; max-width: 100%; padding: 2px 8px; border-radius: 999px;
+    font-size: 12px; font-weight: 500; color: var(--text-secondary);
+    background: var(--bg-canvas); border: 1px solid var(--border-subtle);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle;
+  }
+
+  /* Layout: lista a la izquierda (2fr); Datos y Resumen apilados a la derecha (1fr, mín. 300px).
+     En el DOM la columna lateral va primero para que en móvil quede arriba de la lista. */
+  .layout {
+    display: grid; gap: 16px; align-items: start;
+    grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+    grid-template-areas: "principal lateral";
+  }
+  .col-main { grid-area: principal; min-width: 0; }
+  .col-main .table-card { margin-bottom: 0; }
+  .col-side { grid-area: lateral; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+  .col-side .card { margin-bottom: 0; }
+  .side-datos { order: 0; }
+  .side-avance { order: 1; }
+  .summary { order: 2; }
+  .side-avance-body { display: flex; flex-direction: column; gap: 10px; }
+  .side-avance-body .bar { flex: none; width: 100%; }
+  @media (min-width: 1100px) {
+    .col-side { position: sticky; top: 16px; }
+  }
+
+  /* Resumen de la selección (cifras apiladas) */
+  .sum-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .sum-item { min-width: 0; }
+  .sum-item .sum-value { font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; margin-top: 2px; overflow-wrap: anywhere; }
+  .sum-item .sum-sub { font-size: 12px; font-weight: 500; color: var(--text-tertiary); }
+  .sum-item.strong .sum-value { font-weight: 700; }
+  .sum-item.highlight .sum-value { color: var(--text-brand); }
+  .sum-item.secondary { padding-top: 12px; border-top: 1px solid var(--border-subtle); }
+  .sum-item.secondary .sum-value { font-size: 13px; color: var(--text-secondary); }
+  .sum-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+  .sum-actions .cta { width: 100%; }
+  .sum-actions .hint { font-size: 12px; text-align: center; }
+  /* Escritorio: columna lateral más baja. Datos en 3 columnas, resumen en 2, acciones en una fila. */
+  @media (min-width: 861px) {
+    .side-datos .facts { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    .sum-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; }
+    .sum-item.secondary { grid-column: 1 / -1; }
+    .sum-actions { flex-direction: row; flex-wrap: wrap; align-items: center; }
+    .sum-actions .cta { flex: 1 1 180px; width: auto; }
+    .sum-actions .hint { flex-basis: 100%; }
+  }
+
+  /* Progreso de respuestas */
+  .bar { flex: 1; min-width: 120px; height: 8px; background: var(--border-subtle); border-radius: 999px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; width: 0; background: var(--success); transition: width .2s; }
+  .progress-text { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* Tarjeta principal: barra de herramientas + lista */
+  .table-card { padding: 0; overflow: hidden; border-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+  .toolbar { display: flex; flex-direction: column; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); }
+  .tb-row { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; min-width: 0; }
+  .tb-row .hint { white-space: nowrap; margin-left: auto; }
+  .filters { display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap; flex: 1 1 auto; min-width: 0; }
+  .search {
+    flex: 1 1 200px; min-width: 0; padding: 8px 12px;
+    border: 1px solid var(--border-default); border-radius: var(--radius-sm);
+    background: var(--bg-surface); color: var(--text-primary);
+  }
+  select.sel {
+    padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-default);
+    background: var(--bg-surface); color: var(--text-primary); max-width: 100%;
+  }
+  .toolbar .filters-btn { display: none; }
+  .tb-bulk { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tb-bulk .fact-label { margin-right: 2px; }
+
+  /* Toggle de vista (igual que en Mis campañas) */
+  .view-toggle {
+    display: inline-flex; border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm); overflow: hidden;
+  }
+  .view-toggle button {
+    background: var(--bg-surface); border: 0; color: var(--text-secondary);
+    padding: 8px 12px; font-weight: 500;
+  }
+  .view-toggle button + button { border-left: 1px solid var(--border-default); }
+  .view-toggle button[aria-pressed="true"] { background: var(--brand); color: #fff; }
+
+  /* Pestañas */
+  .tabs { display: flex; gap: 4px; margin-bottom: 0; overflow-x: auto; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius) var(--radius) 0 0; padding: 0 8px; }
+  .tab {
+    background: none; border: 0; border-bottom: 2px solid transparent;
+    color: var(--text-secondary); padding: 10px 14px; font-weight: 500; white-space: nowrap;
+  }
+  .tab[aria-selected="true"] { color: var(--text-brand); border-bottom-color: var(--brand); font-weight: 600; }
+  .tab .count { margin-left: 6px; font-size: 12px; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
+  .tab[aria-selected="true"] .count { color: var(--text-brand); }
+
+  /* Botón pequeño (acciones masivas, mostrar más) */
+  .btn-sm {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 5px 10px; min-height: 32px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default); background: var(--bg-surface);
+    color: var(--text-secondary); font-size: 13px; font-weight: 600; white-space: nowrap;
+  }
+  .btn-sm:hover { border-color: var(--brand); color: var(--text-brand); }
+  .btn-sm:focus-visible, .linklike:focus-visible, .grp-toggle:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .linklike { background: none; border: 0; padding: 0; color: var(--text-primary); font-weight: 700; text-align: left; }
+  .linklike:hover { color: var(--text-link); text-decoration: underline; }
+
+  /* Encabezado de grupo por plaza */
+  .grp-head { display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap; }
+  .grp-title { display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1 1 auto; }
+  .grp-toggle {
+    display: inline-flex; align-items: center; gap: 8px; min-width: 0; flex: 0 1 auto;
+    background: none; border: 0; padding: 4px 0; color: var(--text-primary); text-align: left;
+  }
+  .grp-toggle .chev { display: inline-block; transition: transform .15s; color: var(--text-tertiary); }
+  .grp-toggle[aria-expanded="false"] .chev { transform: rotate(-90deg); }
+  .grp-name { font-weight: 700; }
+  .grp-sub { font-size: 12px; font-weight: 500; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
+  .grp-actions { display: flex; gap: 6px; }
+  .grp-more { display: flex; justify-content: center; padding: 4px 0 0; }
+
+  /* Vista de tarjetas */
+  .cards { display: flex; flex-direction: column; gap: 18px; padding: 16px; }
+  .cards[hidden], .table-wrap[hidden] { display: none; }
+  .grp { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .grp + .grp { padding-top: 16px; border-top: 1px solid var(--border-subtle); }
+  .mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .mcard {
+    display: flex; flex-direction: column; gap: 10px; min-width: 0;
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius); box-shadow: var(--shadow); padding: 12px; cursor: pointer;
+  }
+  .mcard:hover { border-color: var(--border-default); }
+  .mcard.is-si { border-color: var(--success); background: var(--bg-selected); }
+  .mcard.is-no { background: var(--bg-canvas); box-shadow: none; }
+  .mcard.is-no .mcard-info { opacity: .55; }
+  /* Tarjeta: miniatura + texto (clave, subtipo, precio); Sí/No debajo */
+  .mcard-info { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+  .mcard-thumb {
+    flex: 0 0 44px; width: 44px; height: 44px; border-radius: 8px;
+    overflow: hidden; background: var(--illus-bg);
+  }
+  /* Ilustración plana del medio (miniatura y ficha). Colores solo desde --illus-* */
+  .illus svg { display: block; width: 100%; height: 100%; }
+  .illus .il-f { fill: var(--illus-frame); }
+  .illus .il-s { fill: var(--illus-screen); }
+  .illus .il-d { fill: var(--illus-detail); }
+  .mcard-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+  .mcard-text .linklike { font-size: 13px; line-height: 18px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mcard-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mcard-tot { font-variant-numeric: tabular-nums; } /* subtotal de la línea (vallas y BR) */
+  .mcard-price { font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: 4px 8px; flex-wrap: wrap; margin-top: 2px; }
+  .mcard-price .price-disc { font-size: 17px; line-height: 22px; font-weight: 700; white-space: nowrap; }
+  .mcard-price .price-solo { font-size: 17px; line-height: 22px; font-weight: 700; white-space: nowrap; color: var(--text-primary); }
+  .mcard-price .strike { white-space: nowrap; }
+  .strike { text-decoration: line-through; color: var(--text-tertiary); font-size: 12px; }
+
+  /* Control de decisión Sí / No (tarjeta y ficha) */
+  .yn { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .yn button {
+    min-height: 40px; border-radius: var(--radius-sm); border: 1px solid var(--border-default);
+    background: var(--bg-surface); color: var(--text-secondary); font-weight: 700; font-size: 14px;
+  }
+  .yn button:hover { border-color: var(--text-tertiary); }
+  .yn button[aria-pressed="true"][data-v="si"] { background: var(--success); border-color: var(--success); color: #fff; }
+  .yn button[aria-pressed="true"][data-v="no"] { background: var(--text-tertiary); border-color: var(--text-tertiary); color: #fff; }
+  .yn button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  /* Campañas de solo lectura en la maqueta: Sí/No y acciones masivas deshabilitados (mismo patrón que .cta[disabled]) */
+  .yn button[disabled], .seg button[disabled], .btn-sm[disabled] { opacity: .5; cursor: not-allowed; }
+
+  /* Vista de tabla */
+  .table-wrap { overflow-x: auto; background: var(--bg-surface); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th {
+    text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary);
+    padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); white-space: nowrap;
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  tr.city td { background: var(--bg-canvas); color: var(--text-secondary); }
+  tr.medio { cursor: pointer; }
+  tr.medio:hover td { background: var(--bg-canvas); }
+  tr.medio.is-si td { background: var(--bg-selected); }
+  tr.medio.is-no td { color: var(--text-tertiary); }
+  td .linklike { white-space: nowrap; }
+  td.dir-cell { max-width: 280px; }
+  .trunc { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* Medios fijos: tabla ancha (columnas de la plantilla de OBP). Se desplaza dentro de .table-wrap;
+     ¿Lo incluyes? y la clave (o ruta) quedan fijas a la izquierda (patrón Key Column de Órbita). */
+  .table-wrap.is-wide table { width: max-content; min-width: 100%; }
+  .table-wrap.is-wide td { white-space: nowrap; }
+  .table-wrap.is-wide th.key, .table-wrap.is-wide td.key { position: sticky; z-index: 1; background: var(--bg-surface); }
+  .table-wrap.is-wide .key-1 { left: 0; width: 120px; min-width: 120px; max-width: 120px; box-sizing: border-box; }
+  .table-wrap.is-wide .key-2 { left: 120px; box-shadow: inset -1px 0 0 var(--border-subtle); }
+  /* Encabezado de plaza: se queda a la vista (ancho del contenedor) al desplazar la tabla */
+  .table-wrap.is-wide tr.city td { padding: 0; }
+  .table-wrap.is-wide tr.city .grp-head { position: sticky; left: 0; width: var(--tw, 100%); box-sizing: border-box; padding: 8px 12px; white-space: normal; }  .muted { color: var(--text-tertiary); }
+  .price-disc { color: var(--text-brand); font-weight: 600; }
+  .empty { padding: 24px 16px; text-align: center; color: var(--text-tertiary); }
+  .empty .btn-sm { margin-top: 8px; }
+
+  /* Segmento Sí / No (tabla) */
+  .seg { display: inline-flex; border: 1px solid var(--border-default); border-radius: var(--radius-sm); overflow: hidden; }
+  .seg button {
+    background: var(--bg-surface); border: 0; color: var(--text-secondary);
+    padding: 6px 12px; font-weight: 600; font-size: 13px;
+  }
+  .seg button + button { border-left: 1px solid var(--border-default); }
+  .seg button[aria-pressed="true"][data-v="si"] { background: var(--success); color: #fff; }
+  .seg button[aria-pressed="true"][data-v="no"] { background: var(--text-tertiary); color: #fff; }
+  .seg button:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+
+  /* Botones */
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 14px; border-radius: var(--radius-sm); border: 1px solid var(--brand);
+    background: var(--brand); color: #fff; font-weight: 600; text-decoration: none; white-space: nowrap;
+  }
+  .cta:hover { background: var(--brand-hover); }
+  .cta.secondary { background: transparent; color: var(--text-brand); }
+  .cta[disabled] { opacity: .5; cursor: not-allowed; }
+  .hint { font-size: 13px; color: var(--text-tertiary); }
+
+  /* Información contextual: botón "i" + texto corto (hover, foco o toque). El texto se posiciona fijo dentro de la pantalla. */
+  .info { display: inline-flex; align-items: center; vertical-align: middle; flex: none; }
+  .info-btn {
+    position: relative; display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; padding: 0; border-radius: 50%;
+    border: 1px solid var(--border-default); background: var(--bg-surface); color: var(--text-secondary);
+    font-family: Georgia, "Times New Roman", serif; font-size: 12px; font-weight: 700; font-style: italic; line-height: 1;
+  }
+  .info-btn::after { content: ""; position: absolute; inset: -8px; } /* área de toque ampliada */
+  .info-btn:hover, .info-btn[aria-expanded="true"] { border-color: var(--brand); color: var(--text-brand); }
+  .info-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .info-tip {
+    position: fixed; z-index: 40; top: 0; left: 0; width: max-content; max-width: min(280px, calc(100vw - 32px));
+    padding: 8px 10px; border-radius: var(--radius-sm);
+    background: var(--text-primary); color: var(--bg-surface); box-shadow: var(--shadow);
+    font-size: 13px; font-weight: 500; line-height: 1.4; text-align: left; text-transform: none; letter-spacing: normal;
+    white-space: normal; overflow-wrap: anywhere;
+  }
+  .info-tip[hidden] { display: none; }
+  .side-foot { order: 3; display: flex; align-items: center; gap: 6px; padding: 0 4px; }
+
+  /* Ficha del medio: panel lateral (escritorio) / pantalla completa (móvil) */
+  .ficha {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 20;
+    width: 420px; max-width: 100%;
+    display: flex; flex-direction: column;
+    background: var(--bg-surface); border-left: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow), -8px 0 24px rgba(20, 24, 40, .12);
+  }
+  .ficha[hidden] { display: none; }
+  .ficha-head { display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border-subtle); }
+  .ficha-head h2 { margin: 0; font-size: 18px; }
+  .ficha-head .grow { flex: 1; min-width: 0; }
+  .ficha-close {
+    min-width: 40px; min-height: 40px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default); background: var(--bg-surface); color: var(--text-secondary); font-size: 18px; line-height: 1;
+  }
+  .ficha-close:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .ficha-body { flex: 1; overflow-y: auto; padding: 16px 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+  .ficha-meta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin-top: 6px; font-size: 13px; color: var(--text-secondary); }
+  .ficha-illus { flex: 0 0 auto; width: 100%; height: 176px; border-radius: 12px; overflow: hidden; background: var(--illus-bg); }
+  .ficha-dir { font-size: 13px; color: var(--text-secondary); overflow-wrap: anywhere; }
+  .ficha-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; margin: 0; }
+  .ficha-grid .full { grid-column: 1 / -1; }
+  .ficha-grid dd { margin: 2px 0 0; font-weight: 500; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .ficha-sec { font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: .04em; margin: 0; }
+
+  @media (max-width: 860px) {
+    .topbar { padding: 0 16px; }
+    .content { padding: 16px; }
+    .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "lateral" "principal"; }
+    .summary { order: -1; }
+    .sum-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sum-item.secondary { grid-column: 1 / -1; }
+    .toolbar { padding: 12px 14px; }
+    .tb-row .bar { order: 3; flex: 1 1 100%; min-width: 0; }
+    .tb-row .hint { white-space: normal; margin-left: 0; }
+    .toolbar .filters-btn { display: inline-flex; }
+    .filters { display: none; flex: 1 1 100%; flex-direction: column; align-items: stretch; }
+    .filters.open { display: flex; }
+    .filters .search { flex: 0 0 auto; }
+    .view-toggle, .table-wrap { display: none; }
+    .cards { padding: 12px; }
+    .mgrid { grid-template-columns: minmax(0, 1fr); }
+    .yn button, .btn-sm { min-height: 44px; }
+    .info-btn { width: 24px; height: 24px; font-size: 13px; }
+    .info-btn::after { inset: -10px; }
+    .grp-actions { flex: 1 1 100%; }
+    .grp-actions .btn-sm { flex: 1; }
+    .ficha { width: 100%; border-left: 0; }
+    body.ficha-abierta { overflow: hidden; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-brand">OBP · Clientes</div>
+      <div class="spacer"></div>
+      <span class="user-name"></span>
+      <a class="logout" id="resetDatos" href="#" hidden>Restablecer datos</a>
+      <a class="logout" href="login.html">Cerrar sesión</a>
+    </header>
+
+    <main class="content">
+      <nav class="crumbs" aria-label="Migas de pan">
+        <a href="mis-campanas.html">Mis campañas</a><span>/</span>
+        <a href="detalle-campana.html" id="crumbCamp"></a><span>/</span>
+        <span aria-current="page">Propuesta de medios</span>
+      </nav>
+
+      <section class="card prop-head">
+        <div class="title-row">
+          <h1>Propuesta de medios</h1>
+          <span class="badge b-action" id="propBadge"></span>
+        </div>
+        <div class="prop-code" id="propCode"></div>
+      </section>
+
+      <div class="layout">
+      <!-- Columna lateral: en escritorio va a la derecha y queda fija al hacer scroll -->
+      <aside class="col-side" aria-label="Datos y resumen">
+        <section class="card side-datos" aria-labelledby="hDatos">
+          <h2 id="hDatos">Datos de la campaña</h2>
+          <div class="facts">
+            <div><div class="fact-label">Cliente</div><div class="fact-value" id="factCliente"></div></div>
+            <div><div class="fact-label">Vigencia</div><div class="fact-value" id="factVigencia"></div></div>
+            <div><div class="fact-label">Responsable comercial</div><div class="fact-value">Por asignar</div></div>
+          </div>
+        </section>
+
+        <!-- Avance de respuestas: cuenta tarjetas (cada medio fijo, valla o unidad de BR) -->
+        <section class="card side-avance" aria-labelledby="hAvance">
+          <h2 id="hAvance">Avance de respuestas</h2>
+          <div class="side-avance-body" aria-label="Avance de respuestas">
+            <div class="progress-text" id="progressText">0 de 0 respondidos</div>
+            <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Medios respondidos"><span id="barFill"></span></div>
+            <div class="hint" id="pendingHint" aria-live="polite">Responde todos los medios para confirmar.</div>
+          </div>
+        </section>
+
+        <!-- Resumen de la selección. Montos antes de IVA. -->
+        <section class="card summary" aria-labelledby="hResumen">
+          <h2 id="hResumen">Resumen de la selección</h2>
+          <div class="sum-list">
+            <div class="sum-item strong highlight">
+              <div class="fact-label">Medios elegidos</div>
+              <div class="sum-value"><span id="sumElegidos">0</span> <span class="sum-sub">de <span id="sumTotal">0</span></span></div>
+            </div>
+            <div class="sum-item">
+              <div class="fact-label">Impactos de la selección <span data-info-slot="frecuencia"></span></div>
+              <div class="sum-value" id="sumImpactos">0</div>
+            </div>
+            <div class="sum-item strong">
+              <div class="fact-label">Inversión de la selección <span data-info-slot="precios"></span></div>
+              <div class="sum-value" id="sumInversion">$0 MXN</div>
+            </div>
+            <div class="sum-item highlight">
+              <div class="fact-label">Con descuento</div>
+              <div class="sum-value" id="sumDescuento">$0 MXN</div>
+            </div>
+            <div class="sum-item secondary">
+              <div class="fact-label">Inversión de toda la propuesta · antes de IVA</div>
+              <div class="sum-value" id="sumPropuesta">$0 MXN</div>
+            </div>
+          </div>
+          <div class="sum-actions">
+            <button class="cta" type="button" id="btnConfirmar" disabled>Confirmar selección</button>
+            <button class="cta secondary" type="button">Descargar propuesta</button>
+            <div class="hint">Puedes descargar la propuesta en PDF como referencia.</div>
+          </div>
+        </section>
+
+        <!-- Pie de la columna derecha: contacto -->
+        <div class="side-foot hint">¿Tienes dudas? <span data-info-slot="dudas"></span></div>
+      </aside>
+
+      <!-- Columna principal: pestañas + lista -->
+      <div class="col-main">
+      <div class="tabs" role="tablist" aria-label="Tipo de medio">
+        <button class="tab" role="tab" aria-selected="true" data-tab="sitios">Sitios fijos<span class="count" data-count="sitios">0/0</span></button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="camiones">Camiones<span class="count" data-count="camiones">0/0</span></button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="indoors">Indoor<span class="count" data-count="indoors">0/0</span></button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="vallas">Vallas móviles<span class="count" data-count="vallas">0/0</span></button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="riders">Brand riders<span class="count" data-count="riders">0/0</span></button>
+      </div>
+
+      <section class="card table-card" aria-label="Medios de la propuesta">
+      <!-- Barra de herramientas: avance, filtros, acciones masivas y vista -->
+      <div class="toolbar">
+        <div class="tb-row">
+          <button class="btn-sm filters-btn" type="button" id="btnFiltros" aria-expanded="false" aria-controls="filtros">Filtros</button>
+          <div class="filters" id="filtros">
+            <input class="search" id="fBuscar" type="search" placeholder="Buscar por clave o dirección" aria-label="Buscar por clave o dirección">
+            <select class="sel" id="fPlaza" aria-label="Plaza"><option value="all">Todas las plazas</option></select>
+            <select class="sel" id="fEstado" aria-label="Estado de respuesta">
+              <option value="all">Todos</option>
+              <option value="pend">Sin responder</option>
+              <option value="si">Elegidos</option>
+              <option value="no">No incluidos</option>
+            </select>
+          </div>
+          <div class="view-toggle" role="group" aria-label="Vista">
+            <button type="button" data-view="cards" aria-pressed="true">Tarjetas</button>
+            <button type="button" data-view="table" aria-pressed="false">Tabla</button>
+          </div>
+          <span data-info-slot="elegir"></span>
+        </div>
+      </div>
+
+      <!-- Vista de tarjetas (principal; única vista en móvil) -->
+      <div class="cards" id="cardsWrap"></div>
+
+      <!-- Vista de tabla (solo escritorio) -->
+      <div class="table-wrap" id="tablaWrap" hidden>
+        <table>
+          <!-- Encabezado de columnas: lo repinta el JS según la pestaña (medios fijos o líneas de vallas/BR) -->
+          <thead id="tablaHead">
+            <tr>
+              <th>¿Lo incluyes?</th>
+              <th>Clave</th>
+              <th>Subtipo</th>
+              <th>Dirección</th>
+              <th class="num">Precio cliente</th>
+              <th class="num">Precio con descuento</th>
+            </tr>
+          </thead>
+          <tbody id="tablaBody"></tbody>
+        </table>
+      </div>
+      </section>
+      </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Ficha del medio -->
+<aside class="ficha" id="ficha" role="dialog" aria-modal="false" aria-labelledby="fichaTitulo" hidden>
+  <div class="ficha-head">
+    <div class="grow">
+      <h2 id="fichaTitulo"></h2>
+      <div class="ficha-meta" id="fichaMeta"></div>
+    </div>
+    <button class="ficha-close" type="button" id="fichaCerrar" aria-label="Cerrar ficha">×</button>
+  </div>
+  <div class="ficha-body" id="fichaBody"></div>
+</aside>
+
+<script src="datos.js"></script>
+<script src="estado.js"></script>
+<script>
+  // Encabezado desde datos.js: campaña de ?id o, si no viene, la propuesta de ejemplo. El código es el identificador de la propuesta.
+  obpPintarComun();
+  // Solo esta campaña recorre el flujo en la maqueta; las demás son de solo lectura.
+  const CAMP_FLUJO = 'JRA-0021-ALPINA-ALPINA_LECHE-NOV-2026';
+  const camp = obpCampanaDeUrl() || obpCampana(CAMP_FLUJO);
+  // Estado guardado de la campaña (estado.js): estado, respondidos y respuestas de la propuesta.
+  const campEstado = window.OBP_ESTADO ? OBP_ESTADO.obtenerCampana(camp.codigo) : null;
+  const estadoActual = () => (campEstado && campEstado.estado) || camp.estado;
+  const nivelDe = e => OBP_ESTADOS.indexOf(e);
+  // Editable solo en modo demo (estado.js), solo la campaña del flujo y hasta aceptar la cotización.
+  const EDITABLE = !!(window.OBP_ESTADO && OBP_ESTADO.modoDemo) && camp.codigo === CAMP_FLUJO && !!campEstado && nivelDe(estadoActual()) < nivelDe('Aceptada');
+  const confirmada = () => nivelDe(estadoActual()) >= nivelDe('Selección confirmada');
+  function pintarBadge() {
+    const badge = document.getElementById('propBadge');
+    const e = estadoActual();
+    badge.textContent = e;
+    const marca = e === 'Selección confirmada' || e === 'Aceptada';
+    badge.classList.toggle('b-brand', marca);
+    badge.classList.toggle('b-action', !marca);
+  }
+  const detalleHref = `detalle-campana.html?id=${encodeURIComponent(camp.codigo)}`;
+  document.getElementById('crumbCamp').textContent = camp.codigo;
+  document.getElementById('crumbCamp').href = detalleHref;
+  document.getElementById('propCode').textContent = camp.codigo;
+  pintarBadge();
+  document.getElementById('factCliente').textContent = `${OBP_DATA.cliente.nombre} · ${OBP_DATA.cliente.empresa}`;
+  document.getElementById('factVigencia').textContent = `${camp.inicio} – ${camp.fin}`;
+
+  // Medios de ejemplo (maqueta). Precios en MXN antes de IVA.
+  // Medios fijos (sitios, camiones, indoors): un registro por medio.
+  // Campos opcionales de la ficha: dimensiones, iluminacion, vista, poi, material. Si no vienen, no se muestran.
+  const TABS = [
+    { key: 'sitios', label: 'Sitios fijos' },
+    { key: 'camiones', label: 'Camiones' },
+    { key: 'indoors', label: 'Indoor' },
+    { key: 'vallas', label: 'Vallas móviles' },
+    { key: 'riders', label: 'Brand riders' }
+  ];
+
+  // Periodo de la campaña de la propuesta (JRA-0021-ALPINA-ALPINA_LECHE-NOV-2026): aplica a sitios, camiones e indoor.
+  const PERIODO_CAMPANA = { inicio: '1 nov 2026', fin: '31 dic 2026' };
+  const periodoTxt = p => `${p.inicio} – ${p.fin}`;
+
+  // Columnas de la tabla (plantilla de propuesta de OBP, hojas por tipo). Texto o número; '—' = sin definir todavía.
+  //   Comunes: inicio, fin (periodo de la campaña), comentarios, impactosTotales.
+  //   Sitios: referencias, lat, lng, tiempoExp (seg/mes), hombres, mujeres (fracción: 0.25 = 25 %),
+  //     nse { ab, cmas, c, dmas, d, e } y edad { e0_14, e15_19, e20_24, e25_34, e35_44, e45_64, e65 } (fracciones).
+  //   Camiones: tipoExhibicion, categoria, tipoAnuncio, tiempoExp (seg), kmPromedio, hombres, mujeres (fracción).
+  //     impactos = impactos únicos, alcance = alcance mensual, frecuencia = frecuencia promedio mensual.
+  //   Indoor: inmueble, nivel, area, aNivelPiso, descripcion, hombres, mujeres (personas),
+  //     nse { abcmas, c, cmenos, dmas, de } y edad { e13_17, e18_25, e26_40, e41_55, e55 }, precioProduccion.
+  //   En cero, impactos, alcance, frecuencia, tiempo de exposición y perfil se muestran «Sin dato».
+  const MEDIOS = [
+    { id: 'm1', tab: 'sitios', ciudad: 'Guadalajara', nombre: 'Espectacular Av. Vallarta', direccion: 'Av. Vallarta 3233, Vallarta Poniente, Zapopan', clave: 'IMJ-ZMG-ESP-O-0412A', formato: 'Espectacular', impactos: 1280000, alcance: 214000, frecuencia: 6.0, audiencia: '62% H · 38% M · NSE C+', dimensiones: '12.9 × 7.2 m', iluminacion: 'Iluminado', vista: 'Natural', poi: 'Plaza Galerías, Expo Guadalajara', precio: 185000, descuento: 166500,
+      inicio: PERIODO_CAMPANA.inicio, fin: PERIODO_CAMPANA.fin, comentarios: '—', referencias: '—',
+      lat: 20.6736, lng: -103.3440, // coordenadas de ejemplo (centro de la ciudad)
+      impactosTotales: '—', tiempoExp: '—', hombres: 0.62, mujeres: 0.38,
+      nse: { ab: '—', cmas: '—', c: '—', dmas: '—', d: '—', e: '—' },
+      edad: { e0_14: '—', e15_19: '—', e20_24: '—', e25_34: '—', e35_44: '—', e45_64: '—', e65: '—' } },
+    // Mupi no está en el catálogo del documento; asignado a CAR, confirmar
+    { id: 'm2', tab: 'sitios', ciudad: 'Guadalajara', nombre: 'Mupi Periférico Norte', direccion: 'Periférico Norte 1520, Zapopan', clave: 'IMJ-ZMG-CAR-O-0877B', formato: 'Mupi', impactos: 540000, alcance: 96000, frecuencia: 5.6, audiencia: '55% H · 45% M · NSE C', precio: 72000, descuento: 64800,
+      inicio: PERIODO_CAMPANA.inicio, fin: PERIODO_CAMPANA.fin, comentarios: '—', referencias: '—',
+      lat: 20.6736, lng: -103.3440, // coordenadas de ejemplo (centro de la ciudad)
+      impactosTotales: '—', tiempoExp: '—', hombres: 0.55, mujeres: 0.45,
+      nse: { ab: '—', cmas: '—', c: '—', dmas: '—', d: '—', e: '—' },
+      edad: { e0_14: '—', e15_19: '—', e20_24: '—', e25_34: '—', e35_44: '—', e45_64: '—', e65: '—' } },
+    { id: 'm3', tab: 'sitios', ciudad: 'Monterrey', nombre: 'Pantalla digital San Pedro', direccion: 'Av. Vasconcelos 402, San Pedro Garza García', clave: 'IMJ-MTY-PAN-O-0103B', formato: 'Pantalla digital', impactos: 910000, alcance: 158000, frecuencia: 5.8, audiencia: '48% H · 52% M · NSE AB', dimensiones: '10 × 5 m', iluminacion: 'Digital', vista: 'Cruzada', precio: 128000, descuento: 115200,
+      inicio: PERIODO_CAMPANA.inicio, fin: PERIODO_CAMPANA.fin, comentarios: '—', referencias: '—',
+      lat: 25.6866, lng: -100.3161, // coordenadas de ejemplo (centro de la ciudad)
+      impactosTotales: '—', tiempoExp: '—', hombres: 0.48, mujeres: 0.52,
+      nse: { ab: '—', cmas: '—', c: '—', dmas: '—', d: '—', e: '—' },
+      edad: { e0_14: '—', e15_19: '—', e20_24: '—', e25_34: '—', e35_44: '—', e45_64: '—', e65: '—' } },
+    { id: 'm4', tab: 'camiones', ciudad: 'Guadalajara', nombre: 'Integral · Urbana', direccion: 'Ruta 14 · Centro – Tlaquepaque', clave: 'R-ZMG14', formato: 'Integral', tipoRuta: 'Urbana', impactos: 760000, alcance: 120000, frecuencia: 6.3, audiencia: '60% H · 40% M', precio: 96000, descuento: 86400,
+      inicio: PERIODO_CAMPANA.inicio, fin: PERIODO_CAMPANA.fin,
+      tipoExhibicion: '—', categoria: '—', tipoAnuncio: '—',
+      impactosTotales: '—', tiempoExp: '—', kmPromedio: '—', hombres: 0.60, mujeres: 0.40 },
+    { id: 'm5', tab: 'indoors', ciudad: 'Monterrey', nombre: 'Centro comercial Galerías', direccion: 'Galerías Monterrey, Av. Insurgentes 2500, nivel 2', clave: 'IMJ-MTY-CCO-I-22NA', formato: 'Indoor · nivel 2', impactos: 410000, alcance: 88000, frecuencia: 4.7, audiencia: '1,240 H · 1,310 M', precio: 54000, descuento: 48600,
+      inicio: PERIODO_CAMPANA.inicio, fin: PERIODO_CAMPANA.fin, comentarios: '—',
+      inmueble: 'Galerías Monterrey', nivel: 'Nivel 2', area: '—', aNivelPiso: '—', descripcion: '—',
+      impactosTotales: '—', hombres: 1240, mujeres: 1310,
+      nse: { abcmas: '—', c: '—', cmenos: '—', dmas: '—', de: '—' },
+      edad: { e13_17: '—', e18_25: '—', e26_40: '—', e41_55: '—', e55: '—' },
+      precioProduccion: '—' }
+  ];
+
+  // Vallas móviles y brand riders: el equipo pide X unidades por plaza (vallas) o por formato (BR) y las
+  // cotiza por fuera. El cliente no ve clave del proveedor ni detalle de cotización: ve cada unidad como una
+  // tarjeta con numeración simbólica ("Valla 01", "Blitz 360 · 01") y responde Sí/No por unidad.
+  // Solicitudes (una por plaza o por formato); cada una se expande en N unidades (ver UNIDADES).
+  // Campos: tipo ('valla' | 'br'), grupo (plaza de vallas o nombre del formato BR), unidades,
+  //   periodo (vallas, texto: '12 nov 2026 – 28 nov 2026', mismo formato que PERIODO_CAMPANA) o meses (BR, entero),
+  //   precio = precio unitario (vallas: del periodo; BR: mensual), descuento = precio unitario con descuento (opcional),
+  //   familia (solo BR: subtítulo de la ficha), vehiculo (solo BR, opcional; si no viene, no se muestra).
+  // Los totales de la selección (resumen) usan precio × meses en BR; no se muestran subtotales por unidad.
+  // Descuento de ejemplo: 10 %, el mismo que usan los medios fijos.
+  const SOLICITUDES = [
+    { pref: 'vg', tab: 'vallas', tipo: 'valla', grupo: 'Guadalajara (ZMG)', unidades: 15, periodo: '12 nov 2026 – 28 nov 2026', precio: 38000, descuento: 34200 },
+    { pref: 'vc', tab: 'vallas', tipo: 'valla', grupo: 'Ciudad de México (Reforma)', unidades: 6, periodo: '12 nov 2026 – 28 nov 2026', precio: 45000, descuento: 40500 },
+    // Brand riders: unidades y meses provisionales: confirmar con OBP
+    { pref: 'b1', tab: 'riders', tipo: 'br', grupo: 'Mass Awareness 360', familia: 'Mass Awareness', unidades: 4, meses: 1, precio: 54000, descuento: 48600 },
+    { pref: 'b2', tab: 'riders', tipo: 'br', grupo: 'Mass Awareness 180', familia: 'Mass Awareness', unidades: 4, meses: 1, precio: 34000, descuento: 30600 },
+    { pref: 'b3', tab: 'riders', tipo: 'br', grupo: 'Blitz 360', familia: 'Blitz', unidades: 4, meses: 1, precio: 42000, descuento: 37800 },
+    { pref: 'b4', tab: 'riders', tipo: 'br', grupo: 'Blitz 180', familia: 'Blitz', unidades: 4, meses: 1, precio: 27000, descuento: 24300 },
+    { pref: 'b5', tab: 'riders', tipo: 'br', grupo: 'Blitz Premium 180', familia: 'Blitz Premium', unidades: 4, meses: 1, precio: 48000, descuento: 43200 },
+    { pref: 'b6', tab: 'riders', tipo: 'br', grupo: 'Blitz Premium 360', familia: 'Blitz Premium', unidades: 4, meses: 1, precio: 74000, descuento: 66600 }
+  ];
+  // Una tarjeta por unidad, numerada dentro de su plaza (vallas) o de su formato (BR)
+  const num2 = n => String(n).padStart(2, '0');
+  const UNIDADES = SOLICITUDES.flatMap(s => Array.from({ length: s.unidades }, (_, i) => {
+    const { pref, unidades, ...base } = s;
+    return { ...base, id: `${pref}-${num2(i + 1)}`, nombre: s.tipo === 'valla' ? `Valla ${num2(i + 1)}` : `${s.grupo} · ${num2(i + 1)}` };
+  }));
+
+  // Todo lo que el cliente responde: medios fijos + unidades. Avance y Confirmar cuentan estas tarjetas.
+  const ITEMS = [...MEDIOS, ...UNIDADES];
+
+  // Estado: null = sin responder, true = Sí, false = No
+  const respuestas = {};
+  let tabActiva = 'sitios';
+  // Respuestas guardadas en el estado (solo la campaña del flujo). Se pintan al cargar.
+  const guardadas = () => (campEstado && campEstado.respuestas) || {};
+  if (EDITABLE) {
+    const g = guardadas();
+    ITEMS.forEach(m => { if (g[m.id] === true || g[m.id] === false) respuestas[m.id] = g[m.id]; });
+  }
+  // Copia limpia para guardar: solo Sí / No (sin responder = ausente)
+  function respuestasLimpias() {
+    const o = {};
+    ITEMS.forEach(m => { if (respuestas[m.id] === true || respuestas[m.id] === false) o[m.id] = respuestas[m.id]; });
+    return o;
+  }
+  // Tras confirmar: hay cambios si alguna respuesta difiere de la guardada
+  const hayCambios = () => { const g = guardadas(); return ITEMS.some(m => (respuestas[m.id] ?? null) !== (g[m.id] ?? null)); };
+  // Antes de confirmar, cada respuesta se guarda al momento. Después, se guarda con "Guardar cambios".
+  function alCambiarRespuestas() {
+    if (EDITABLE && !confirmada()) OBP_ESTADO.actualizarCampana(camp.codigo, { respuestas: respuestasLimpias() });
+  }
+  const dis = () => EDITABLE ? '' : ' disabled';
+
+  // Estado de la interfaz de la lista
+  const POR_GRUPO = 24; // medios visibles por plaza al inicio
+  const ui = {
+    q: '', plaza: 'all', estado: 'all', vista: 'cards',
+    cerrados: new Set(),   // grupos colapsados (tab|plaza)
+    completos: new Set(),  // grupos con "Mostrar más" aplicado (tab|plaza)
+    fichaId: null
+  };
+  const mqMovil = window.matchMedia('(max-width: 860px)');
+
+  const fmtMXN = n => '$' + n.toLocaleString('es-MX') + ' MXN';
+  const fmtNum = n => n ? n.toLocaleString('es-MX') : 'Sin dato';
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const norm = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const estadoDe = id => respuestas[id] === true ? 'si' : respuestas[id] === false ? 'no' : 'pend';
+  const delTab = () => ITEMS.filter(m => m.tab === tabActiva);
+  // Grupo de la lista: plaza (medios fijos y vallas) o formato (BR)
+  const grupoDe = m => m.grupo || m.ciudad;
+  const plazasDe = lista => [...new Set(lista.map(grupoDe))];
+  const dirDe = m => m.direccion || m.nombre || '';
+  const grpKey = plaza => `${tabActiva}|${plaza}`;
+  const vistaEfectiva = () => mqMovil.matches ? 'cards' : ui.vista;
+  const medioTxt = n => `${n} ${n === 1 ? 'medio' : 'medios'}`;
+  // Unidades numeradas (vallas y BR)
+  const esLinea = m => m.tipo === 'valla' || m.tipo === 'br';
+  const tabEsLineas = () => tabActiva === 'vallas' || tabActiva === 'riders';
+  const vallaTxt = n => `${n} ${n === 1 ? 'valla' : 'vallas'}`;
+  const unidTxt = n => `${n.toLocaleString('es-MX')} ${n === 1 ? 'unidad' : 'unidades'}`;
+  const cuentaTxt = n => tabActiva === 'vallas' ? vallaTxt(n) : tabActiva === 'riders' ? unidTxt(n) : medioTxt(n);
+  const mesTxt = n => `${n} ${n === 1 ? 'mes' : 'meses'}`;
+  // Subtítulo de la unidad: plaza y periodo (vallas) o meses (BR)
+  const subUnidad = m => m.tipo === 'br' ? mesTxt(m.meses) : `${m.grupo} · ${m.periodo}`;
+  // Nombre visible (clave en medios fijos, número simbólico en unidades) y nombre accesible (vallas llevan la plaza)
+  const nombreDe = m => esLinea(m) ? m.nombre : m.clave;
+  const nombreA11y = m => m.tipo === 'valla' ? `${m.nombre}, ${m.grupo}` : nombreDe(m);
+  // Montos por tarjeta: valla = precio; BR = precio mensual × meses; medio fijo = precio
+  const tieneDesc = m => typeof m.descuento === 'number' && m.descuento > 0;
+  const precioFinal = m => tieneDesc(m) ? m.descuento : m.precio;
+  const factorDe = m => m.tipo === 'br' ? (m.meses || 1) : 1;
+  const subtotal = m => factorDe(m) * m.precio;
+  const subtotalDesc = m => factorDe(m) * precioFinal(m);
+  // Ilustraciones planas por tipo de medio (viewBox 64 × 64). Clases: il-f estructura, il-s pantalla, il-d detalle.
+  // El fondo lo pone el contenedor (--illus-bg), así la ilustración llena miniatura y ficha sin cortarse.
+  const ILUS = {
+    espectacular: `
+      <rect class="il-f" x="22" y="38" width="5" height="20"/><rect class="il-f" x="37" y="38" width="5" height="20"/>
+      <rect class="il-f" x="16" y="57" width="32" height="3" rx="1"/>
+      <rect class="il-f" x="7" y="11" width="50" height="29" rx="2"/>
+      <rect class="il-s" x="10" y="14" width="44" height="23"/>
+      <rect class="il-d" x="14" y="18" width="26" height="3"/><rect class="il-d" x="14" y="24" width="20" height="2"/><rect class="il-d" x="14" y="29" width="15" height="2"/>`,
+    mupi: `
+      <rect class="il-f" x="30" y="45" width="4" height="13"/><rect class="il-f" x="23" y="57" width="18" height="3" rx="1"/>
+      <rect class="il-f" x="19" y="5" width="26" height="41" rx="2"/>
+      <rect class="il-s" x="22" y="8" width="20" height="35"/>
+      <rect class="il-d" x="25" y="12" width="14" height="3"/><rect class="il-d" x="25" y="18" width="10" height="2"/><rect class="il-d" x="25" y="22" width="12" height="2"/>`,
+    digital: `
+      <rect class="il-f" x="29" y="44" width="6" height="12"/><rect class="il-f" x="20" y="55" width="24" height="3" rx="1"/>
+      <rect class="il-f" x="5" y="11" width="54" height="34" rx="2"/>
+      <rect class="il-s" x="7" y="13" width="50" height="30"/>
+      <path class="il-d" d="M28 20 L38 26 L28 32 Z"/>
+      <rect class="il-d" x="11" y="37" width="42" height="2" opacity=".55"/><rect class="il-d" x="11" y="37" width="18" height="2"/>`,
+    camion: `
+      <rect class="il-f" x="4" y="15" width="38" height="29" rx="2"/>
+      <rect class="il-s" x="7" y="18" width="32" height="23"/>
+      <rect class="il-d" x="11" y="23" width="18" height="3"/><rect class="il-d" x="11" y="29" width="12" height="2"/>
+      <path class="il-f" d="M44 23 H53 L60 32 V44 H44 Z"/>
+      <path class="il-d" d="M47 26 H52 L57 32 H47 Z"/>
+      <rect class="il-f" x="4" y="43" width="56" height="3"/>
+      <circle class="il-f" cx="14" cy="48" r="5"/><circle class="il-d" cx="14" cy="48" r="2"/>
+      <circle class="il-f" cx="50" cy="48" r="5"/><circle class="il-d" cx="50" cy="48" r="2"/>`,
+    indoor: `
+      <rect class="il-f" x="4" y="5" width="56" height="2" opacity=".5"/>
+      <rect class="il-f" x="10" y="12" width="44" height="32" rx="2"/>
+      <rect class="il-s" x="13" y="15" width="38" height="26"/>
+      <rect class="il-d" x="17" y="19" width="22" height="3"/><rect class="il-d" x="17" y="25" width="16" height="2"/><rect class="il-d" x="17" y="29" width="12" height="2"/>
+      <rect class="il-f" x="4" y="54" width="56" height="2"/>
+      <rect class="il-f" x="22" y="44" width="2" height="10" opacity=".5"/><rect class="il-f" x="40" y="44" width="2" height="10" opacity=".5"/>`,
+    valla: `
+      <rect class="il-f" x="8" y="8" width="44" height="30" rx="2"/>
+      <rect class="il-s" x="11" y="11" width="38" height="24"/>
+      <rect class="il-d" x="15" y="15" width="22" height="3"/><rect class="il-d" x="15" y="21" width="16" height="2"/><rect class="il-d" x="15" y="25" width="12" height="2"/>
+      <rect class="il-f" x="16" y="38" width="4" height="3"/><rect class="il-f" x="40" y="38" width="4" height="3"/>
+      <rect class="il-f" x="8" y="40" width="44" height="5" rx="1"/>
+      <rect class="il-f" x="52" y="42" width="8" height="2"/>
+      <circle class="il-f" cx="23" cy="49" r="5"/><circle class="il-d" cx="23" cy="49" r="2"/>
+      <circle class="il-f" cx="37" cy="49" r="5"/><circle class="il-d" cx="37" cy="49" r="2"/>`,
+    rider: `
+      <path class="il-f" d="M4 24 Q4 20 8 20 H44 L52 30 H58 Q60 30 60 33 V44 H4 Z"/>
+      <path class="il-d" d="M42 23 H44 L50 30 H42 Z"/>
+      <rect class="il-s" x="4" y="32" width="56" height="7"/>
+      <rect class="il-d" x="8" y="34" width="14" height="2"/>
+      <circle class="il-f" cx="15" cy="45" r="6"/><circle class="il-d" cx="15" cy="45" r="2.5"/>
+      <circle class="il-f" cx="49" cy="45" r="6"/><circle class="il-d" cx="49" cy="45" r="2.5"/>`
+  };
+  // Ilustración según pestaña; en sitios fijos, según subtipo (por defecto, espectacular)
+  function ilusKey(m) {
+    const f = norm(m.formato);
+    switch (m.tab) {
+      case 'camiones': return 'camion';
+      case 'indoors': return 'indoor';
+      case 'vallas': return 'valla';
+      case 'riders': return 'rider';
+    }
+    if (/mupi|panel vertical/.test(f)) return 'mupi';
+    if (/pantalla|digital/.test(f)) return 'digital';
+    return 'espectacular';
+  }
+  const ilusSvg = m => `<svg viewBox="0 0 64 64" focusable="false" aria-hidden="true">${ILUS[ilusKey(m)]}</svg>`;
+
+  // Información contextual (textos de la plantilla de propuesta). Cada botón "i" lleva su propio texto (role="tooltip").
+  const INFO = {
+    numeracion: 'Número simbólico asignado a cada unidad solicitada. No corresponde a la clave del proveedor.',
+    elegir: 'Elige Sí en cada medio o unidad que quieras sumar a tu campaña. Tu asesor preparará la cotización con los que elijas.',
+    precios: 'Precios en pesos mexicanos (MXN), antes de IVA. La cotización formal incluye el IVA y las condiciones de pago.',
+    frecuencia: 'Frecuencia y tiempo de exposición se muestran como promedio. «Sin dato» indica que la información aún no está cargada para ese medio.',
+    dudas: '¿Tienes dudas? Llama al 33 3640 0944 o 33 3640 6194, o escribe a tu asesor.'
+  };
+  let infoSeq = 0;
+  function infoHtml(key) {
+    const id = `info-${key}-${++infoSeq}`;
+    return `<span class="info"><button type="button" class="info-btn" data-info="${key}" aria-label="Más información" title="Más información" aria-expanded="false" aria-describedby="${id}">i</button><span class="info-tip" role="tooltip" id="${id}" hidden>${esc(INFO[key])}</span></span>`;
+  }
+  // Muestra el texto bajo el botón (o arriba si no cabe), siempre dentro de la pantalla con 16 px de margen
+  let infoFijo = null; // botón abierto con clic/toque: no se cierra al quitar el cursor
+  function infoMostrar(btn) {
+    document.querySelectorAll('.info-btn[aria-expanded="true"]').forEach(b => { if (b !== btn) infoOcultar(b, true); });
+    const tip = document.getElementById(btn.getAttribute('aria-describedby'));
+    if (!tip) return;
+    tip.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+    const r = btn.getBoundingClientRect();
+    const w = tip.offsetWidth, h = tip.offsetHeight, vw = document.documentElement.clientWidth, vh = window.innerHeight;
+    const left = Math.max(16, Math.min(r.left + r.width / 2 - w / 2, vw - w - 16));
+    const top = r.bottom + 8 + h > vh - 8 && r.top - 8 - h > 8 ? r.top - 8 - h : r.bottom + 8;
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  }
+  function infoOcultar(btn, forzar) {
+    if (!btn || (!forzar && infoFijo === btn)) return;
+    const tip = document.getElementById(btn.getAttribute('aria-describedby'));
+    if (tip) tip.hidden = true;
+    btn.setAttribute('aria-expanded', 'false');
+    if (infoFijo === btn) infoFijo = null;
+  }
+  const infoCerrarTodos = () => document.querySelectorAll('.info-btn[aria-expanded="true"]').forEach(b => infoOcultar(b, true));
+  document.querySelectorAll('[data-info-slot]').forEach(s => { s.outerHTML = infoHtml(s.dataset.infoSlot); });
+
+  function pasaFiltros(m) {
+    if (ui.plaza !== 'all' && grupoDe(m) !== ui.plaza) return false;
+    if (ui.estado !== 'all' && estadoDe(m.id) !== ui.estado) return false;
+    if (ui.q) {
+      const q = norm(ui.q.trim());
+      // Unidades: por número y plaza (vallas) o formato (BR). Medios fijos: por clave y dirección.
+      const texto = esLinea(m) ? `${m.nombre} ${m.grupo}` : `${m.clave} ${dirDe(m)}`;
+      if (q && !norm(texto).includes(q)) return false;
+    }
+    return true;
+  }
+
+  // Grupos por plaza (BR: por formato) de la pestaña activa, ya filtrados
+  function gruposVisibles() {
+    const tab = delTab();
+    return plazasDe(tab).map(plaza => {
+      const todos = tab.filter(m => grupoDe(m) === plaza);
+      const vis = todos.filter(pasaFiltros);
+      return { plaza, todos, vis };
+    }).filter(g => g.vis.length);
+  }
+
+  // Sí / No grande (tarjeta y ficha)
+  function yn(m) {
+    const r = respuestas[m.id];
+    return `<div class="yn" role="group" aria-label="¿Incluyes ${esc(nombreA11y(m))}?">
+      <button type="button" data-id="${m.id}" data-v="si" aria-pressed="${r === true}"${dis()}>Sí</button>
+      <button type="button" data-id="${m.id}" data-v="no" aria-pressed="${r === false}"${dis()}>No</button>
+    </div>`;
+  }
+
+  // Sí / No compacto (tabla)
+  function seg(m) {
+    const r = respuestas[m.id];
+    return `<div class="seg" role="group" aria-label="¿Incluyes ${esc(nombreA11y(m))}?">
+      <button type="button" data-id="${m.id}" data-v="si" aria-pressed="${r === true}"${dis()}>Sí</button>
+      <button type="button" data-id="${m.id}" data-v="no" aria-pressed="${r === false}"${dis()}>No</button>
+    </div>`;
+  }
+
+  function grpHead(g) {
+    const abierto = !ui.cerrados.has(grpKey(g.plaza));
+    const resp = g.todos.filter(m => estadoDe(m.id) !== 'pend').length;
+    // Unidades: "15 vallas · X de 15 respondidas" / "20 unidades · X de 20 respondidas" (cuentan tarjetas)
+    let sub = tabEsLineas()
+      ? `${cuentaTxt(g.todos.length)} · ${resp} de ${g.todos.length} respondidas`
+      : `${medioTxt(g.todos.length)} · ${resp} de ${g.todos.length} respondidos`;
+    if (g.vis.length !== g.todos.length) sub += ` · ${g.vis.length} con los filtros`;
+    const p = esc(g.plaza);
+    return `<div class="grp-head">
+      <div class="grp-title">
+        <button type="button" class="grp-toggle" data-act="grp" data-plaza="${p}" aria-expanded="${abierto}">
+          <span class="chev" aria-hidden="true">▾</span>
+          <span class="grp-name">${p}</span>
+          <span class="grp-sub">${sub}</span>
+        </button>
+        ${tabEsLineas() ? infoHtml('numeracion') : ''}
+      </div>
+      <div class="grp-actions" role="group" aria-label="Acciones para ${p}">
+        <button class="btn-sm" type="button" data-act="bulk" data-scope="plaza" data-plaza="${p}" data-val="si"${dis()}>Todos Sí</button>
+        <button class="btn-sm" type="button" data-act="bulk" data-scope="plaza" data-plaza="${p}" data-val="no"${dis()}>Todos No</button>
+      </div>
+    </div>`;
+  }
+
+  function masBtn(g, visibles) {
+    const resto = g.vis.length - visibles.length;
+    if (resto <= 0) return '';
+    return `<button class="btn-sm" type="button" data-act="more" data-plaza="${esc(g.plaza)}">Mostrar más (${cuentaTxt(resto)})</button>`;
+  }
+
+  const visiblesDe = g => ui.completos.has(grpKey(g.plaza)) ? g.vis : g.vis.slice(0, POR_GRUPO);
+
+  function vacioHtml() {
+    if (!delTab().length) return 'Esta propuesta no incluye medios de este tipo.';
+    return `Ningún medio coincide con los filtros.<br><button class="btn-sm" type="button" data-act="clear">Limpiar filtros</button>`;
+  }
+
+  function renderCards(grupos) {
+    const wrap = document.getElementById('cardsWrap');
+    if (!grupos.length) { wrap.innerHTML = `<div class="empty">${vacioHtml()}</div>`; return; }
+    wrap.innerHTML = grupos.map(g => {
+      const abierto = !ui.cerrados.has(grpKey(g.plaza));
+      const vis = visiblesDe(g);
+      const cards = !abierto ? '' : `<div class="mgrid">${vis.map(m => {
+        if (esLinea(m)) return cardLinea(m);
+        // El tipo de medio ya lo da la foto: la tarjeta muestra el periodo de la campaña.
+        const sub = esc(periodoTxt(PERIODO_CAMPANA));
+        // Precio con descuento como protagonista; precio cliente tachado como referencia. Sin descuento: solo precio cliente.
+        const tieneDesc = typeof m.descuento === 'number' && m.descuento > 0;
+        const precio = tieneDesc
+          ? `<span class="price-disc" aria-label="Precio con descuento ${fmtMXN(m.descuento)}">${fmtMXN(m.descuento)}</span><s class="strike" aria-label="Precio cliente ${fmtMXN(m.precio)}">${fmtMXN(m.precio)}</s>`
+          : `<span class="price-solo" aria-label="Precio cliente ${fmtMXN(m.precio)}">${fmtMXN(m.precio)}</span>`;
+        return `<article class="mcard is-${estadoDe(m.id)}" data-open="${m.id}">
+          <div class="mcard-info">
+            <div class="mcard-thumb illus" aria-hidden="true">${ilusSvg(m)}</div>
+            <div class="mcard-text">
+              <button type="button" class="linklike" data-open="${m.id}" aria-label="Ver ficha de ${esc(m.clave)}" title="${esc(m.clave)}">${esc(m.clave)}</button>
+              <div class="mcard-sub" title="${sub}">${sub}</div>
+              <div class="mcard-price">${precio}</div>
+            </div>
+          </div>
+          ${yn(m)}
+        </article>`;
+      }).join('')}</div>${masBtn(g, vis) ? `<div class="grp-more">${masBtn(g, vis)}</div>` : ''}`;
+      return `<section class="grp" aria-label="${esc(g.plaza)}">${grpHead(g)}${cards}</section>`;
+    }).join('');
+  }
+
+  // Tarjeta de unidad (vallas y BR): número simbólico como clave, "plaza · periodo" (vallas) o "N meses" (BR),
+  // precio unitario con descuento y tachado, y Sí/No. Sin descuento: solo el precio. Sin subtotal por unidad.
+  function cardLinea(m) {
+    const sub = subUnidad(m);
+    const precio = tieneDesc(m)
+      ? `<span class="price-disc" aria-label="Precio unitario con descuento ${fmtMXN(m.descuento)}">${fmtMXN(m.descuento)}</span><s class="strike" aria-label="Precio unitario ${fmtMXN(m.precio)}">${fmtMXN(m.precio)}</s>`
+      : `<span class="price-solo" aria-label="Precio unitario ${fmtMXN(m.precio)}">${fmtMXN(m.precio)}</span>`;
+    return `<article class="mcard is-${estadoDe(m.id)}" data-open="${m.id}">
+      <div class="mcard-info">
+        <div class="mcard-thumb illus" aria-hidden="true">${ilusSvg(m)}</div>
+        <div class="mcard-text">
+          <button type="button" class="linklike" data-open="${m.id}" aria-label="Ver ficha de ${esc(nombreA11y(m))}" title="${esc(m.nombre)}">${esc(m.nombre)}</button>
+          <div class="mcard-sub" title="${esc(sub)}">${esc(sub)}</div>
+          <div class="mcard-price">${precio}</div>
+        </div>
+      </div>
+      ${yn(m)}
+    </article>`;
+  }
+
+  // Celdas de medios fijos. Sin valor ('—', null) → «—». Métricas y perfil en cero → «Sin dato».
+  const sinValor = v => v === undefined || v === null || v === '' || v === '—';
+  const cTxt = v => sinValor(v) ? '—' : esc(v);
+  const cNum = v => sinValor(v) ? '—' : v === 0 ? 'Sin dato' : esc(Number(v).toLocaleString('es-MX'));
+  const cProm = v => sinValor(v) ? '—' : v === 0 ? 'Sin dato' : esc(Number(v).toLocaleString('es-MX', { minimumFractionDigits: 1, maximumFractionDigits: 1 }));
+  const cPct = v => sinValor(v) ? '—' : v === 0 ? 'Sin dato' : esc(Math.round(v * 100) + '%');
+  const cMXN = v => sinValor(v) ? '—' : fmtMXN(v);
+  const cMapa = m => sinValor(m.lat) || sinValor(m.lng) ? '—'
+    : `<a href="https://www.google.com/maps?q=${encodeURIComponent(m.lat + ',' + m.lng)}" target="_blank" rel="noopener">Ver en mapa</a>`;
+  const cDir = m => { const d = esc(dirDe(m)); return `<span class="trunc" title="${d}">${d}</span>`; };
+  const cClave = m => `<button type="button" class="linklike" data-open="${m.id}" aria-label="Ver ficha de ${esc(m.clave)}">${esc(m.clave)}</button>`;
+  const cRuta = m => `<button type="button" class="linklike" data-open="${m.id}" aria-label="Ver ficha de ${esc(m.nombre)}">${esc(m.nombre)}</button>`;
+  const cDesc = m => tieneDesc(m) ? `<span class="price-disc">${fmtMXN(m.descuento)}</span>` : fmtMXN(m.precio);
+  // Columna: [encabezado, celda(m), clase opcional ('num' | 'dir-cell' | 'key')]
+  const COL_INCLUYES = ['¿Lo incluyes?', m => seg(m), 'key key-1'];
+  const COLS_TIPO = {
+    sitios: [
+      COL_INCLUYES,
+      ['Clave IMJ', cClave, 'key key-2'],
+      ['Formato', m => cTxt(m.formato)],
+      ['Dirección', cDir, 'dir-cell'],
+      ['Vista', m => cTxt(m.vista)],
+      ['Iluminación', m => cTxt(m.iluminacion)],
+      ['Medida', m => cTxt(m.dimensiones)],
+      ['Inicio', m => cTxt(m.inicio)],
+      ['Fin', m => cTxt(m.fin)],
+      ['Comentarios', m => cTxt(m.comentarios)],
+      ['Referencias comerciales', m => cTxt(m.referencias)],
+      ['Ubicación', cMapa],
+      ['Latitud', m => m.lat.toFixed(4), 'num'],
+      ['Longitud', m => m.lng.toFixed(4), 'num'],
+      ['Impactos', m => cNum(m.impactos), 'num'],
+      ['Impactos totales', m => cNum(m.impactosTotales), 'num'],
+      ['Alcance', m => cNum(m.alcance), 'num'],
+      ['Frecuencia promedio', m => cProm(m.frecuencia), 'num'],
+      ['Tiempo de exposición promedio (seg/mes)', m => cProm(m.tiempoExp), 'num'],
+      ['Hombres', m => cPct(m.hombres), 'num'],
+      ['Mujeres', m => cPct(m.mujeres), 'num'],
+      ['NSE AB', m => cPct(m.nse?.ab), 'num'],
+      ['NSE C+', m => cPct(m.nse?.cmas), 'num'],
+      ['NSE C', m => cPct(m.nse?.c), 'num'],
+      ['NSE D+', m => cPct(m.nse?.dmas), 'num'],
+      ['NSE D', m => cPct(m.nse?.d), 'num'],
+      ['NSE E', m => cPct(m.nse?.e), 'num'],
+      ['Edad 0–14', m => cPct(m.edad?.e0_14), 'num'],
+      ['Edad 15–19', m => cPct(m.edad?.e15_19), 'num'],
+      ['Edad 20–24', m => cPct(m.edad?.e20_24), 'num'],
+      ['Edad 25–34', m => cPct(m.edad?.e25_34), 'num'],
+      ['Edad 35–44', m => cPct(m.edad?.e35_44), 'num'],
+      ['Edad 45–64', m => cPct(m.edad?.e45_64), 'num'],
+      ['Edad 65 o más', m => cPct(m.edad?.e65), 'num'],
+      ['Precio cliente', m => fmtMXN(m.precio), 'num'],
+      ['Precio con descuento', cDesc, 'num']
+    ],
+    camiones: [
+      COL_INCLUYES,
+      ['Ruta', cRuta, 'key key-2'],
+      ['Tipo de exhibición', m => cTxt(m.tipoExhibicion)],
+      ['Categoría', m => cTxt(m.categoria)],
+      ['Tipo de anuncio', m => cTxt(m.tipoAnuncio)],
+      ['Inicio', m => cTxt(m.inicio)],
+      ['Fin', m => cTxt(m.fin)],
+      ['Impactos únicos', m => cNum(m.impactos), 'num'],
+      ['Alcance mensual', m => cNum(m.alcance), 'num'],
+      ['Impactos totales', m => cNum(m.impactosTotales), 'num'],
+      ['Frecuencia promedio mensual', m => cProm(m.frecuencia), 'num'],
+      ['Tiempo de exposición promedio (seg)', m => cProm(m.tiempoExp), 'num'],
+      ['Km promedio', m => cNum(m.kmPromedio), 'num'],
+      ['Hombres', m => cPct(m.hombres), 'num'],
+      ['Mujeres', m => cPct(m.mujeres), 'num'],
+      ['Precio cliente', m => fmtMXN(m.precio), 'num'],
+      ['Precio con descuento', cDesc, 'num']
+    ],
+    indoors: [
+      COL_INCLUYES,
+      ['Clave IMJ', cClave, 'key key-2'],
+      ['Formato', m => cTxt(m.formato)],
+      ['Inmueble', m => cTxt(m.inmueble)],
+      ['Nivel', m => cTxt(m.nivel)],
+      ['Área', m => cTxt(m.area)],
+      ['A nivel de piso', m => cTxt(m.aNivelPiso)],
+      ['Descripción', m => cTxt(m.descripcion)],
+      ['Comentarios', m => cTxt(m.comentarios)],
+      ['Dirección', cDir, 'dir-cell'],
+      ['Inicio', m => cTxt(m.inicio)],
+      ['Fin', m => cTxt(m.fin)],
+      ['Impactos', m => cNum(m.impactos), 'num'],
+      ['Alcance', m => cNum(m.alcance), 'num'],
+      ['Impactos totales', m => cNum(m.impactosTotales), 'num'],
+      ['Frecuencia promedio', m => cProm(m.frecuencia), 'num'],
+      // Indoor: hombres y mujeres son cantidad de personas, no porcentaje
+      ['Hombres', m => cNum(m.hombres), 'num'],
+      ['Mujeres', m => cNum(m.mujeres), 'num'],
+      ['NSE ABC+', m => cPct(m.nse?.abcmas), 'num'],
+      ['NSE C', m => cPct(m.nse?.c), 'num'],
+      ['NSE C-', m => cPct(m.nse?.cmenos), 'num'],
+      ['NSE D+', m => cPct(m.nse?.dmas), 'num'],
+      ['NSE DE', m => cPct(m.nse?.de), 'num'],
+      ['Edad 13–17', m => cPct(m.edad?.e13_17), 'num'],
+      ['Edad 18–25', m => cPct(m.edad?.e18_25), 'num'],
+      ['Edad 26–40', m => cPct(m.edad?.e26_40), 'num'],
+      ['Edad 41–55', m => cPct(m.edad?.e41_55), 'num'],
+      ['Edad 55 o más', m => cPct(m.edad?.e55), 'num'],
+      ['Precio de producción', m => cMXN(m.precioProduccion), 'num'],
+      ['Precio cliente', m => fmtMXN(m.precio), 'num'],
+      ['Precio con descuento', cDesc, 'num']
+    ]
+  };
+  const tabEsMedios = () => !!COLS_TIPO[tabActiva];
+  function filaMedio(m) {
+    return `<tr class="medio is-${estadoDe(m.id)}" data-open="${m.id}">${COLS_TIPO[m.tab].map(([, cel, cls]) => `<td${cls ? ` class="${cls}"` : ''}>${cel(m)}</td>`).join('')}</tr>`;
+  }
+
+  // Columnas de la tabla según la pestaña (vallas y BR sin cambios)
+  function columnas() {
+    if (tabEsMedios()) return COLS_TIPO[tabActiva].map(([h, , cls]) => cls ? [h, cls] : h);
+    const br = tabActiva === 'riders';
+    return ['¿Lo incluyes?', 'Unidad', br ? 'Formato' : 'Plaza',
+      br ? ['Meses', 'num'] : 'Periodo', ['Precio unitario', 'num'],
+      ['Precio con descuento', 'num']];
+  }
+
+  function filaLinea(m) {
+    const br = m.tipo === 'br';
+    return `<tr class="medio is-${estadoDe(m.id)}" data-open="${m.id}">
+      <td>${seg(m)}</td>
+      <td><button type="button" class="linklike" data-open="${m.id}" aria-label="Ver ficha de ${esc(nombreA11y(m))}">${esc(m.nombre)}</button></td>
+      <td>${esc(m.grupo)}</td>
+      ${br ? `<td class="num">${m.meses}</td>` : `<td>${esc(m.periodo)}</td>`}
+      <td class="num">${fmtMXN(m.precio)}</td>
+      <td class="num">${tieneDesc(m) ? `<span class="price-disc">${fmtMXN(m.descuento)}</span>` : ''}</td>
+    </tr>`;
+  }
+
+  // Ancho visible de la tabla: el encabezado de plaza lo usa para no salirse al desplazar
+  function tablaAncho() {
+    const wrap = document.getElementById('tablaWrap');
+    if (wrap.clientWidth) wrap.style.setProperty('--tw', wrap.clientWidth + 'px');
+  }
+  window.addEventListener('resize', tablaAncho);
+
+  function renderTabla(grupos) {
+    const body = document.getElementById('tablaBody');
+    const cols = columnas();
+    const n = cols.length;
+    // Medios fijos: tabla ancha con desplazamiento horizontal y columnas clave fijas
+    const wrap = document.getElementById('tablaWrap');
+    wrap.classList.toggle('is-wide', tabEsMedios());
+    tablaAncho();
+    document.getElementById('tablaHead').innerHTML = `<tr>${cols.map(c => Array.isArray(c) ? `<th class="${c[1]}">${c[0]}</th>` : `<th>${c}</th>`).join('')}</tr>`;
+    if (!grupos.length) { body.innerHTML = `<tr><td colspan="${n}" class="empty">${vacioHtml()}</td></tr>`; return; }
+    const filas = [];
+    grupos.forEach(g => {
+      filas.push(`<tr class="city"><td colspan="${n}">${grpHead(g)}</td></tr>`);
+      if (ui.cerrados.has(grpKey(g.plaza))) return;
+      const vis = visiblesDe(g);
+      vis.forEach(m => {
+        filas.push(esLinea(m) ? filaLinea(m) : filaMedio(m));
+      });
+      const mas = masBtn(g, vis);
+      if (mas) filas.push(`<tr><td colspan="${n}"><div class="grp-more">${mas}</div></td></tr>`);
+    });
+    body.innerHTML = filas.join('');
+  }
+
+  function renderFiltros() {
+    const sel = document.getElementById('fPlaza');
+    const plazas = plazasDe(delTab());
+    if (ui.plaza !== 'all' && !plazas.includes(ui.plaza)) ui.plaza = 'all';
+    sel.innerHTML = `<option value="all">Todas las plazas</option>` +
+      plazas.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+    sel.value = ui.plaza;
+    // BR no tiene plaza (se agrupa por formato): se oculta el filtro de plaza
+    sel.hidden = tabActiva === 'riders';
+    const ph = tabActiva === 'riders' ? 'Buscar por formato o número'
+      : tabEsLineas() ? 'Buscar por número o plaza' : 'Buscar por clave o dirección';
+    const buscar = document.getElementById('fBuscar');
+    buscar.placeholder = ph;
+    buscar.setAttribute('aria-label', ph);
+  }
+
+  function renderLista() {
+    renderFiltros();
+    const grupos = gruposVisibles();
+    const vista = vistaEfectiva();
+    document.getElementById('cardsWrap').hidden = vista !== 'cards';
+    document.getElementById('tablaWrap').hidden = vista !== 'table';
+    // Solo se pinta la vista activa
+    if (vista === 'cards') { renderCards(grupos); document.getElementById('tablaBody').innerHTML = ''; }
+    else { renderTabla(grupos); document.getElementById('cardsWrap').innerHTML = ''; }
+  }
+
+  // Ficha: solo campos con dato
+  function renderFicha() {
+    const panel = document.getElementById('ficha');
+    const m = ITEMS.find(x => x.id === ui.fichaId);
+    if (!m) { panel.hidden = true; document.body.classList.remove('ficha-abierta'); return; }
+    panel.hidden = false;
+    document.body.classList.add('ficha-abierta');
+    if (esLinea(m)) { renderFichaLinea(m); return; }
+    document.getElementById('fichaTitulo').textContent = m.clave;
+    document.getElementById('fichaMeta').innerHTML = `<span class="tag">${esc(m.formato)}</span><span>${esc(m.ciudad)}</span>`;
+    const campos = [
+      ['Impactos', m.impactos ? m.impactos.toLocaleString('es-MX') : ''],
+      ['Alcance', m.alcance ? m.alcance.toLocaleString('es-MX') : ''],
+      ['Frecuencia', m.frecuencia ? m.frecuencia.toFixed(1) : ''],
+      ['Audiencia', m.audiencia, true],
+      ['Dimensiones', m.dimensiones],
+      ['Iluminación', m.iluminacion],
+      ['Vista', m.vista],
+      ['Material', m.material],
+      ['Puntos de interés', m.poi, true]
+    ].filter(c => c[1]);
+    const detalle = campos.length
+      ? `<dl class="ficha-grid">${campos.map(([k, v, full]) => `<div${full ? ' class="full"' : ''}><dt class="fact-label">${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`
+      : '<p class="muted" style="margin:0">Sin datos de apoyo para este medio.</p>';
+    document.getElementById('fichaBody').innerHTML = `
+      <div class="ficha-illus illus" aria-hidden="true">${ilusSvg(m)}</div>
+      ${m.direccion ? `<div class="ficha-dir">${esc(m.direccion)}</div>` : ''}
+      <dl class="ficha-grid">
+        <div><dt class="fact-label">Precio cliente</dt><dd>${fmtMXN(m.precio)}</dd></div>
+        <div><dt class="fact-label">Precio con descuento</dt><dd class="price-disc">${fmtMXN(m.descuento)}</dd></div>
+      </dl>
+      <div><div class="fact-label" style="margin-bottom:6px">¿Lo incluyes?</div>${yn(m)}</div>
+      <h3 class="ficha-sec">Detalle del medio</h3>
+      ${detalle}`;
+  }
+
+  // Ficha de unidad (vallas y BR): número simbólico, subtítulo por tipo, ilustración, Propuesta y Sí/No.
+  // Solo campos con dato. No se muestran clave del proveedor, proveedor, costo ni margen.
+  function renderFichaLinea(m) {
+    const br = m.tipo === 'br';
+    document.getElementById('fichaTitulo').textContent = m.nombre;
+    const meta = br ? `Brand rider · ${m.familia}` : `Valla móvil · ${m.grupo}`;
+    document.getElementById('fichaMeta').innerHTML = `<span>${esc(meta)}</span>`;
+    const campos = [
+      ['Tipo de vehículo', br ? m.vehiculo : ''],
+      br ? ['Meses', m.meses ? mesTxt(m.meses) : ''] : ['Periodo', m.periodo],
+      [br ? 'Precio unitario mensual' : 'Precio unitario', fmtMXN(m.precio)],
+      ['Precio con descuento', tieneDesc(m) ? fmtMXN(m.descuento) : '', 'price-disc']
+    ].filter(c => c[1]);
+    document.getElementById('fichaBody').innerHTML = `
+      <div class="ficha-illus illus" aria-hidden="true">${ilusSvg(m)}</div>
+      <h3 class="ficha-sec">Propuesta</h3>
+      <dl class="ficha-grid">${campos.map(([k, v, cls]) => `<div><dt class="fact-label">${k}</dt><dd${cls ? ` class="${cls}"` : ''}>${esc(v)}</dd></div>`).join('')}</dl>
+      <div><div class="fact-label" style="margin-bottom:6px">¿Lo incluyes?</div>${yn(m)}</div>`;
+  }
+
+  function abrirFicha(id) {
+    ui.fichaId = id;
+    renderFicha();
+    document.getElementById('fichaCerrar').focus();
+  }
+
+  function cerrarFicha() {
+    const id = ui.fichaId;
+    ui.fichaId = null;
+    renderFicha();
+    const origen = id && document.querySelector(`#cardsWrap .linklike[data-open="${id}"], #tablaBody .linklike[data-open="${id}"]`);
+    if (origen) origen.focus();
+  }
+
+  function renderResumen() {
+    // Cada tarjeta es una unidad (medio fijo, valla o BR = 1). "Medios elegidos", Avance y Confirmar cuentan tarjetas.
+    const elegidos = ITEMS.filter(m => respuestas[m.id] === true);
+    const respondidos = ITEMS.filter(m => respuestas[m.id] !== undefined && respuestas[m.id] !== null).length;
+    const total = ITEMS.length;
+    const unidadesEleg = elegidos.length;
+    const unidadesTotal = total;
+    const impactos = elegidos.reduce((s, m) => s + (m.impactos || 0), 0);
+    const inversion = elegidos.reduce((s, m) => s + subtotal(m), 0);
+    const descuento = elegidos.reduce((s, m) => s + subtotalDesc(m), 0);
+    const propuesta = ITEMS.reduce((s, m) => s + subtotal(m), 0);
+
+    document.getElementById('sumElegidos').textContent = unidadesEleg.toLocaleString('es-MX');
+    document.getElementById('sumTotal').textContent = unidadesTotal.toLocaleString('es-MX');
+    document.getElementById('sumImpactos').textContent = fmtNum(impactos);
+    document.getElementById('sumInversion').textContent = fmtMXN(inversion);
+    document.getElementById('sumDescuento').textContent = fmtMXN(descuento);
+    document.getElementById('sumPropuesta').textContent = fmtMXN(propuesta);
+
+    const pct = total ? Math.round(respondidos / total * 100) : 0;
+    document.getElementById('progressText').textContent = `${respondidos} de ${total} respondidos`;
+    const bar = document.querySelector('.bar');
+    bar.setAttribute('aria-valuenow', pct);
+    document.getElementById('barFill').style.width = pct + '%';
+
+    const completo = respondidos === total;
+    const btn = document.getElementById('btnConfirmar');
+    const faltan = `Faltan ${total - respondidos} por responder.`;
+    let hint;
+    if (!EDITABLE) {
+      // Campañas de solo lectura en la maqueta
+      btn.disabled = true;
+      hint = 'Esta campaña no admite cambios en la maqueta.';
+    } else if (confirmada()) {
+      // Selección ya confirmada: sigue editable; los cambios se guardan con "Guardar cambios"
+      const cambios = hayCambios();
+      btn.textContent = cambios ? 'Guardar cambios' : 'Selección confirmada';
+      btn.disabled = !(cambios && completo);
+      hint = !completo ? faltan : cambios ? 'Guarda los cambios para actualizar tu selección.' : 'Selección confirmada.';
+    } else {
+      btn.textContent = 'Confirmar selección';
+      btn.disabled = !completo;
+      hint = completo ? 'Listo para confirmar.' : faltan;
+    }
+    document.getElementById('pendingHint').textContent = hint;
+
+    TABS.forEach(t => {
+      const del = ITEMS.filter(m => m.tab === t.key);
+      const eleg = del.filter(m => respuestas[m.id] === true).length;
+      document.querySelector(`[data-count="${t.key}"]`).textContent = `${eleg}/${del.length}`;
+    });
+  }
+
+  function render() {
+    // Conserva el foco en el botón Sí/No pulsado aunque se vuelva a pintar la lista
+    const a = document.activeElement;
+    const foco = a && a.dataset && a.dataset.id && a.dataset.v
+      ? { id: a.dataset.id, v: a.dataset.v, enFicha: !!a.closest('#ficha') } : null;
+    renderLista();
+    renderResumen();
+    renderFicha();
+    if (foco) {
+      const sel = `button[data-id="${foco.id}"][data-v="${foco.v}"]`;
+      const el = document.querySelector(foco.enFicha ? `#ficha ${sel}` : `#cardsWrap ${sel}, #tablaBody ${sel}`);
+      if (el) el.focus();
+    }
+  }
+
+  // Acciones masivas: por plaza (en la pestaña activa) o por toda la pestaña. Sobrescriben respuestas, con confirmación.
+  function marcarTodos(scope, plaza, val) {
+    if (!EDITABLE) return;
+    const objetivo = delTab().filter(m => scope === 'tab' || grupoDe(m) === plaza);
+    if (!objetivo.length) return;
+    const sobrescribe = objetivo.filter(m => estadoDe(m.id) !== 'pend' && respuestas[m.id] !== val).length;
+    if (sobrescribe > 0) {
+      const ambito = scope === 'tab' ? `toda la pestaña ${TABS.find(t => t.key === tabActiva).label}` : plaza;
+      const ok = window.confirm(`Vas a marcar "${val ? 'Sí' : 'No'}" en ${cuentaTxt(objetivo.length)} de ${ambito}.\n${sobrescribe} ya ${sobrescribe === 1 ? 'tenía otra respuesta y se sobrescribirá' : 'tenían otra respuesta y se sobrescribirán'}. ¿Continuar?`);
+      if (!ok) return;
+    }
+    objetivo.forEach(m => { respuestas[m.id] = val; });
+    alCambiarRespuestas();
+    render();
+  }
+
+  // Confirmar selección (o Guardar cambios tras confirmar): guarda respuestas y deja la campaña en "Selección confirmada".
+  // respondidos queda en el total de medios de la campaña en el estado.
+  document.getElementById('btnConfirmar').addEventListener('click', () => {
+    if (!EDITABLE) return;
+    const completo = ITEMS.every(m => respuestas[m.id] === true || respuestas[m.id] === false);
+    if (!completo || (confirmada() && !hayCambios())) return;
+    OBP_ESTADO.actualizarCampana(camp.codigo, {
+      estado: 'Selección confirmada',
+      respondidos: campEstado.medios,
+      respuestas: respuestasLimpias()
+    });
+    pintarBadge();
+    render();
+  });
+
+  // Delegación de clics
+  document.addEventListener('click', e => {
+    // Información contextual: clic o toque fija/quita el texto; un clic fuera lo cierra
+    const ib = e.target.closest('.info-btn');
+    if (ib) {
+      if (infoFijo === ib) infoOcultar(ib, true);
+      else { infoMostrar(ib); infoFijo = ib; }
+      return;
+    }
+    if (infoFijo && !e.target.closest('.info-tip')) infoOcultar(infoFijo, true);
+    const b = e.target.closest('button[data-v]');
+    if (b) {
+      if (!EDITABLE) return;
+      const id = b.dataset.id;
+      const v = b.dataset.v === 'si';
+      respuestas[id] = respuestas[id] === v ? null : v;
+      alCambiarRespuestas();
+      render();
+      return;
+    }
+    const act = e.target.closest('[data-act]');
+    if (act) {
+      const plaza = act.dataset.plaza;
+      if (act.dataset.act === 'bulk') marcarTodos(act.dataset.scope, plaza, act.dataset.val === 'si');
+      else if (act.dataset.act === 'grp') {
+        const k = grpKey(plaza);
+        ui.cerrados.has(k) ? ui.cerrados.delete(k) : ui.cerrados.add(k);
+        renderLista();
+        const t = document.querySelector(`.grp-toggle[data-plaza="${CSS.escape(plaza)}"]`);
+        if (t) t.focus();
+      } else if (act.dataset.act === 'more') { ui.completos.add(grpKey(plaza)); renderLista(); }
+      else if (act.dataset.act === 'clear') {
+        ui.q = ''; ui.plaza = 'all'; ui.estado = 'all';
+        document.getElementById('fBuscar').value = '';
+        document.getElementById('fEstado').value = 'all';
+        renderLista();
+      }
+      return;
+    }
+    const tab = e.target.closest('.tab');
+    if (tab) {
+      tabActiva = tab.dataset.tab;
+      ui.plaza = 'all';
+      document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', t === tab));
+      render();
+      return;
+    }
+    const vt = e.target.closest('.view-toggle button');
+    if (vt) {
+      ui.vista = vt.dataset.view;
+      document.querySelectorAll('.view-toggle button').forEach(x => x.setAttribute('aria-pressed', String(x === vt)));
+      renderLista();
+      return;
+    }
+    // Tarjeta o fila (fuera de los controles): abre la ficha
+    const abrir = e.target.closest('[data-open]');
+    if (abrir && !e.target.closest('a, input, select')) abrirFicha(abrir.dataset.open);
+  });
+
+  // Filtros
+  document.getElementById('fBuscar').addEventListener('input', e => { ui.q = e.target.value; renderLista(); });
+  document.getElementById('fPlaza').addEventListener('change', e => { ui.plaza = e.target.value; renderLista(); });
+  document.getElementById('fEstado').addEventListener('change', e => { ui.estado = e.target.value; renderLista(); });
+  document.getElementById('btnFiltros').addEventListener('click', e => {
+    const abierto = document.getElementById('filtros').classList.toggle('open');
+    e.currentTarget.setAttribute('aria-expanded', String(abierto));
+  });
+
+  // Ficha: cerrar con botón o Escape
+  document.getElementById('fichaCerrar').addEventListener('click', cerrarFicha);
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    // Escape cierra primero el texto de información abierto; si no hay, la ficha
+    if (document.querySelector('.info-btn[aria-expanded="true"]')) { infoCerrarTodos(); return; }
+    if (ui.fichaId) cerrarFicha();
+  });
+
+  // Información contextual: se muestra al pasar el cursor o al enfocar con teclado
+  document.addEventListener('mouseover', e => { const b = e.target.closest('.info-btn'); if (b) infoMostrar(b); });
+  document.addEventListener('mouseout', e => { const b = e.target.closest('.info-btn'); if (b && !b.contains(e.relatedTarget)) infoOcultar(b); });
+  document.addEventListener('focusin', e => { if (e.target.matches('.info-btn')) infoMostrar(e.target); });
+  document.addEventListener('focusout', e => { if (e.target.matches('.info-btn')) infoOcultar(e.target, true); });
+  // Al hacer scroll o cambiar el tamaño, el texto abierto se reacomoda junto a su botón
+  const infoReubicar = () => document.querySelectorAll('.info-btn[aria-expanded="true"]').forEach(infoMostrar);
+  window.addEventListener('scroll', infoReubicar, { passive: true, capture: true });
+  window.addEventListener('resize', infoReubicar);
+
+  // Al cruzar el corte de móvil, la tabla se oculta y la lista se pinta como tarjetas
+  mqMovil.addEventListener('change', renderLista);
+
+  render();
+</script>
+</body>
+</html>
