@@ -1,0 +1,141 @@
+/* Stepper (§6). Círculo 38 con borde 3 px OUTSIDE; conector 1 px detrás de los círculos. */
+.ui-stepper-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.ui-stepper {
+  --_line: var(--ui-color-icon-all-colors-blue);
+  --_center: calc(var(--ui-space-16) + var(--ui-size-stepper-circle) / 2);
+
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-stepper--on-color { --_line: var(--ui-color-border-on-color); }
+
+.ui-stepper--vertical { flex-direction: column; }
+
+.ui-stepper__item {
+  position: relative;
+  flex: none;
+}
+
+.ui-stepper--horizontal .ui-stepper__item { width: var(--ui-size-stepper-step-w); }
+.ui-stepper--vertical .ui-stepper__item { min-height: var(--ui-size-stepper-step-h); }
+
+/* Conector hacia el siguiente paso */
+.ui-stepper__item:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  background: var(--_line);
+}
+
+.ui-stepper--horizontal .ui-stepper__item:not(:last-child)::before {
+  top: var(--_center);
+  left: var(--_center);
+  width: 100%;
+  height: var(--ui-stroke-width-1);
+}
+
+.ui-stepper--vertical .ui-stepper__item:not(:last-child)::before {
+  top: var(--_center);
+  left: var(--_center);
+  width: var(--ui-stroke-width-1);
+  height: 100%;
+}
+
+.ui-stepper__step {
+  position: relative;
+  display: flex;
+  gap: var(--ui-space-16);
+  width: 100%;
+  margin: 0;
+  padding: var(--ui-space-16);
+  border: 0;
+  border-radius: var(--ui-radius-control-sm);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+
+.ui-stepper--horizontal .ui-stepper__step { flex-direction: column; }
+.ui-stepper--vertical .ui-stepper__step { flex-direction: row; align-items: flex-start; }
+
+.ui-stepper__step.is-interactive { cursor: pointer; }
+
+.ui-stepper__step.is-interactive:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: calc(var(--ui-focus-ring-offset) * -1);
+}
+
+.ui-stepper__status {
+  position: relative;
+  z-index: var(--ui-z-raised);
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-size-stepper-circle);
+  height: var(--ui-size-stepper-circle);
+  border-radius: var(--ui-radius-control-pill);
+}
+
+/* default = pendiente */
+.ui-stepper__status--pending {
+  background: var(--ui-color-bg-surface-default);
+  box-shadow: 0 0 0 var(--ui-stroke-width-3) var(--ui-color-border-all-colors-blue);
+  color: var(--ui-color-icon-all-colors-blue);
+  font: var(--ui-font-heading-h3);
+  letter-spacing: var(--ui-type-heading-h3-tracking);
+}
+
+/* Active = en curso */
+.ui-stepper__status--current {
+  background: var(--ui-color-bg-fill-all-colors-blue);
+  box-shadow: 0 0 0 var(--ui-stroke-width-3) var(--ui-color-border-all-colors-blue);
+}
+
+.ui-stepper__dot {
+  width: var(--ui-size-stepper-dot);
+  height: var(--ui-size-stepper-dot);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-default);
+}
+
+/* Check = completado */
+.ui-stepper__status--complete {
+  background: var(--ui-color-bg-fill-brand-default);
+  box-shadow: 0 0 0 var(--ui-stroke-width-3) var(--ui-color-border-focus);
+  color: var(--ui-color-icon-on-color);
+}
+
+.ui-stepper__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ui-stepper__label {
+  color: var(--ui-color-text-tertiary);
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.ui-stepper__title {
+  color: var(--ui-color-text-primary);
+  font: var(--ui-font-body-sm-bold);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+}
+
+/* Motivo de bloqueo, visible debajo del paso (6.1). */
+.ui-stepper__reason {
+  margin-top: var(--ui-space-4);
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}

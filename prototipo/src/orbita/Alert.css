@@ -1,0 +1,69 @@
+/* Alerts (§8.2). Info usa la superficie de marca (azul), no la de info. */
+.ui-alert {
+  --_bg: var(--ui-color-bg-surface-brand-default);
+  --_border: var(--ui-color-border-all-colors-blue);
+  --_fg: var(--ui-color-text-brand-default);
+  --_icon: var(--ui-color-icon-brand-default);
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ui-space-16);
+  width: 100%;
+  padding: var(--ui-space-16);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--_border);
+  border-radius: var(--ui-radius-control-sm);
+  background: var(--_bg);
+  color: var(--_fg);
+}
+
+.ui-alert__main {
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+.ui-alert__icon {
+  color: var(--_icon);
+}
+
+.ui-alert__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ui-alert__title,
+.ui-alert__description {
+  margin: 0;
+}
+
+.ui-alert__title {
+  font: var(--ui-font-body-md-bold);
+  letter-spacing: var(--ui-type-body-md-tracking);
+}
+
+.ui-alert__description {
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.ui-alert__side {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-16);
+}
+
+.ui-alert--soft-info { --_bg: var(--ui-color-bg-surface-brand-default); --_border: var(--ui-color-border-all-colors-blue); --_fg: var(--ui-color-text-brand-default); --_icon: var(--ui-color-icon-brand-default); }
+.ui-alert--soft-success { --_bg: var(--ui-color-bg-surface-success-default); --_border: var(--ui-color-border-all-colors-green); --_fg: var(--ui-color-text-success-default); --_icon: var(--ui-color-icon-success-default); }
+.ui-alert--soft-warning { --_bg: var(--ui-color-bg-surface-warning-default); --_border: var(--ui-color-border-all-colors-yellow); --_fg: var(--ui-color-text-warning-default); --_icon: var(--ui-color-icon-warning-default); }
+.ui-alert--soft-danger { --_bg: var(--ui-color-bg-surface-danger-default); --_border: var(--ui-color-border-all-colors-red); --_fg: var(--ui-color-text-danger-default); --_icon: var(--ui-color-icon-danger-default); }
+
+.ui-alert--solid-info { --_bg: var(--ui-color-bg-fill-all-colors-blue); --_border: var(--ui-color-border-all-colors-blue); --_fg: var(--ui-color-text-text-on-color); --_icon: var(--ui-color-icon-on-color); }
+.ui-alert--solid-success { --_bg: var(--ui-color-bg-fill-success-default); --_border: var(--ui-color-border-all-colors-green); --_fg: var(--ui-color-text-text-on-color); --_icon: var(--ui-color-icon-on-color); }
+/* Solid warning y danger no verificados en Figma: se sigue el patrón de info y success. */
+.ui-alert--solid-warning { --_bg: var(--ui-color-bg-fill-warning-default); --_border: var(--ui-color-border-all-colors-yellow); --_fg: var(--ui-color-text-text-on-color); --_icon: var(--ui-color-icon-on-color); }
+.ui-alert--solid-danger { --_bg: var(--ui-color-bg-fill-danger-default); --_border: var(--ui-color-border-all-colors-red); --_fg: var(--ui-color-text-text-on-color); --_icon: var(--ui-color-icon-on-color); }

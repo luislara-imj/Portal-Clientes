@@ -1,0 +1,105 @@
+/* Lightbox (§14.2). El fondo de pantalla no está en Figma: se usa bg/overlay/darker. */
+.ui-lightbox-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-layer-dialog-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ui-space-16);
+}
+
+.ui-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--ui-color-bg-overlay-darker);
+}
+
+.ui-lightbox {
+  --_img: var(--ui-size-lightbox-md);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-space-32);
+  max-width: 100%;
+  outline: none;
+}
+
+.ui-lightbox--sm { --_img: var(--ui-size-lightbox-sm); }
+.ui-lightbox--md { --_img: var(--ui-size-lightbox-md); }
+.ui-lightbox--lg { --_img: var(--ui-size-lightbox-lg); }
+
+.ui-lightbox__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-24);
+  max-width: 100%;
+}
+
+.ui-lightbox__arrow { box-shadow: var(--ui-shadow-3); }
+
+.ui-lightbox__figure {
+  position: relative;
+  width: var(--_img);
+  max-width: calc(100vw - var(--ui-space-32) - 2 * (var(--ui-size-control-lg) + var(--ui-space-24)));
+  margin: 0;
+}
+
+.ui-lightbox__figure > .ui-tooltip-anchor {
+  position: absolute;
+  z-index: var(--ui-z-raised);
+  top: var(--ui-space-16);
+  right: var(--ui-space-16);
+}
+
+.ui-lightbox__caption {
+  margin-top: var(--ui-space-8);
+  color: var(--ui-color-text-text-on-color);
+  font: var(--ui-font-body-sm-regular);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+  text-align: center;
+}
+
+.ui-lightbox__caption:empty { display: none; }
+
+.ui-lightbox__dots {
+  display: flex;
+  gap: var(--ui-space-lightbox-dots);
+}
+
+.ui-lightbox__dot {
+  width: var(--ui-size-lightbox-dot);
+  height: var(--ui-size-lightbox-dot);
+  margin: 0;
+  padding: 0;
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-fill-default);
+  cursor: pointer;
+}
+
+.ui-lightbox__dot.is-active {
+  border-color: var(--ui-color-bg-fill-brand-default);
+  background: var(--ui-color-bg-fill-brand-default);
+}
+
+.ui-lightbox__dot:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+/* Compact: flechas sobre la imagen cuando no caben a los lados. */
+@media (max-width: 720px) {
+  .ui-lightbox__figure { max-width: calc(100vw - var(--ui-space-32)); }
+  .ui-lightbox__row > .ui-tooltip-anchor {
+    position: absolute;
+    z-index: var(--ui-z-raised);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .ui-lightbox__row > .ui-tooltip-anchor:first-child { left: var(--ui-space-8); }
+  .ui-lightbox__row > .ui-tooltip-anchor:last-child { right: var(--ui-space-8); }
+}

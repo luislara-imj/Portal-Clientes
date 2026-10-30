@@ -1,0 +1,76 @@
+/* Toogle (§12.5). Sin hover en Figma. */
+.ui-toogle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+}
+
+.ui-toogle__track {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  width: var(--ui-size-toogle-track-w);
+  height: var(--ui-size-toogle-track-h);
+  margin: 0;
+  padding: 0 var(--ui-space-2);
+  border: 0;
+  border-radius: var(--ui-radius-16);
+  background: var(--ui-color-bg-fill-brand-disabled);
+  cursor: pointer;
+  transition: background-color var(--ui-motion-base);
+}
+
+.ui-toogle__track.is-on {
+  background: var(--ui-color-bg-fill-brand-default);
+}
+
+.ui-toogle__track--stroke {
+  box-shadow: 0 0 0 var(--ui-stroke-width-1) var(--ui-color-border-default);
+}
+
+.ui-toogle__knob {
+  width: var(--ui-size-toogle-knob);
+  height: var(--ui-size-toogle-knob);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-fill-default);
+  transition: transform var(--ui-motion-base);
+}
+
+.ui-toogle__track.is-on .ui-toogle__knob {
+  transform: translateX(calc(var(--ui-size-toogle-track-w) - var(--ui-size-toogle-knob) - var(--ui-space-4)));
+}
+
+.ui-toogle__track:focus-visible,
+.ui-toogle__track[data-state="focus"] {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-toogle__track:disabled {
+  background: var(--ui-color-bg-fill-hover);
+  cursor: not-allowed;
+}
+
+.ui-toogle__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  color: var(--ui-color-text-primary);
+  font: var(--ui-font-body-sm-bold);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+  cursor: pointer;
+}
+
+.ui-toogle__icon { color: var(--ui-color-icon-default); }
+
+.ui-toogle.is-disabled .ui-toogle__label {
+  color: var(--ui-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.ui-toogle.is-disabled .ui-toogle__icon { color: var(--ui-color-icon-disabled); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-toogle__track,
+  .ui-toogle__knob { transition: none; }
+}

@@ -1,0 +1,80 @@
+/* Tooltip (§16.2): radio 8 del componente (PROTOTIPO_SPEC 6.1). */
+.ui-tooltip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.ui-tooltip {
+  position: absolute;
+  z-index: var(--ui-layer-surface-tooltip);
+  display: none; /* oculto no ocupa espacio (evita scroll horizontal); sigue sirviendo a aria-describedby */
+  align-items: center;
+  height: var(--ui-size-tooltip);
+  padding: var(--ui-space-4) var(--ui-space-8);
+  border-radius: var(--ui-radius-control-sm);
+  background: var(--ui-color-text-primary);
+  box-shadow: var(--ui-shadow-1);
+  color: var(--ui-color-text-on-canvas-inverse);
+  font: var(--ui-font-body-xs-bold);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.ui-tooltip.is-open {
+  display: inline-flex;
+}
+
+/* Flecha 10 × 7 del mismo color que la caja. */
+.ui-tooltip::after {
+  content: "";
+  position: absolute;
+  border: calc(var(--ui-size-tooltip-arrow-w) / 2) var(--ui-stroke-style-solid) transparent;
+}
+
+.ui-tooltip--top {
+  bottom: calc(100% + var(--ui-size-tooltip-arrow-h) + var(--ui-space-2));
+}
+.ui-tooltip--top::after {
+  top: 100%;
+  border-top: var(--ui-size-tooltip-arrow-h) var(--ui-stroke-style-solid) var(--ui-color-text-primary);
+  border-bottom-width: 0;
+}
+
+.ui-tooltip--bottom {
+  top: calc(100% + var(--ui-size-tooltip-arrow-h) + var(--ui-space-2));
+}
+.ui-tooltip--bottom::after {
+  bottom: 100%;
+  border-bottom: var(--ui-size-tooltip-arrow-h) var(--ui-stroke-style-solid) var(--ui-color-text-primary);
+  border-top-width: 0;
+}
+
+.ui-tooltip--top.ui-tooltip--align-center,
+.ui-tooltip--bottom.ui-tooltip--align-center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ui-tooltip--top.ui-tooltip--align-center::after,
+.ui-tooltip--bottom.ui-tooltip--align-center::after {
+  left: calc(50% - var(--ui-size-tooltip-arrow-w) / 2);
+}
+.ui-tooltip--align-left { left: 0; }
+.ui-tooltip--align-left::after { left: var(--ui-space-8); }
+.ui-tooltip--align-right { right: 0; }
+.ui-tooltip--align-right::after { right: var(--ui-space-8); }
+
+/* Side: a la derecha, centrado en vertical. */
+.ui-tooltip--side {
+  left: calc(100% + var(--ui-size-tooltip-arrow-h) + var(--ui-space-2));
+  right: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.ui-tooltip--side::after {
+  right: 100%;
+  left: auto;
+  top: calc(50% - var(--ui-size-tooltip-arrow-w) / 2);
+  border-right: var(--ui-size-tooltip-arrow-h) var(--ui-stroke-style-solid) var(--ui-color-text-primary);
+  border-left-width: 0;
+}

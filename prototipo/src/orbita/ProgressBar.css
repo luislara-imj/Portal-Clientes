@@ -1,0 +1,79 @@
+/* Progress bar (§10). */
+.ui-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  width: 100%;
+  min-width: 0;
+}
+
+.ui-progress__header,
+.ui-progress__row {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+}
+
+.ui-progress__header .ui-progress__label { flex: 1; }
+
+.ui-progress__row .ui-progress__bar { flex: 1; }
+
+.ui-progress__label {
+  min-width: 0;
+  color: var(--ui-color-text-primary);
+  font: var(--ui-font-body-xs-medium);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.ui-progress__info {
+  display: inline-flex;
+  gap: var(--ui-space-4);
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-xs-medium);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-progress__bar {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-fill-tertiary-default);
+}
+
+.ui-progress__bar--xxs { height: var(--ui-size-progress-xxs); }
+.ui-progress__bar--xs { height: var(--ui-size-progress-xs); }
+.ui-progress__bar--sm { height: var(--ui-size-progress-sm); }
+.ui-progress__bar--md { height: var(--ui-size-progress-md); }
+.ui-progress__bar--lg { height: var(--ui-size-progress-lg); }
+
+.ui-progress__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--_fill, var(--ui-color-bg-fill-brand-default));
+  transition: width var(--ui-motion-base) linear;
+}
+
+.ui-progress__bar--brand { --_fill: var(--ui-color-bg-fill-brand-default); }
+.ui-progress__bar--success { --_fill: var(--ui-color-bg-fill-success-default); }
+.ui-progress__bar--danger { --_fill: var(--ui-color-bg-fill-danger-default); }
+.ui-progress__bar--neutro { --_fill: var(--ui-color-text-tertiary); }
+
+.ui-progress__helper {
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-caption-xs);
+  letter-spacing: var(--ui-type-caption-xs-tracking);
+}
+
+.ui-progress.is-disabled .ui-progress__label,
+.ui-progress.is-disabled .ui-progress__info,
+.ui-progress.is-disabled .ui-progress__helper {
+  color: var(--ui-color-text-disabled);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-progress__fill { transition: none; }
+}

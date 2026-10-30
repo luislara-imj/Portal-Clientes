@@ -1,0 +1,15 @@
+.ui-logo {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  color: var(--ui-color-text-primary);
+  font-family: var(--ui-font-family-ui);
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: var(--ui-font-tracking-tight);
+  line-height: 1;
+  user-select: none;
+}
+
+.ui-logo--sm { font-size: var(--ui-size-icon-md); }
+.ui-logo--md { font-size: var(--ui-size-icon-lg); }
+.ui-logo--lg { font-size: var(--ui-size-icon-xl); }

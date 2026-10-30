@@ -1,0 +1,54 @@
+/* Pagination (§16.4). La barra de scroll de Figma la da el contenedor de la tabla. */
+
+.ui-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-8) var(--ui-space-32);
+  padding: var(--ui-space-4) 0;
+}
+
+.ui-pagination__text {
+  margin: 0;
+  color: var(--ui-color-text-tertiary);
+  font: var(--ui-font-body-xs-bold);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.ui-pagination__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-4);
+}
+
+.ui-pagination__page {
+  color: var(--ui-color-icon-default);
+  font: var(--ui-font-body-sm-regular);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+  font-variant-numeric: tabular-nums;
+}
+
+.ui-pagination__size {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+}
+
+/* Autocomplete xs (53 × 32, radio 8): se usa un select nativo con el aspecto del Input xs. */
+.ui-pagination__select {
+  height: var(--ui-size-control-xs);
+  padding: 0 var(--ui-space-8);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+  border-radius: var(--ui-radius-control-sm);
+  background: var(--ui-color-bg-fill-default);
+  color: var(--ui-color-text-primary);
+  font: var(--ui-font-body-sm-regular);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+}
+
+.ui-pagination__select:focus-visible {
+  border-color: var(--ui-color-border-brand);
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}

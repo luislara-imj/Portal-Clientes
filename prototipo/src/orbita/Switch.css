@@ -1,0 +1,80 @@
+/* Switch = control segmentado (§12.4); ítems = Button color "Switch" (§1.3). */
+.ui-switch {
+  display: inline-flex;
+  flex: none;
+  align-self: flex-start;
+  width: fit-content;
+  align-items: center;
+  gap: var(--ui-space-8);
+  height: var(--ui-size-control-xs);
+  padding: var(--ui-space-6);
+  border-radius: var(--ui-radius-control-lg);
+  background: var(--ui-color-bg-fill-tertiary-default);
+}
+
+.ui-switch--md {
+  height: var(--ui-size-control-lg);
+  padding: var(--ui-space-8);
+}
+
+.ui-switch__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-4);
+  height: var(--ui-size-control-xxs);
+  margin: 0;
+  padding: var(--ui-space-4) var(--ui-space-8);
+  border: 0;
+  border-radius: var(--ui-radius-control-xs);
+  background: transparent;
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-xs-bold);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--ui-motion-fast), color var(--ui-motion-fast);
+}
+
+.ui-switch--md .ui-switch__item {
+  height: var(--ui-size-control-xs);
+  padding: var(--ui-space-4) var(--ui-space-12);
+  font: var(--ui-font-body-sm-bold);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+}
+
+.ui-switch__icon { color: var(--ui-color-icon-default); }
+
+.ui-switch:not(.is-readonly):not(.is-loading) .ui-switch__item:not(:disabled):hover { color: var(--ui-color-text-primary); }
+.ui-switch:not(.is-readonly):not(.is-loading) .ui-switch__item:not(:disabled):active { background: var(--ui-color-bg-fill-tertiary-pressed); color: var(--ui-color-text-primary); }
+
+.ui-switch__item.is-selected {
+  background: var(--ui-color-bg-surface-default);
+  color: var(--ui-color-text-primary);
+}
+
+.ui-switch__item:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+/* Disabled y Loading */
+.ui-switch.is-disabled {
+  background: var(--ui-color-bg-fill-disabled);
+}
+
+.ui-switch.is-disabled .ui-switch__item,
+.ui-switch.is-loading .ui-switch__item {
+  background: var(--ui-color-bg-fill-tertiary-default);
+  color: var(--ui-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.ui-switch.is-disabled .ui-switch__icon,
+.ui-switch.is-loading .ui-switch__item {
+  color: var(--ui-color-icon-disabled);
+}
+
+.ui-switch.is-loading .ui-switch__item { cursor: progress; }
+
+.ui-switch.is-readonly .ui-switch__item { cursor: default; }

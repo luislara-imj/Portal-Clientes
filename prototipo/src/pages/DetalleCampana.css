@@ -1,0 +1,75 @@
+/* Detalle de campaña: solo maquetación con tokens --ui-*. */
+
+/* Resumen por fase: 2 columnas en escritorio, 1 en móvil. */
+.dc-rejilla {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 600px) {
+  .dc-rejilla { grid-template-columns: minmax(0, 1fr); }
+}
+
+.dc-fase {
+  gap: var(--ui-space-16);
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.dc-fase__cabeza { justify-content: space-between; }
+
+.dc-fase__titulo {
+  margin: 0;
+  font: var(--ui-font-heading-h5);
+  letter-spacing: var(--ui-type-heading-h5-tracking);
+}
+
+.dc-fase__cuerpo { flex: 1 1 auto; }
+
+.dc-dato {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.dc-dato__valor {
+  font: var(--ui-font-heading-h4);
+  letter-spacing: var(--ui-type-heading-h4-tracking);
+}
+
+/* Fase bloqueada: candado + motivo, sin botón. */
+.dc-bloqueo {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-8);
+}
+
+.dc-bloqueo__icono {
+  flex: none;
+  color: var(--ui-color-icon-tertiary-default);
+}
+
+/* Datos de la campaña */
+.dc-datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+  gap: var(--ui-space-16);
+  margin: 0;
+}
+
+.dc-datos__fila {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+.dc-datos__valor {
+  margin: 0;
+  font: var(--ui-font-body-md-medium);
+  letter-spacing: var(--ui-type-body-md-tracking);
+  overflow-wrap: anywhere;
+}

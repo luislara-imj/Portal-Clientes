@@ -1,0 +1,45 @@
+/* Breadcrumbs (§9). Sin hover en Figma. */
+.ui-breadcrumbs__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-4);
+  min-height: var(--ui-space-16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ui-breadcrumbs__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+  font: var(--ui-font-body-xs-bold);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.ui-breadcrumbs__link {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-2);
+  background: none;
+  color: var(--ui-color-text-tertiary);
+  font: inherit;
+  letter-spacing: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ui-breadcrumbs__link:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-breadcrumbs__current {
+  color: var(--ui-color-text-brand-default);
+}
+
+.ui-breadcrumbs__chevron {
+  color: var(--ui-color-icon-tertiary-default);
+}

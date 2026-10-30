@@ -1,0 +1,175 @@
+/* Cotización: solo maquetación con tokens --ui-* (sin colores sueltos). */
+
+.cot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-24);
+  min-width: 0;
+}
+
+/* Datos de la cotización */
+.cot-datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+  gap: var(--ui-space-16);
+  margin: 0;
+}
+
+.cot-dato {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+.cot-dato dt {
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.cot-dato dd {
+  margin: 0;
+  font: var(--ui-font-body-sm-semibold);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+  overflow-wrap: anywhere;
+}
+
+/* Tablas a la izquierda, cierre a la derecha (escritorio); una columna en móvil. */
+.cot-cuerpo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  align-items: start;
+  gap: var(--ui-space-24);
+}
+
+.cot-tablas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-24);
+  min-width: 0;
+}
+
+.cot-cierre {
+  position: sticky;
+  top: var(--ui-space-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .cot-cuerpo { grid-template-columns: minmax(0, 1fr); }
+  .cot-cierre { position: static; }
+}
+
+.cot-pie-tabla {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: var(--ui-space-8);
+  font: var(--ui-font-body-sm-regular);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+}
+
+.cot-pie-tabla strong { font: var(--ui-font-body-sm-semibold); }
+
+/* Lista de montos (cierre y modal) */
+.cot-montos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+  margin: 0;
+}
+
+.cot-monto {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ui-space-8);
+}
+
+.cot-monto dt {
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-sm-regular);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+}
+
+.cot-monto dd {
+  margin: 0;
+  font: var(--ui-font-body-sm-semibold);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.cot-monto--total {
+  padding-top: var(--ui-space-12);
+  border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+}
+
+.cot-monto--total dt {
+  color: var(--ui-color-text-primary);
+  font: var(--ui-font-body-md-semibold);
+  letter-spacing: var(--ui-type-body-md-tracking);
+}
+
+.cot-monto--total dd {
+  font: var(--ui-font-heading-h4);
+  letter-spacing: var(--ui-type-heading-h4-tracking);
+}
+
+.cot-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  margin: 0;
+  padding-left: var(--ui-space-16);
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-sm-regular);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+}
+
+.cot-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+}
+
+/* Bloqueada */
+.cot-bloqueo {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-12);
+}
+
+.cot-bloqueo__icono {
+  display: inline-flex;
+  flex: none;
+  color: var(--ui-color-text-secondary);
+}
+
+/* Modal: pie con botones; en móvil apilados a ancho completo, primario arriba. */
+.cot-modal-pie {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ui-space-12);
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .cot-modal-pie { flex-direction: column-reverse; }
+  .cot-modal-pie > * { width: 100%; }
+}
+
+.cot-modal-cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  padding: var(--ui-space-8);
+}

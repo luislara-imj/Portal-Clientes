@@ -1,0 +1,433 @@
+/* Instalación (Figma, nodo 543:31890). Solo tokens --ui-*. */
+
+/* --- Fase bloqueada ---------------------------------------------------- */
+.ins-bloqueada {
+  align-items: center;
+  gap: var(--ui-space-12);
+  padding-top: var(--ui-space-48);
+  padding-bottom: var(--ui-space-48);
+  text-align: center;
+}
+
+.ins-bloqueada .pg-texto { max-width: 48ch; }
+
+.ins-bloqueada__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-48);
+  height: var(--ui-space-48);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-color-bg-fill-tertiary-default);
+  color: var(--ui-color-icon-secondary-default);
+}
+
+/* --- Contenedor de tres columnas (escritorio) ---------------------------- */
+.ins-drill.ui-card {
+  border-radius: var(--ui-radius-surface-modal);
+}
+
+.ins-cols {
+  display: flex;
+  align-items: flex-start; /* cada columna alinea sus tarjetas arriba, sin estirarse */
+  gap: var(--ui-space-12);
+  min-height: 480px;
+}
+
+.ins-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  min-width: 0;
+}
+
+.ins-col--angosta { flex: none; width: 154px; }
+.ins-col--ancha { flex: 1 1 auto; }
+
+.ins-col__titulo {
+  margin: 0;
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-md-bold);
+  letter-spacing: var(--ui-type-body-md-tracking);
+  text-align: center;
+}
+
+.ins-col__lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-10);
+  min-width: 0;
+}
+
+.ins-col__lista--sitios { gap: var(--ui-space-16); }
+
+/* --- Tarjeta de tipo de medio / plaza ----------------------------------- */
+.ins-tarjeta.ui-card {
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-8);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--ui-space-16) var(--ui-space-12);
+  background: var(--ui-color-bg-fill-default);
+  text-align: center;
+}
+
+.ins-tarjeta__cabeza,
+.ins-tarjeta__avance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+.ins-tarjeta__icono { color: var(--ui-color-icon-tertiary-default); }
+
+.ins-tarjeta__nombre {
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-md-bold);
+  letter-spacing: var(--ui-type-body-md-tracking);
+  overflow-wrap: break-word;
+}
+
+.ins-tarjeta__sub {
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+/* Activo: elegido en una columna anterior (borde brand). */
+.ins-tarjeta--activo.ui-card,
+.ins-tarjeta--activo.ui-card:hover {
+  border-color: var(--ui-color-border-brand);
+}
+
+.ins-tarjeta--activo .ins-tarjeta__icono { color: var(--ui-color-icon-brand-default); }
+.ins-tarjeta--activo .ins-tarjeta__nombre { color: var(--ui-color-text-brand-default); }
+
+/* Elegido: fondo brand pressed, texto sobre color. */
+.ins-tarjeta--elegido.ui-card,
+.ins-tarjeta--elegido.ui-card:hover {
+  border-color: var(--ui-color-bg-fill-brand-pressed);
+  background: var(--ui-color-bg-fill-brand-pressed);
+  color: var(--ui-color-text-text-on-color);
+}
+
+.ins-tarjeta--elegido .ins-tarjeta__icono { color: var(--ui-color-icon-on-color); }
+.ins-tarjeta--elegido .ins-tarjeta__nombre,
+.ins-tarjeta--elegido .ins-tarjeta__sub,
+.ins-tarjeta--elegido .ins-sitio__clave,
+.ins-tarjeta--elegido .ins-sitio__detalle { color: var(--ui-color-text-text-on-color); }
+
+/* Móvil: tarjeta en fila (ícono, nombre con "X de Y instalados" debajo, anillo a la derecha). */
+.ins-tarjeta--horizontal.ui-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "icono nombre anillo"
+    "icono sub anillo";
+  align-items: center;
+  gap: 0 var(--ui-space-12);
+  padding: var(--ui-space-12) var(--ui-space-16);
+  text-align: left;
+}
+
+.ins-tarjeta--horizontal .ins-tarjeta__cabeza,
+.ins-tarjeta--horizontal .ins-tarjeta__avance { display: contents; }
+
+.ins-tarjeta--horizontal .ins-tarjeta__icono { grid-area: icono; }
+.ins-tarjeta--horizontal .ins-tarjeta__nombre { grid-area: nombre; align-self: end; }
+.ins-tarjeta--horizontal .ins-tarjeta__sub { grid-area: sub; align-self: start; }
+.ins-tarjeta--horizontal .ins-anillo { grid-area: anillo; }
+
+/* --- Anillo de porcentaje ------------------------------------------------ */
+.ins-anillo {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-48);
+  height: var(--ui-space-48);
+  border-radius: var(--ui-radius-full);
+  background: conic-gradient(var(--ui-color-bg-fill-brand-default) calc(var(--ins-p, 0) * 1%), var(--ui-color-border-subtle) 0);
+}
+
+.ins-anillo__valor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-40);
+  height: var(--ui-space-40);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-color-bg-fill-default);
+  color: var(--ui-color-text-primary);
+  font: var(--ui-font-body-xs-bold);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Grupos de sitios y tarjeta de sitio --------------------------------- */
+.ins-grupo.ui-accordion {
+  box-sizing: border-box;
+  border-color: var(--ui-color-border-subtle);
+  background: var(--ui-color-bg-surface-secondary-default);
+}
+
+.ins-grupo .ui-accordion__panel { gap: var(--ui-space-12); }
+
+.ins-grupo__titulo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-12);
+}
+
+.ins-grupo__icono { color: var(--ui-color-icon-tertiary-default); }
+
+.ins-sitio.ui-card {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--ui-space-16);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--ui-space-16) var(--ui-space-32);
+  background: var(--ui-color-bg-fill-default);
+}
+
+.ins-sitio.ins-tarjeta--elegido.ui-card { background: var(--ui-color-bg-fill-brand-pressed); }
+
+.ins-sitio__texto {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+.ins-sitio__clave {
+  overflow: hidden;
+  color: var(--ui-color-text-primary);
+  font: var(--ui-font-body-md-bold);
+  letter-spacing: var(--ui-type-body-md-tracking);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ins-sitio__detalle {
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-sm-semibold);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+  overflow-wrap: anywhere;
+}
+
+.ins-sitio__estatus { display: flex; }
+
+/* --- Marcador vacío ------------------------------------------------------ */
+.ins-marcador {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-16);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-dashed) var(--ui-color-border-default);
+  border-radius: var(--ui-radius-surface-card);
+  color: var(--ui-color-text-tertiary);
+  text-align: center;
+}
+
+.ins-marcador__titulo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-8);
+  font: var(--ui-font-label-md-bold);
+  letter-spacing: var(--ui-type-label-md-tracking);
+}
+
+.ins-marcador__ayuda {
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+/* --- Móvil: columnas apiladas como Accordion ----------------------------- */
+.ins-movil {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-12);
+  min-width: 0;
+}
+
+.ins-movil .ins-sitio.ui-card { padding: var(--ui-space-16); }
+
+/* En móvil la clave completa importa más que una sola línea: se parte en vez de cortarse. */
+.ins-movil .ins-sitio__clave {
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* --- Panel lateral: Línea de tiempo -------------------------------------- */
+.ins-panel-capa {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-layer-dialog-modal);
+}
+
+.ins-panel-fondo {
+  position: fixed;
+  inset: 0;
+  background: var(--ui-color-bg-overlay-default);
+}
+
+.ins-panel {
+  position: fixed;
+  top: var(--ui-space-32);
+  right: 0;
+  bottom: var(--ui-space-32);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-24);
+  box-sizing: border-box;
+  width: min(472px, 100%);
+  padding: var(--ui-space-32);
+  overflow-y: auto;
+  border-radius: var(--ui-radius-16) 0 0 var(--ui-radius-16);
+  background: var(--ui-color-bg-fill-brand-default);
+  box-shadow: var(--ui-shadow-3);
+  color: var(--ui-color-text-text-on-color);
+  outline: none;
+}
+
+.ins-panel__cabeza {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ui-space-12);
+}
+
+.ins-panel__titulos { min-width: 0; }
+
+.ins-panel__kicker {
+  margin: 0 0 var(--ui-space-4);
+  font: var(--ui-font-body-xs-semibold);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.ins-panel__titulo {
+  margin: 0;
+  font: var(--ui-font-heading-h3);
+  letter-spacing: var(--ui-type-heading-h3-tracking);
+  overflow-wrap: anywhere;
+}
+
+.ins-panel__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+}
+
+.ins-panel__fechas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-4) var(--ui-space-16);
+  margin: 0;
+  font: var(--ui-font-body-md-regular);
+  letter-spacing: var(--ui-type-body-md-tracking);
+}
+
+.ins-panel__fechas strong { font-weight: var(--ui-font-weight-semibold); }
+
+.ins-panel__estimado {
+  margin: 0;
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.ins-pasos {
+  position: relative;
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--ui-space-24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Línea punteada que une los marcadores (centro del círculo de 38 dentro del padding 16). */
+.ins-pasos::before {
+  content: "";
+  position: absolute;
+  top: var(--ui-space-32);
+  bottom: var(--ui-space-32);
+  left: calc(var(--ui-space-16) + var(--ui-space-20) - var(--ui-stroke-width-2));
+  border-left: var(--ui-stroke-width-2) dotted var(--ui-color-border-on-color);
+}
+
+.ins-paso {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-16);
+  padding: var(--ui-space-16);
+  border-radius: var(--ui-radius-surface-card);
+  background: var(--ui-color-bg-fill-brand-pressed);
+}
+
+.ins-paso__marca {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 38px;
+  height: 38px;
+  border: var(--ui-stroke-width-3) var(--ui-stroke-style-solid) var(--ui-color-border-brand);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-color-bg-fill-default);
+  color: var(--ui-color-text-brand-default);
+  font: var(--ui-font-heading-h3);
+}
+
+.ins-paso--completo .ins-paso__marca { color: var(--ui-color-icon-brand-default); }
+
+.ins-paso--actual .ins-paso__marca {
+  border-color: var(--ui-color-border-on-color);
+  background: var(--ui-color-bg-fill-brand-default);
+}
+
+.ins-paso__punto {
+  width: var(--ui-space-16);
+  height: var(--ui-space-16);
+  border-radius: var(--ui-radius-full);
+  background: var(--ui-color-bg-fill-default);
+}
+
+.ins-paso__texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ins-paso__duracion {
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.ins-paso__nombre {
+  font: var(--ui-font-body-sm-bold);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+}
+
+@media (max-width: 767px) {
+  .ins-panel {
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    padding: var(--ui-space-24) var(--ui-space-16);
+    border-radius: 0;
+  }
+
+  .ins-pasos { justify-content: flex-start; gap: var(--ui-space-16); }
+}

@@ -1,0 +1,141 @@
+/* Popover (§16.3). */
+.ui-popover-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.ui-popover {
+  --_bg: var(--ui-color-bg-surface-default);
+  --_border: var(--ui-color-border-default);
+  --_gap: var(--ui-space-12);
+
+  position: absolute;
+  z-index: var(--ui-layer-surface-popover);
+  display: flex;
+  flex-direction: column;
+  width: var(--ui-size-popover-w);
+  max-width: calc(100vw - var(--ui-space-32));
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--_border);
+  border-radius: var(--ui-radius-surface-card);
+  background: var(--_bg);
+  box-shadow: var(--ui-shadow-3);
+  color: var(--ui-color-text-primary);
+  text-align: left;
+}
+
+.ui-popover--warning {
+  --_bg: var(--ui-color-bg-surface-warning-default);
+  --_border: var(--ui-color-border-warning);
+}
+
+/* Posición */
+.ui-popover--bottom { top: calc(100% + var(--_gap)); }
+.ui-popover--top { bottom: calc(100% + var(--_gap)); }
+.ui-popover--left { right: calc(100% + var(--_gap)); top: 0; }
+.ui-popover--right { left: calc(100% + var(--_gap)); top: 0; }
+.ui-popover--bottom.ui-popover--align-start,
+.ui-popover--top.ui-popover--align-start { left: 0; }
+.ui-popover--bottom.ui-popover--align-end,
+.ui-popover--top.ui-popover--align-end { right: 0; }
+.ui-popover--bottom.ui-popover--align-center,
+.ui-popover--top.ui-popover--align-center { left: 50%; transform: translateX(-50%); }
+
+/* Indicador (flecha): cuadro girado con el borde del popover. */
+.ui-popover::before {
+  content: "";
+  position: absolute;
+  width: var(--ui-size-popover-arrow);
+  height: var(--ui-size-popover-arrow);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--_border);
+  background: var(--_bg);
+  transform: rotate(45deg);
+}
+
+.ui-popover--bottom::before {
+  top: calc(var(--ui-size-popover-arrow) / -2);
+  border-right: 0;
+  border-bottom: 0;
+}
+.ui-popover--top::before {
+  bottom: calc(var(--ui-size-popover-arrow) / -2);
+  border-left: 0;
+  border-top: 0;
+}
+.ui-popover--bottom.ui-popover--align-start::before,
+.ui-popover--top.ui-popover--align-start::before { left: var(--ui-space-16); }
+.ui-popover--bottom.ui-popover--align-end::before,
+.ui-popover--top.ui-popover--align-end::before { right: var(--ui-space-16); }
+.ui-popover--bottom.ui-popover--align-center::before,
+.ui-popover--top.ui-popover--align-center::before { left: calc(50% - var(--ui-size-popover-arrow) / 2); }
+.ui-popover--left::before {
+  right: calc(var(--ui-size-popover-arrow) / -2);
+  top: var(--ui-space-16);
+  border-left: 0;
+  border-bottom: 0;
+}
+.ui-popover--right::before {
+  left: calc(var(--ui-size-popover-arrow) / -2);
+  top: var(--ui-space-16);
+  border-right: 0;
+  border-top: 0;
+}
+
+.ui-popover__header {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  min-height: var(--ui-size-popover-bar);
+  padding: var(--ui-space-8);
+  border-bottom: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--_border);
+}
+
+.ui-popover__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-size-control-xs);
+  height: var(--ui-size-control-xs);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-all-colors-blue);
+  color: var(--ui-color-icon-all-colors-blue);
+}
+
+.ui-popover__titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.ui-popover__title,
+.ui-popover__description {
+  margin: 0;
+}
+
+.ui-popover__title {
+  font: var(--ui-font-heading-h6);
+  letter-spacing: var(--ui-type-heading-h6-tracking);
+}
+
+.ui-popover__description {
+  color: var(--ui-color-text-tertiary);
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.ui-popover__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+  padding: var(--ui-space-8);
+  font: var(--ui-font-body-sm-regular);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+}
+
+.ui-popover__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  min-height: var(--ui-size-popover-bar);
+  padding: var(--ui-space-8);
+  border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--_border);
+}

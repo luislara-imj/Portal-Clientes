@@ -1,0 +1,211 @@
+/* Propuesta de medios: solo maquetación con tokens --ui-* sobre componentes de Órbita. */
+
+.pp {
+  --pp-col-incluye: calc(var(--ui-size-image-lg) + var(--ui-space-16));
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  min-width: 0;
+}
+
+.pp-etiqueta {
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.pp-monto {
+  color: var(--ui-color-text-primary);
+  font: var(--ui-font-body-md-bold);
+  letter-spacing: var(--ui-type-body-md-tracking);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Resumen fijo bajo la barra superior */
+.pp-resumen {
+  position: sticky;
+  top: var(--ui-size-appbar);
+  z-index: var(--ui-z-sticky);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-16);
+  padding: var(--ui-space-16);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-surface-card);
+  background: var(--ui-color-bg-surface-default);
+  box-shadow: var(--ui-shadow-2);
+}
+
+.pp-resumen__datos {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: var(--ui-space-16) var(--ui-space-32);
+  min-width: 0;
+}
+
+.pp-dato {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+.pp-dato--avance { min-width: var(--ui-size-image-lg); }
+
+.pp-resumen__accion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--ui-space-4);
+}
+
+@media (max-width: 600px) {
+  .pp-resumen {
+    gap: var(--ui-space-12);
+    padding: var(--ui-space-12);
+  }
+
+  .pp-resumen__datos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ui-space-8) var(--ui-space-12);
+  }
+
+  .pp-dato--avance { min-width: 0; }
+
+  .pp-resumen__accion {
+    align-items: stretch;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Pestañas por tipo + filtros + grupos */
+.pp-medios {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pp-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  min-width: 0;
+  padding: var(--ui-space-16);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+  border-radius: var(--ui-radius-surface-card);
+  background: var(--ui-color-bg-surface-default);
+}
+
+.pp-panel:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.pp-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--ui-space-12) var(--ui-space-24);
+  min-width: 0;
+}
+
+.pp-filtro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+.pp-grupos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  min-width: 0;
+}
+
+.pp-grupo { box-sizing: border-box; min-width: 0; }
+
+.pp-grupo .ui-accordion__panel { min-width: 0; }
+
+.pp-grupo__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-8);
+}
+
+.pp-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ui-space-8);
+  margin: 0;
+  padding: var(--ui-space-24) 0;
+}
+
+/* Vista tabla: "¿Lo incluyes?" y la clave quedan fijas; el resto se desplaza dentro del contenedor. */
+.pp-tabla { padding: 0; border: 0; }
+
+.pp-tabla .ui-table__table .is-key:first-child {
+  box-sizing: border-box;
+  width: var(--pp-col-incluye);
+  min-width: var(--pp-col-incluye);
+  max-width: var(--pp-col-incluye);
+  box-shadow: none;
+}
+
+.pp-tabla .ui-table__table .is-key:first-child + .is-key { left: var(--pp-col-incluye); }
+
+.pp-clave { font: var(--ui-font-body-sm-bold); letter-spacing: var(--ui-type-body-sm-tracking); }
+
+.pp-recorte {
+  display: inline-block;
+  max-width: var(--ui-size-popover-w);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+/* En pantallas angostas solo "¿Lo incluyes?" queda fija para dejar espacio al desplazamiento. */
+@media (max-width: 600px) {
+  .pp-tabla .ui-table__table .is-key:first-child + .is-key {
+    position: static;
+    min-width: 0;
+  }
+}
+
+/* Vista tarjetas */
+.pp-rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--ui-size-card-media-w), 100%), 1fr));
+  gap: var(--ui-space-16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pp-rejilla__item { display: flex; min-width: 0; }
+
+.pp-tarjeta { box-sizing: border-box; min-width: 0; }
+
+.pp-tarjeta__pie {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+.pp-tarjeta__precio {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}

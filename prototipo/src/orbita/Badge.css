@@ -1,0 +1,55 @@
+/* Badge (§2.1). */
+.ui-badge {
+  --_bg: var(--ui-color-bg-fill-brand-default);
+  --_border: var(--ui-color-border-all-colors-blue);
+  --_fg: var(--ui-color-text-text-on-color);
+  --_icon: var(--ui-color-icon-on-color);
+
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-4);
+  background: var(--_bg);
+  color: var(--_fg);
+  font: var(--ui-font-body-xs-semibold);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+  white-space: nowrap;
+}
+
+.ui-badge__icon { color: var(--_icon); }
+
+.ui-badge--sm { height: var(--ui-size-badge-sm); padding: var(--ui-space-2) var(--ui-space-8); border-radius: var(--ui-radius-control-xs); }
+.ui-badge--md { height: var(--ui-size-badge-md); padding: var(--ui-space-2) var(--ui-space-8); border-radius: var(--ui-radius-control-sm); }
+.ui-badge--lg { height: var(--ui-size-badge-lg); padding: var(--ui-space-4) var(--ui-space-8); border-radius: var(--ui-radius-control-sm); }
+.ui-badge--num {
+  justify-content: center;
+  min-width: var(--ui-size-badge-sm);
+  height: var(--ui-size-badge-sm);
+  padding: var(--ui-space-4);
+  border-radius: var(--ui-radius-control-pill);
+}
+.ui-badge--dot {
+  width: var(--ui-size-dot);
+  height: var(--ui-size-dot);
+  padding: 0;
+  border-radius: var(--ui-radius-control-pill);
+}
+
+/* Borde 1 px OUTSIDE */
+.ui-badge--stroke { box-shadow: 0 0 0 var(--ui-stroke-width-1) var(--_border); }
+
+.ui-badge--accent-soft { --_bg: var(--ui-color-bg-surface-brand-default); --_border: var(--ui-color-border-brand); --_fg: var(--ui-color-text-brand-default); --_icon: var(--ui-color-icon-brand-default); }
+.ui-badge--accent-solid { --_bg: var(--ui-color-bg-fill-brand-default); --_border: var(--ui-color-border-all-colors-blue); --_fg: var(--ui-color-text-text-on-color); --_icon: var(--ui-color-icon-on-color); }
+.ui-badge--gray-soft { --_bg: var(--ui-color-bg-fill-tertiary-default); --_border: var(--ui-color-border-default); --_fg: var(--ui-color-text-primary); --_icon: var(--ui-color-icon-secondary-default); }
+.ui-badge--gray-solid { --_bg: var(--ui-color-bg-surface-tertiary-default); --_border: var(--ui-color-border-default); --_fg: var(--ui-color-text-primary); --_icon: var(--ui-color-icon-secondary-default); }
+.ui-badge--success-soft { --_bg: var(--ui-color-bg-surface-success-default); --_border: var(--ui-color-border-success); --_fg: var(--ui-color-text-success-default); --_icon: var(--ui-color-icon-success-default); }
+.ui-badge--success-solid { --_bg: var(--ui-color-bg-fill-success-default); --_border: var(--ui-color-border-all-colors-green); --_fg: var(--ui-color-text-text-on-color); --_icon: var(--ui-color-icon-on-color); }
+.ui-badge--warning-soft { --_bg: var(--ui-color-bg-surface-warning-default); --_border: var(--ui-color-border-warning); --_fg: var(--ui-color-text-warning-default); --_icon: var(--ui-color-icon-warning-default); }
+.ui-badge--warning-solid { --_bg: var(--ui-color-bg-fill-warning-default); --_border: var(--ui-color-border-all-colors-yellow); --_fg: var(--ui-color-text-text-on-color); --_icon: var(--ui-color-icon-on-color); }
+.ui-badge--danger-soft { --_bg: var(--ui-color-bg-surface-danger-default); --_border: var(--ui-color-border-danger); --_fg: var(--ui-color-text-danger-default); --_icon: var(--ui-color-icon-danger-default); }
+.ui-badge--danger-solid { --_bg: var(--ui-color-bg-fill-danger-default); --_border: var(--ui-color-border-all-colors-red); --_fg: var(--ui-color-text-text-on-color); --_icon: var(--ui-color-icon-on-color); }
+.ui-badge--info-soft { --_bg: var(--ui-color-bg-surface-info-default); --_border: var(--ui-color-border-info); --_fg: var(--ui-color-text-info-default); --_icon: var(--ui-color-icon-info-default); }
+.ui-badge--info-solid { --_bg: var(--ui-color-bg-fill-info-default); --_border: var(--ui-color-border-all-colors-cyan); --_fg: var(--ui-color-text-text-on-color); --_icon: var(--ui-color-icon-on-color); }
+
+.ui-badge--disabled-soft { --_bg: var(--ui-color-bg-surface-disabled); --_border: var(--ui-color-border-disabled); --_fg: var(--ui-color-text-disabled); --_icon: var(--ui-color-icon-disabled); }
+.ui-badge--disabled-solid { --_bg: var(--ui-color-bg-fill-disabled); --_border: var(--ui-color-border-disabled); --_fg: var(--ui-color-text-disabled); --_icon: var(--ui-color-icon-disabled); }

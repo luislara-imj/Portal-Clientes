@@ -1,0 +1,111 @@
+/* Modal (§7). El fondo de pantalla no está en Figma: se usa bg/overlay/default. */
+.ui-modal-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-layer-dialog-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ui-space-16);
+}
+
+.ui-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-layer-dialog-backdrop);
+  background: var(--ui-color-bg-overlay-default);
+}
+
+.ui-modal {
+  position: relative;
+  z-index: var(--ui-layer-dialog-modal);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: calc(100vh - var(--ui-space-32));
+  border-radius: var(--ui-radius-surface-modal);
+  background: var(--ui-color-bg-fill-default);
+  box-shadow: 0 0 0 var(--ui-stroke-width-1) var(--ui-color-border-default), var(--ui-shadow-3);
+  color: var(--ui-color-text-primary);
+  outline: none;
+}
+
+.ui-modal--xs { max-width: var(--ui-size-modal-xs); }
+.ui-modal--sm { max-width: var(--ui-size-modal-sm); }
+.ui-modal--md { max-width: var(--ui-size-modal-md); }
+.ui-modal--lg { max-width: var(--ui-size-modal-lg); }
+.ui-modal--xl { max-width: var(--ui-size-modal-xl); }
+.ui-modal--xxl { max-width: var(--ui-size-modal-xxl); }
+
+.ui-modal:focus-visible {
+  box-shadow: 0 0 0 var(--ui-stroke-width-1) var(--ui-color-border-default), 0 0 0 var(--ui-focus-ring-width) var(--ui-focus-ring-color), var(--ui-shadow-3);
+}
+
+.ui-modal__header,
+.ui-modal__footer {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-16);
+  min-height: var(--ui-size-modal-bar);
+  padding: var(--ui-space-16);
+}
+
+.ui-modal__header { border-bottom: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default); }
+.ui-modal__footer { border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default); flex-wrap: wrap; }
+
+.ui-modal__title-group {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+.ui-modal__title-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-size-control-xs);
+  height: var(--ui-size-control-xs);
+  padding: var(--ui-space-8);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-all-colors-blue);
+  color: var(--ui-color-icon-all-colors-blue);
+}
+
+.ui-modal__title {
+  margin: 0;
+  font: var(--ui-font-heading-h3);
+  letter-spacing: var(--ui-type-heading-h3-tracking);
+}
+
+.ui-modal__actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-16);
+}
+
+.ui-modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+  min-height: 0;
+  padding: var(--ui-space-8);
+  overflow-y: auto;
+}
+
+.ui-modal__footer-start,
+.ui-modal__footer-end {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-12);
+}
+
+.ui-modal__footer-end {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-left: auto;
+}

@@ -1,0 +1,32 @@
+.ui-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  line-height: 1;
+}
+
+.ui-icon svg {
+  height: 1em;
+  width: auto;
+  max-width: 100%;
+}
+
+.ui-icon--10 { width: var(--ui-size-icon-xs); height: var(--ui-size-icon-xs); font-size: var(--ui-size-icon-xs); }
+.ui-icon--16 { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); font-size: var(--ui-size-icon-sm); }
+.ui-icon--20 { width: var(--ui-size-icon-md); height: var(--ui-size-icon-md); font-size: var(--ui-size-icon-md); }
+.ui-icon--24 { width: var(--ui-size-icon-lg); height: var(--ui-size-icon-lg); font-size: var(--ui-size-icon-lg); }
+.ui-icon--32 { width: var(--ui-size-icon-xl); height: var(--ui-size-icon-xl); font-size: var(--ui-size-icon-xl); }
+
+.ui-icon--spin svg {
+  animation: ui-spin var(--ui-motion-spin) linear infinite;
+}
+
+@keyframes ui-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-icon--spin svg { animation-duration: calc(var(--ui-motion-spin) * 3); }
+}

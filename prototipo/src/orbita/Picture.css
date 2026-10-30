@@ -1,0 +1,55 @@
+/* Picture (§14.1). */
+.ui-picture {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: var(--ui-color-bg-fill-default);
+}
+
+.ui-picture--wide { aspect-ratio: 16 / 9; }
+.ui-picture--square { aspect-ratio: 1 / 1; }
+.ui-picture--fill { height: 100%; aspect-ratio: auto; }
+
+.ui-picture--radius-none { border-radius: var(--ui-radius-image-na); }
+.ui-picture--radius-sm { border-radius: var(--ui-radius-image-sm); }
+.ui-picture--radius-md { border-radius: var(--ui-radius-image-md); }
+.ui-picture--radius-pill { border-radius: var(--ui-radius-image-pill); }
+
+.ui-picture--shadow {
+  overflow: visible;
+  box-shadow: var(--ui-shadow-3);
+}
+
+.ui-picture--shadow > * { border-radius: inherit; }
+
+.ui-picture--stroke::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.ui-picture__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ui-picture__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--ui-color-bg-fill-tertiary-default);
+  color: var(--ui-color-icon-disabled);
+}
+
+.ui-picture--button { cursor: zoom-in; }

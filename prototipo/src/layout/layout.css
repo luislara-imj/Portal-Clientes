@@ -1,0 +1,168 @@
+/* Maquetación de las pantallas: solo grid, flex, gaps, paddings y tipografía con tokens --ui-*. */
+
+/* Contenedor de página bajo la barra superior: ancho máximo 1280, padding 24 (16 en móvil). */
+.pg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-24);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--ui-space-24) var(--ui-space-24) var(--ui-space-64);
+}
+
+@media (max-width: 600px) {
+  .pg {
+    padding: var(--ui-space-16) var(--ui-space-16) var(--ui-space-48);
+  }
+}
+
+.pg-pila {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+.pg-pila--md { gap: var(--ui-space-16); }
+
+.pg-fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+.pg-titulo {
+  margin: 0;
+  font: var(--ui-font-heading-h1);
+  letter-spacing: var(--ui-type-heading-h1-tracking);
+  overflow-wrap: anywhere;
+}
+
+.pg-subtitulo {
+  margin: 0;
+  font: var(--ui-font-heading-h4);
+  letter-spacing: var(--ui-type-heading-h4-tracking);
+}
+
+.pg-texto {
+  margin: 0;
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-sm-regular);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+}
+
+.pg-parrafo { margin: 0; }
+
+.pg-meta {
+  margin: 0;
+  color: var(--ui-color-text-tertiary);
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+  overflow-wrap: anywhere;
+}
+
+/* Login: tarjeta de 400 centrada sobre el canvas */
+.login {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--ui-space-24) var(--ui-space-16);
+}
+
+.login__tarjeta {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 400px;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+}
+
+/* Mis campañas */
+.mc-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--ui-size-card-kpi-w), 1fr));
+  gap: var(--ui-space-16);
+}
+
+.mc-rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: var(--ui-space-16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Tarjeta completa clicable: el enlace del nombre cubre la tarjeta; el botón queda encima. */
+.mc-tarjeta {
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.mc-tarjeta:has(.mc-enlace:focus-visible) {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.mc-enlace {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+.mc-enlace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.mc-nombre {
+  margin: 0;
+  font: var(--ui-font-heading-h5);
+  letter-spacing: var(--ui-type-heading-h5-tracking);
+  overflow-wrap: anywhere;
+}
+
+.mc-pie {
+  display: flex;
+  margin-top: auto;
+  padding-top: var(--ui-space-8);
+}
+
+.mc-cta {
+  position: relative;
+  z-index: var(--ui-z-raised);
+}
+
+/* Encabezado de campaña */
+.enc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  min-width: 0;
+}
+
+/* Estado vacío (campaña no encontrada) */
+.vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-space-12);
+  padding: var(--ui-space-48) var(--ui-space-16);
+  text-align: center;
+  color: var(--ui-color-icon-tertiary-default);
+}
+
+.vacio .pg-texto { max-width: 48ch; }
+.vacio .pg-subtitulo { color: var(--ui-color-text-primary); }

@@ -1,0 +1,100 @@
+/* Tabs (§5). Pestaña = Button color "Tap": borde 1 px arriba, izquierda y derecha. */
+.ui-tabs {
+  --_h: var(--ui-size-control-xs);
+  --_pad: var(--ui-space-4);
+  --_pad-x: var(--ui-space-12);
+
+  display: flex;
+  align-items: flex-end;
+  gap: var(--ui-space-8);
+  /* Espacio para el anillo de foco dentro del scroll; el margen negativo lo compensa abajo. */
+  padding: var(--ui-space-4) var(--ui-space-16);
+  margin-bottom: var(--ui-space-neg-4);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.ui-tabs--xxl { --_h: var(--ui-size-control-xxs); --_pad: var(--ui-space-4); --_pad-x: var(--ui-space-8); }
+.ui-tabs--xs { --_h: var(--ui-size-control-xs); --_pad: var(--ui-space-4); --_pad-x: var(--ui-space-12); }
+.ui-tabs--sm { --_h: var(--ui-size-control-sm); --_pad: var(--ui-space-6); --_pad-x: var(--ui-space-12); }
+.ui-tabs--md { --_h: var(--ui-size-control-md); --_pad: var(--ui-space-8); --_pad-x: var(--ui-space-16); }
+.ui-tabs--lg { --_h: var(--ui-size-control-lg); --_pad: var(--ui-space-12); --_pad-x: var(--ui-space-24); }
+
+.ui-tabs__list {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+}
+
+.ui-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-4);
+  height: var(--_h);
+  margin: 0;
+  padding: 0 var(--_pad-x);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+  border-bottom-width: 0;
+  background: var(--ui-color-bg-surface-default);
+  color: var(--ui-color-text-primary);
+  font: var(--ui-font-body-sm-regular);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ui-tabs--xxl .ui-tabs__tab {
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.ui-tabs--rounded .ui-tabs__tab {
+  border-radius: var(--ui-radius-control-xs) var(--ui-radius-control-xs) 0 0;
+}
+
+.ui-tabs__icon { color: var(--ui-color-icon-default); }
+
+.ui-tabs__tab:not(:disabled):hover { background: var(--ui-color-bg-surface-hover); }
+
+.ui-tabs__tab:not(:disabled):active {
+  border-color: transparent;
+  background: var(--ui-color-bg-fill-brand-pressed);
+  color: var(--ui-color-text-text-on-color);
+}
+
+/* Seleccionada: más alta (contenido + p 4/0/4/0) y en negritas. */
+.ui-tabs__tab.is-selected {
+  height: auto;
+  padding: calc(var(--_pad) + var(--ui-space-4)) var(--_pad-x);
+  border-color: transparent;
+  background: var(--ui-color-bg-fill-brand-default);
+  color: var(--ui-color-text-text-on-color);
+  font: var(--ui-font-body-sm-bold);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+}
+
+.ui-tabs__tab.is-selected .ui-tabs__icon,
+.ui-tabs__tab:not(:disabled):active .ui-tabs__icon {
+  color: var(--ui-color-icon-on-color);
+}
+
+.ui-tabs__tab:focus-visible {
+  position: relative;
+  z-index: var(--ui-z-raised);
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-tabs__tab:disabled {
+  background: var(--ui-color-bg-surface-disabled);
+  color: var(--ui-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.ui-tabs__tab:disabled .ui-tabs__icon { color: var(--ui-color-icon-disabled); }
+
+.ui-tab-panel:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}

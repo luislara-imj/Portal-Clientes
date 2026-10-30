@@ -1,0 +1,114 @@
+/* Icon button (§1.5). */
+.ui-icon-button {
+  --_bg: transparent;
+  --_bg-hover: var(--_bg);
+  --_bg-pressed: var(--_bg);
+  --_bg-selected: var(--_bg);
+  --_bg-disabled: var(--ui-color-bg-fill-disabled);
+  --_border: transparent;
+  --_border-disabled: var(--_border);
+  --_icon: var(--ui-color-icon-default);
+  --_icon-selected: var(--_icon);
+  --_icon-disabled: var(--ui-color-icon-disabled);
+
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--_border);
+  background: var(--_bg);
+  color: var(--_icon);
+  cursor: pointer;
+  transition: background-color var(--ui-motion-fast);
+}
+
+.ui-icon-button--xxs { width: var(--ui-size-control-xxs); height: var(--ui-size-control-xxs); }
+.ui-icon-button--xs { width: var(--ui-size-control-xs); height: var(--ui-size-control-xs); }
+.ui-icon-button--sm { width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); }
+.ui-icon-button--md { width: var(--ui-size-control-md); height: var(--ui-size-control-md); }
+.ui-icon-button--lg { width: var(--ui-size-control-lg); height: var(--ui-size-control-lg); }
+
+.ui-icon-button__badge {
+  position: absolute;
+  top: var(--ui-space-neg-2);
+  right: var(--ui-space-neg-2);
+  width: var(--ui-size-dot);
+  height: var(--ui-size-dot);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-fill-danger-default);
+}
+
+.ui-icon-button--primary {
+  --_bg: var(--ui-color-bg-fill-brand-default);
+  --_bg-hover: var(--ui-color-bg-fill-brand-hover);
+  --_bg-pressed: var(--ui-color-bg-fill-brand-pressed);
+  --_bg-selected: var(--ui-color-bg-fill-brand-selected);
+  --_bg-disabled: var(--ui-color-bg-fill-brand-disabled);
+  --_icon: var(--ui-color-icon-on-color);
+  --_icon-disabled: var(--ui-color-icon-on-color);
+}
+
+.ui-icon-button--secondary {
+  --_bg: var(--ui-color-bg-fill-secondary-default);
+  --_bg-hover: var(--ui-color-bg-fill-secondary-hover);
+  --_bg-pressed: var(--ui-color-bg-fill-secondary-pressed);
+  --_bg-selected: var(--ui-color-bg-fill-secondary-selected);
+  --_border: var(--ui-color-border-default);
+  --_border-disabled: var(--ui-color-border-disabled);
+}
+
+.ui-icon-button--tertiary {
+  --_bg-hover: var(--ui-color-bg-fill-tertiary-hover);
+  --_bg-pressed: var(--ui-color-bg-fill-tertiary-pressed);
+  --_bg-selected: var(--ui-color-bg-fill-tertiary-selected);
+}
+
+.ui-icon-button--destructive {
+  --_bg: var(--ui-color-bg-surface-danger-default);
+  --_bg-hover: var(--ui-color-bg-surface-danger-hover);
+  --_bg-pressed: var(--ui-color-bg-surface-danger-pressed);
+  --_bg-selected: var(--ui-color-bg-surface-danger-selected);
+  --_icon: var(--ui-color-icon-danger-default);
+}
+
+.ui-icon-button--ghost {
+  --_bg-hover: var(--ui-color-bg-fill-hover);
+  --_bg-pressed: var(--ui-color-bg-fill-secondary-pressed);
+  --_bg-selected: var(--ui-color-bg-fill-brand-default);
+  --_icon-selected: var(--ui-color-text-text-on-color);
+}
+
+.ui-icon-button:not(:disabled):not(.is-loading):hover,
+.ui-icon-button[data-state="hover"] {
+  background: var(--_bg-hover);
+}
+
+.ui-icon-button:not(:disabled):not(.is-loading):active,
+.ui-icon-button[data-state="pressed"] {
+  background: var(--_bg-pressed);
+}
+
+.ui-icon-button.is-selected {
+  background: var(--_bg-selected);
+  color: var(--_icon-selected);
+}
+
+.ui-icon-button[data-state="focus"] {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-icon-button:disabled,
+.ui-icon-button.is-loading {
+  background: var(--_bg-disabled);
+  border-color: var(--_border-disabled);
+  color: var(--_icon-disabled);
+  cursor: not-allowed;
+}
+
+.ui-icon-button.is-loading {
+  cursor: progress;
+}

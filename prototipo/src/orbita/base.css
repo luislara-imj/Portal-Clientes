@@ -1,0 +1,58 @@
+/* Utilidades compartidas de Órbita (accesibilidad). */
+
+/* Oculto a la vista, visible para lectores de pantalla. */
+.ui-sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Amplía el área táctil a --ui-size-touch-min sin cambiar el tamaño visual. */
+.ui-touch {
+  position: relative;
+}
+
+.ui-touch::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, var(--ui-size-touch-min));
+  height: max(100%, var(--ui-size-touch-min));
+  transform: translate(-50%, -50%);
+}
+
+/* Solo vertical: para controles muy juntos en horizontal (Switch, migas, puntos). */
+.ui-touch-y {
+  position: relative;
+}
+
+.ui-touch-y::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: max(100%, var(--ui-size-touch-min));
+  transform: translateY(-50%);
+}
+
+/* Radio de controles (`pill?` de Button, Icon button e Input). */
+.ui-radius--none { border-radius: var(--ui-radius-control-na); }
+.ui-radius--xs { border-radius: var(--ui-radius-control-xs); }
+.ui-radius--sm { border-radius: var(--ui-radius-control-sm); }
+.ui-radius--md { border-radius: var(--ui-radius-control-md); }
+.ui-radius--lg { border-radius: var(--ui-radius-control-lg); }
+.ui-radius--pill { border-radius: var(--ui-radius-control-pill); }
+
+/* Anillo de foco estándar de Órbita (Button, Icon button, Card, Toogle): 2 px a 2 px del control. */
+.ui-focus-ring:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}

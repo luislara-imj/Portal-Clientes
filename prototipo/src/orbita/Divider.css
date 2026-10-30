@@ -1,0 +1,43 @@
+/* Divider (§16.1): línea 1 px dentro de un marco con p4. */
+.ui-divider {
+  --_style: var(--ui-stroke-style-solid);
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+}
+
+.ui-divider--dashed { --_style: var(--ui-stroke-style-dashed); }
+
+.ui-divider--horizontal {
+  width: 100%;
+  padding: var(--ui-space-4) 0;
+}
+
+.ui-divider--vertical {
+  flex-direction: column;
+  align-self: stretch;
+  padding: 0 var(--ui-space-4);
+}
+
+.ui-divider__line {
+  flex: 1;
+}
+
+.ui-divider--horizontal .ui-divider__line {
+  border-top: var(--ui-stroke-width-1) var(--_style) var(--ui-color-border-default);
+}
+
+.ui-divider--vertical .ui-divider__line {
+  min-height: var(--ui-space-16);
+  border-left: var(--ui-stroke-width-1) var(--_style) var(--ui-color-border-default);
+}
+
+.ui-divider__text {
+  flex: none;
+  color: var(--ui-color-text-tertiary);
+}
+
+.ui-divider--lg .ui-divider__text { font: var(--ui-font-body-lg-regular); letter-spacing: var(--ui-type-body-lg-tracking); }
+.ui-divider--md .ui-divider__text { font: var(--ui-font-body-md-regular); letter-spacing: var(--ui-type-body-md-tracking); }
+.ui-divider--sm .ui-divider__text { font: var(--ui-font-body-sm-regular); letter-spacing: var(--ui-type-body-sm-tracking); }
+.ui-divider--xs .ui-divider__text { font: var(--ui-font-body-xs-regular); letter-spacing: var(--ui-type-body-xs-tracking); }

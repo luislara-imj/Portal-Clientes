@@ -1,0 +1,84 @@
+/* Barra superior compuesta (6.1). Alto 64 y p 8/16 como el Header de Órbita (§11.1). */
+.ui-appbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--ui-layer-app-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-16);
+  min-height: var(--ui-size-appbar);
+  padding: var(--ui-space-8) var(--ui-space-16);
+  border-bottom: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  background: var(--ui-color-bg-surface-default);
+  color: var(--ui-color-text-primary);
+}
+
+.ui-appbar__start,
+.ui-appbar__client,
+.ui-appbar__actions {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.ui-appbar__start { gap: var(--ui-space-24); }
+.ui-appbar__client { gap: var(--ui-space-8); }
+.ui-appbar__actions { flex: none; gap: var(--ui-space-8); }
+
+.ui-appbar__home {
+  display: inline-flex;
+  border-radius: var(--ui-radius-control-xs);
+  text-decoration: none;
+}
+
+.ui-appbar__home:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-appbar__client-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ui-appbar__client-name,
+.ui-appbar__client-company {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-appbar__client-name {
+  font: var(--ui-font-body-xs-bold);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+.ui-appbar__client-company {
+  color: var(--ui-color-text-tertiary);
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+
+/* Angosto: botones solo con ícono (label visualmente oculto) y sin texto del cliente. */
+@media (max-width: 720px) {
+  .ui-appbar__start { gap: var(--ui-space-12); }
+  .ui-appbar__client-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .ui-appbar__actions .ui-button { padding: 0 var(--ui-space-8); }
+  .ui-appbar__actions .ui-button__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}

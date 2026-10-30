@@ -1,0 +1,137 @@
+/* Tag (§2.2). */
+.ui-tag {
+  --_bg: var(--ui-color-bg-surface-brand-default);
+  --_fg: var(--ui-color-text-brand-default);
+  --_icon: var(--ui-color-icon-brand-default);
+  --_x-hover-bg: var(--ui-color-bg-surface-brand-hover);
+  --_x-hover-icon: var(--ui-color-icon-brand-hover);
+  --_x-pressed-bg: var(--ui-color-bg-surface-brand-pressed);
+  --_x-pressed-icon: var(--ui-color-icon-brand-pressed);
+  --_x-selected-bg: var(--ui-color-bg-surface-brand-selected);
+
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: var(--ui-size-tag);
+  padding: var(--ui-space-2) var(--ui-space-4) var(--ui-space-2) var(--ui-space-6);
+  border-radius: var(--ui-radius-control-sm);
+  background: var(--_bg);
+  color: var(--_fg);
+  font: var(--ui-font-body-xs-semibold);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+  white-space: nowrap;
+}
+
+.ui-tag:not(.ui-tag--removable) {
+  padding-right: var(--ui-space-6);
+}
+
+.ui-tag--border {
+  box-shadow: inset 0 0 0 var(--ui-stroke-width-1) var(--ui-color-border-default);
+}
+
+.ui-tag__content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+}
+
+.ui-tag__icon { color: var(--_icon); }
+
+.ui-tag__avatar {
+  width: var(--ui-size-icon-sm);
+  height: var(--ui-size-icon-sm);
+  border-radius: var(--ui-radius-control-pill);
+  object-fit: cover;
+}
+
+.ui-tag__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-size-tag-close);
+  height: var(--ui-size-tag-close);
+  margin: 0;
+  padding: var(--ui-space-2);
+  border: 0;
+  border-radius: var(--ui-radius-control-xs);
+  background: transparent;
+  color: var(--_icon);
+  cursor: pointer;
+}
+
+.ui-tag__remove:hover,
+.ui-tag__remove[data-state="hover"] { background: var(--_x-hover-bg); color: var(--_x-hover-icon); }
+.ui-tag__remove:active,
+.ui-tag__remove[data-state="pressed"] { background: var(--_x-pressed-bg); color: var(--_x-pressed-icon); }
+.ui-tag__remove[data-state="selected"] { background: var(--_x-selected-bg); color: var(--_x-pressed-icon); }
+
+.ui-tag__remove:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-stroke-width-1);
+}
+
+.ui-tag--gray {
+  --_bg: var(--ui-color-bg-fill-tertiary-default);
+  --_fg: var(--ui-color-text-primary);
+  --_icon: var(--ui-color-icon-default);
+  --_x-hover-bg: var(--ui-color-bg-fill-tertiary-hover);
+  --_x-hover-icon: var(--ui-color-icon-hover);
+  --_x-pressed-bg: var(--ui-color-bg-fill-tertiary-pressed);
+  --_x-pressed-icon: var(--ui-color-icon-pressed);
+  --_x-selected-bg: var(--ui-color-bg-fill-tertiary-selected);
+}
+
+/* success, warning, danger, info: estados del xmark no verificados en Figma; se sigue el patrón de accent. */
+.ui-tag--success {
+  --_bg: var(--ui-color-bg-surface-success-default);
+  --_fg: var(--ui-color-text-success-default);
+  --_icon: var(--ui-color-icon-success-default);
+  --_x-hover-bg: var(--ui-color-bg-surface-success-hover);
+  --_x-hover-icon: var(--ui-color-icon-success-hover);
+  --_x-pressed-bg: var(--ui-color-bg-surface-success-pressed);
+  --_x-pressed-icon: var(--ui-color-icon-success-pressed);
+  --_x-selected-bg: var(--ui-color-bg-surface-success-selected);
+}
+.ui-tag--warning {
+  --_bg: var(--ui-color-bg-surface-warning-default);
+  --_fg: var(--ui-color-text-warning-default);
+  --_icon: var(--ui-color-icon-warning-default);
+  --_x-hover-bg: var(--ui-color-bg-surface-warning-hover);
+  --_x-hover-icon: var(--ui-color-icon-warning-hover);
+  --_x-pressed-bg: var(--ui-color-bg-surface-warning-pressed);
+  --_x-pressed-icon: var(--ui-color-icon-warning-pressed);
+  --_x-selected-bg: var(--ui-color-bg-surface-warning-selected);
+}
+.ui-tag--danger {
+  --_bg: var(--ui-color-bg-surface-danger-default);
+  --_fg: var(--ui-color-text-danger-default);
+  --_icon: var(--ui-color-icon-danger-default);
+  --_x-hover-bg: var(--ui-color-bg-surface-danger-hover);
+  --_x-hover-icon: var(--ui-color-icon-danger-hover);
+  --_x-pressed-bg: var(--ui-color-bg-surface-danger-pressed);
+  --_x-pressed-icon: var(--ui-color-icon-danger-pressed);
+  --_x-selected-bg: var(--ui-color-bg-surface-danger-selected);
+}
+.ui-tag--info {
+  --_bg: var(--ui-color-bg-surface-info-default);
+  --_fg: var(--ui-color-text-info-default);
+  --_icon: var(--ui-color-icon-info-default);
+  --_x-hover-bg: var(--ui-color-bg-surface-info-hover);
+  --_x-hover-icon: var(--ui-color-icon-info-hover);
+  --_x-pressed-bg: var(--ui-color-bg-surface-info-pressed);
+  --_x-pressed-icon: var(--ui-color-icon-info-pressed);
+  --_x-selected-bg: var(--ui-color-bg-surface-info-selected);
+}
+
+.ui-tag.is-disabled {
+  --_bg: var(--ui-color-bg-surface-disabled);
+  --_fg: var(--ui-color-text-disabled);
+  --_icon: var(--ui-color-icon-disabled);
+}
+
+.ui-tag.is-disabled .ui-tag__remove {
+  cursor: not-allowed;
+  background: transparent;
+  color: var(--_icon);
+}

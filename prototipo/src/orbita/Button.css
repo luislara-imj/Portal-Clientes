@@ -1,0 +1,180 @@
+/* Button (§1). Colores por variante en variables locales; los estados las intercambian. */
+.ui-button {
+  --_bg: transparent;
+  --_bg-hover: var(--_bg);
+  --_bg-pressed: var(--_bg);
+  --_bg-selected: var(--_bg);
+  --_bg-disabled: var(--_bg);
+  --_bg-loading: var(--_bg-disabled);
+  --_border: transparent;
+  --_border-disabled: var(--_border);
+  --_fg: var(--ui-color-text-primary);
+  --_fg-hover: var(--_fg);
+  --_fg-pressed: var(--_fg);
+  --_fg-selected: var(--_fg);
+  --_fg-disabled: var(--ui-color-text-disabled);
+  --_icon: var(--ui-color-icon-default);
+  --_icon-hover: var(--_icon);
+  --_icon-pressed: var(--_icon);
+  --_icon-selected: var(--_icon);
+  --_icon-disabled: var(--ui-color-icon-disabled);
+  --_icon-loading: var(--_icon-disabled);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-width: 0;
+  margin: 0;
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--_border);
+  background: var(--_bg);
+  color: var(--_fg);
+  font: var(--ui-font-body-sm-bold);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  transition: background-color var(--ui-motion-fast), color var(--ui-motion-fast);
+}
+
+.ui-button__content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+.ui-button__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ui-button__icon {
+  color: var(--_icon-now, var(--_icon));
+}
+
+.ui-button__badge {
+  align-self: flex-start;
+  width: var(--ui-size-dot);
+  height: var(--ui-size-dot);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-fill-danger-default);
+}
+
+.ui-button--full {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+/* ---- Tamaños ---- */
+.ui-button--xxs {
+  height: var(--ui-size-control-xxs);
+  padding: 0 var(--ui-space-8);
+  font: var(--ui-font-body-xs-bold);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+}
+.ui-button--xs { height: var(--ui-size-control-xs); padding: 0 var(--ui-space-12); }
+.ui-button--sm { height: var(--ui-size-control-sm); padding: 0 var(--ui-space-12); }
+.ui-button--md { height: var(--ui-size-control-md); padding: 0 var(--ui-space-16); }
+.ui-button--lg { height: var(--ui-size-control-lg); padding: 0 var(--ui-space-24); }
+.ui-button--xxs.ui-radius--lg { border-radius: var(--ui-radius-control-sm); }
+
+/* ---- Variantes ---- */
+.ui-button--primary {
+  --_bg: var(--ui-color-bg-fill-brand-default);
+  --_bg-hover: var(--ui-color-bg-fill-brand-hover);
+  --_bg-pressed: var(--ui-color-bg-fill-brand-pressed);
+  --_bg-selected: var(--ui-color-bg-fill-brand-selected);
+  --_bg-disabled: var(--ui-color-bg-fill-disabled);
+  --_bg-loading: var(--ui-color-bg-fill-brand-disabled);
+  --_fg: var(--ui-color-text-text-on-color);
+  --_icon: var(--ui-color-icon-on-color);
+  --_icon-loading: var(--ui-color-icon-on-color);
+}
+
+.ui-button--secondary {
+  --_bg: var(--ui-color-bg-fill-secondary-default);
+  --_bg-hover: var(--ui-color-bg-fill-secondary-hover);
+  --_bg-pressed: var(--ui-color-bg-fill-secondary-pressed);
+  --_bg-selected: var(--ui-color-bg-fill-secondary-selected);
+  --_bg-disabled: var(--ui-color-bg-fill-secondary-default);
+  --_border: var(--ui-color-border-default);
+  --_border-disabled: var(--ui-color-border-disabled);
+  --_fg: var(--ui-color-text-primary);
+  --_icon: var(--ui-color-icon-default);
+}
+
+.ui-button--tertiary {
+  --_bg: var(--ui-color-black-alpha-transparent);
+  --_bg-hover: var(--ui-color-bg-fill-tertiary-hover);
+  --_bg-pressed: var(--ui-color-bg-fill-tertiary-pressed);
+  --_bg-selected: var(--ui-color-bg-fill-tertiary-selected);
+  --_bg-disabled: var(--ui-color-bg-fill-tertiary-default);
+  --_fg: var(--ui-color-text-primary);
+  --_icon: var(--ui-color-icon-default);
+}
+
+.ui-button--destructive {
+  --_bg: var(--ui-color-bg-surface-danger-default);
+  --_bg-hover: var(--ui-color-bg-surface-danger-hover);
+  --_bg-pressed: var(--ui-color-bg-surface-danger-pressed);
+  --_bg-selected: var(--ui-color-bg-surface-danger-selected);
+  --_bg-disabled: var(--ui-color-bg-fill-secondary-default);
+  --_fg: var(--ui-color-text-danger-default);
+  --_icon: var(--ui-color-icon-danger-default);
+}
+
+.ui-button--ghost {
+  --_bg: var(--ui-color-black-alpha-transparent);
+  --_fg: var(--ui-color-text-brand-default);
+  --_fg-hover: var(--ui-color-text-brand-hover);
+  --_fg-pressed: var(--ui-color-text-brand-pressed);
+  --_fg-selected: var(--ui-color-text-brand-selected);
+  --_icon: var(--ui-color-icon-brand-default);
+  --_icon-hover: var(--ui-color-icon-brand-hover);
+  --_icon-pressed: var(--ui-color-icon-brand-pressed);
+  --_icon-selected: var(--ui-color-icon-brand-selected);
+}
+
+/* ---- Estados ---- */
+.ui-button:not(:disabled):not(.is-loading):hover,
+.ui-button[data-state="hover"] {
+  background: var(--_bg-hover);
+  color: var(--_fg-hover);
+  --_icon-now: var(--_icon-hover);
+}
+
+.ui-button:not(:disabled):not(.is-loading):active,
+.ui-button[data-state="pressed"] {
+  background: var(--_bg-pressed);
+  color: var(--_fg-pressed);
+  --_icon-now: var(--_icon-pressed);
+}
+
+.ui-button.is-selected {
+  background: var(--_bg-selected);
+  color: var(--_fg-selected);
+  --_icon-now: var(--_icon-selected);
+}
+
+.ui-button[data-state="focus"] {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.ui-button:disabled {
+  background: var(--_bg-disabled);
+  border-color: var(--_border-disabled);
+  color: var(--_fg-disabled);
+  --_icon-now: var(--_icon-disabled);
+  cursor: not-allowed;
+}
+
+.ui-button.is-loading {
+  background: var(--_bg-loading);
+  border-color: var(--_border-disabled);
+  color: var(--_icon-loading);
+  cursor: progress;
+}
