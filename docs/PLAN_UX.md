@@ -44,7 +44,11 @@ Notas:
 
 - La colección **Semantic Color** tiene modos OBP y WIB. El portal usa solo **OBP Light** y **OBP Dark**. WIB queda fuera.
 - Tipografía: SF Pro con fallback a Inter en web. Pesos 400, 500, 600 y 700. Hay escala regular y compacta (la compacta es para tablas densas).
-- Radios, espaciados, sombras y z-index están en colecciones separadas; pendiente de extraer los valores exactos.
+- Estado en texto: el fill de estado (éxito `#22c55e`, advertencia `#eab308`, peligro `#ef4444`, información `#06b6d4`) va en íconos, bordes y fondos. Sobre blanco, solo el texto de peligro (`#b83434`, 5.9:1) pasa contraste AA. Éxito (`#1ca34e`, 3.3:1), advertencia (`#b58b06`, 3.2:1) e información (`#0592aa`, 3.7:1) no llegan a 4.5:1. Regla: un estado nunca se comunica solo con color; va con ícono y texto en `text/primary`.
+- Radios: controles y campos 8; control grande 10; tarjeta 12; popover y dropdown 8; tooltip 6; modal 16; pill y avatar 9999. Pendiente de confirmar con OBP: Figma define `radius/surface/forms` = 2 para formularios. Mientras tanto los campos usan 8, igual que los botones.
+- Espaciado: escala de Figma con paso base 4. Pasos de uso: 4, 8, 12, 16, 24, 32, 48, 64. Los pasos 2, 6 y 10 solo para ajustes internos. Figma también tiene 80 y 96 para secciones grandes.
+- Sombras: `shadow-1` para barras pegadas; `shadow-3` para popovers y dropdowns; `shadow-5` para modales y overlays. Las tarjetas no llevan sombra: usan borde `border/subtle`.
+- z-index y tamaños de control: se toman de Figma al hacer la alta fidelidad.
 
 ### Componentes de Órbita a usar
 
@@ -63,7 +67,7 @@ Notas:
 | Confirmaciones (aceptar cotización) | **Modal** | Un clic con confirmación. |
 | Mensajes de resultado | **Toast** y **Notification** | Tras autorizar o aceptar. |
 | Alertas en línea | **Alerts** | Por ejemplo, medios pendientes de revisión. |
-| Botones | **Button** | Variantes primary, secondary, tertiary, danger. Estados: default, hover, pressed, focus, disabled, loading. |
+| Botones | **Button** | Variantes de Figma: `primary` (confirmar), `secondary` (cancelar), `tertiary`, `destructive` (rechazar, eliminar), `ghost`. Estados: default, hover, pressed, selected, disabled, loading. Focus es un booleano del componente, no un estado. |
 | Acordeones (detalle de cotización o medio) | **Accordion** | Opcional. |
 | Breadcrumbs | **Breadcrumbs** | Campaña > Fase. |
 | Pestañas dentro de una fase | **Tabs** | Por ejemplo, Medios / Cotización. |

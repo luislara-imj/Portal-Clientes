@@ -28,9 +28,9 @@ Hoy es el Excel que recibe el cliente para marcar qué medios quiere. En el port
 
 | Tipo | Datos del medio | Impactos y audiencia | Perfil de audiencia | Inversión |
 |---|---|---|---|---|
-| Sitios fijos | Disponible, clave IMJ, formato, dirección, vista, iluminación, medida, inicio, fin, comentarios, referencias comerciales, ubicación ("Ver en mapa") | Impactos, impactos totales, alcance, frecuencia promedio, tiempo de exposición (seg/mes) | Hombres, mujeres, NSE AB, C+, C, D+, D, E, edades 0 a 14 hasta 35 a 44 | — |
+| Sitios fijos | Disponible, clave IMJ, formato, dirección, vista, iluminación, medida, inicio, fin, comentarios, referencias comerciales, ubicación ("Ver en mapa"), latitud, longitud | Impactos, impactos totales, alcance, frecuencia promedio, tiempo de exposición (seg/mes) | Hombres, mujeres, NSE AB, C+, C, D+, D, E, edades 0 a 14 hasta 35 a 44, 45 a 64 y 65 o más | Precio cliente, precio con descuento |
 | Camiones | Ruta, tipo de exhibición, categoría, tipo de anuncio, inicio, fin | Impactos únicos, alcance mensual, impactos totales, frecuencia mensual, tiempo de exposición, km promedio | Hombres, mujeres | Precio cliente, precio con descuento |
-| Indoors | Disponible, clave IMJ, formato, inmueble, nivel, área, a nivel de piso, descripción, comentarios, dirección, inicio, fin | Impactos, alcance, impactos totales, frecuencia | Hombres, mujeres, NSE ABC+, C, C-, D+, DE, edad 13 a 17 | — |
+| Indoors | Disponible, clave IMJ, formato, inmueble, nivel, área, a nivel de piso, descripción, comentarios, dirección, inicio, fin | Impactos, alcance, impactos totales, frecuencia | Hombres, mujeres, NSE ABC+, C, C-, D+, DE, edades 13 a 17 hasta 55 o más | Precio de producción, precio cliente, precio con descuento |
 | Vallas móviles | Clave IMJ, inicio, fin | — | — | Precio cliente, precio con descuento |
 
 **Reglas de presentación** (de la guía del template):
@@ -85,7 +85,7 @@ Formato distinto: **dos opciones que se cotizan por separado**. El cliente elige
 
 Por opción: nombre, unidades, tiempo de servicio (meses), tipo de vehículo, precio unitario mensual y costo extra. Cada opción tiene su subtotal, IVA y total.
 
-Ejemplo: opción 1 "Wrap 180° · Parcial", 20 unidades, 2 meses, $16,000 mensuales cada una. Opción 2 "Wrap 360° · Completo", 8 unidades, 1 mes, $29,000.
+Ejemplo: opción 1 "Wrap 180° · Parcial", 20 unidades, 2 meses, $16,000 MXN mensuales cada una. Opción 2 "Wrap 360° · Completo", 8 unidades, 1 mes, $29,000 MXN.
 
 ## 3. Derrotero de camiones
 
