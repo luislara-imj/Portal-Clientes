@@ -419,3 +419,103 @@
 
 .vacio .pg-texto { max-width: 48ch; }
 .vacio .pg-subtitulo { color: var(--ui-color-text-primary); }
+
+/* Mis campañas: contenido a la izquierda y panel de acciones pendientes a la derecha. */
+.mc-cuerpo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--ui-space-24);
+  align-items: start;
+}
+
+.mc-principal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-24);
+  min-width: 0;
+}
+
+.mc-lateral {
+  position: sticky;
+  top: var(--ui-space-80);
+}
+
+.mc-acciones {
+  background: var(--ui-color-bg-surface-default);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-surface-card);
+  box-shadow: var(--ui-shadow-1);
+  padding: var(--ui-space-16) var(--ui-space-20);
+}
+
+.mc-acciones-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-8);
+  padding-bottom: var(--ui-space-12);
+}
+
+.mc-acciones-titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  margin: 0;
+  font: var(--ui-font-body-lg-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.mc-acciones-titulo .ui-icon,
+.mc-acciones-titulo svg { color: var(--ui-color-text-brand-default); }
+
+.mc-acciones-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mc-acciones-lista li { border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle); }
+
+.mc-accion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-12);
+  min-height: var(--ui-size-control-md);
+  padding: var(--ui-space-12) 0;
+  color: var(--ui-color-text-primary);
+  text-decoration: none;
+  border-radius: var(--ui-radius-control-sm);
+}
+
+.mc-accion:hover .mc-accion-texto { color: var(--ui-color-text-brand-default); }
+
+.mc-accion:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.mc-accion-textos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.mc-accion-texto { font: var(--ui-font-body-sm-medium); }
+
+.mc-accion-campana {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.mc-acciones-vacio {
+  margin: 0;
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+@media (max-width: 1024px) {
+  .mc-cuerpo { grid-template-columns: minmax(0, 1fr); }
+  .mc-lateral { position: static; order: -1; }
+}

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Badge, Button, Card, Divider, Icon } from '../orbita';
-import { useStore } from '../store/index.js';
+import { formatoMXN, useStore } from '../store/index.js';
 import { AppShell } from '../layout/AppShell.jsx';
 import { badgeDeFase, hrefCampana, proximaAccion, rutaCampana, vigencia } from '../layout/campanas.js';
 import '../layout/layout.css';
@@ -128,6 +128,61 @@ function Kpi({ titulo, valor, icono, detalle, destacada = false }) {
   );
 }
 
+// Texto de la acción pendiente con su dato concreto.
+function textoAccion(r, s) {
+  if (r.fase === 'Propuesta lista') return `Responde la propuesta de ${r.medios} medios`;
+  if (r.fase === 'En selección') {
+    const faltan = r.medios - r.respondidos;
+    if (faltan === 0) return 'Confirma tu selección de medios';
+    return faltan === 1 ? 'Falta 1 medio por responder' : `Faltan ${faltan} medios por responder`;
+  }
+  const total = s.cotizacion(r.codigo)?.total;
+  return total ? `Acepta la cotización de ${formatoMXN(total)}` : 'Acepta la cotización';
+}
+
+// Panel lateral: solo acciones que dependen del cliente, cada una lleva a su fase.
+function AccionesPendientes({ pendientes }) {
+  const s = useStore();
+  return (
+    <section className="mc-acciones" aria-labelledby="mc-acciones-titulo">
+      <div className="mc-acciones-cabecera">
+        <h2 id="mc-acciones-titulo" className="mc-acciones-titulo">
+          <Icon name="warning" size={20} />
+          Acciones pendientes
+        </h2>
+        {pendientes.length > 0 && (
+          <Badge color="accent" theme="soft">
+            {String(pendientes.length)}
+          </Badge>
+        )}
+      </div>
+      {pendientes.length === 0 ? (
+        <p className="mc-acciones-vacio">No tienes acciones pendientes.</p>
+      ) : (
+        <ul className="mc-acciones-lista">
+          {pendientes.map((r) => {
+            const accion = proximaAccion(r);
+            return (
+              <li key={r.codigo}>
+                <a className="mc-accion" href={hrefCampana(r.codigo, accion.fase)}>
+                  <span className="mc-accion-textos">
+                    <span className="mc-accion-texto">{textoAccion(r, s)}</span>
+                    <span className="mc-accion-campana">
+                      {r.nombre}
+                      {!r.flujo && ' · solo consulta'}
+                    </span>
+                  </span>
+                  <Icon name="chevron-right" size={16} />
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
+  );
+}
+
 export default function MisCampanas() {
   const s = useStore();
   const ind = s.indicadores();
@@ -143,18 +198,24 @@ export default function MisCampanas() {
         <h1 className="pg-cabecera-titulo">Mis campañas</h1>
         <p className="pg-cabecera-subtitulo">Elige una campaña para ver su avance</p>
       </header>
-      <div className="mc-kpis">
-        <Kpi titulo="Campañas activas" valor={String(ind.activas)} icono="megaphone" detalle={`de ${resumenes.length} en tu cuenta`} destacada />
-        <Kpi titulo="Con acción pendiente" valor={String(ind.conAccionPendiente)} icono="warning" detalle="Esperan tu respuesta" />
-        <Kpi titulo="Medios instalados" valor={`${ind.mediosInstalados} de ${mediosEnInstalacion}`} icono="success" detalle={`${pctInstalado}% instalado`} />
+      <div className="mc-cuerpo">
+        <div className="mc-principal">
+          <div className="mc-kpis">
+            <Kpi titulo="Campañas activas" valor={String(ind.activas)} icono="megaphone" detalle={`de ${resumenes.length} en tu cuenta`} destacada />
+            <Kpi titulo="Medios instalados" valor={`${ind.mediosInstalados} de ${mediosEnInstalacion}`} icono="success" detalle={`${pctInstalado}% instalado`} />
+          </div>
+          <ul className="mc-rejilla" aria-label="Campañas">
+            {orden.map((r) => (
+              <li key={r.codigo}>
+                <TarjetaCampana r={r} />
+              </li>
+            ))}
+          </ul>
+        </div>
+        <aside className="mc-lateral">
+          <AccionesPendientes pendientes={resumenes.filter((r) => r.accionPendiente)} />
+        </aside>
       </div>
-      <ul className="mc-rejilla" aria-label="Campañas">
-        {orden.map((r) => (
-          <li key={r.codigo}>
-            <TarjetaCampana r={r} />
-          </li>
-        ))}
-      </ul>
     </AppShell>
   );
 }
