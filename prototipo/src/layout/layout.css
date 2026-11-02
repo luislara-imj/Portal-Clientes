@@ -88,15 +88,88 @@
 }
 
 /* Mis campañas */
+/* Header de página (Figma "Header"): tarjeta blanca con título y subtítulo */
+.pg-cabecera {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-16);
+  background: var(--ui-color-bg-surface-default);
+  border-radius: var(--ui-radius-surface-card);
+  box-shadow: var(--ui-shadow-3);
+}
+
+.pg-cabecera-titulo {
+  margin: 0;
+  font: var(--ui-font-heading-h3);
+  color: var(--ui-color-text-primary);
+}
+
+.pg-cabecera-subtitulo {
+  margin: 0;
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-tertiary);
+}
+
+/* KPIs del panel: tarjetas con ícono a la derecha; la destacada va en azul */
 .mc-kpis {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--ui-size-card-kpi-w), 1fr));
   gap: var(--ui-space-16);
 }
 
+.mc-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+  min-width: 0;
+  padding: var(--ui-space-16);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+  border-radius: var(--ui-radius-surface-card);
+  background: var(--ui-color-bg-surface-default);
+  color: var(--ui-color-text-primary);
+}
+
+.mc-kpi.is-destacada {
+  border-color: var(--ui-color-icon-all-colors-blue);
+  background: var(--ui-color-icon-all-colors-blue);
+  color: #ffffff;
+}
+
+.mc-kpi-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-8);
+  color: var(--ui-color-icon-all-colors-blue);
+}
+
+.mc-kpi.is-destacada .mc-kpi-cabecera { color: #ffffff; }
+
+.mc-kpi-titulo {
+  margin: 0;
+  font: var(--ui-font-body-sm-regular);
+  color: inherit;
+}
+
+.mc-kpi-valor {
+  margin: 0;
+  font: var(--ui-font-heading-h3);
+  color: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.mc-kpi-detalle {
+  margin: 0;
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-brand-default, #2d49a1);
+}
+
+.mc-kpi.is-destacada .mc-kpi-detalle { color: #ffffff; }
+
 .mc-rejilla {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
   gap: var(--ui-space-16);
   margin: 0;
   padding: 0;
@@ -108,6 +181,104 @@
   position: relative;
   height: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+}
+
+.mc-cabeza {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-12);
+}
+
+.mc-icono {
+  display: flex;
+  padding-top: var(--ui-space-2);
+  color: var(--ui-color-text-primary);
+}
+
+.mc-titulos {
+  flex: 1;
+  min-width: 0;
+}
+
+.mc-codigo {
+  margin: var(--ui-space-2) 0 0;
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mc-datos {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: var(--ui-space-12);
+  margin: 0;
+}
+
+.mc-dato dt {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.mc-dato dd {
+  margin: var(--ui-space-2) 0 0;
+  font: var(--ui-font-body-sm-medium);
+  color: var(--ui-color-text-primary);
+}
+
+.mc-dato:last-child { text-align: right; }
+
+.mc-estado {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+.mc-estado-texto {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mc-cta { flex: none; }
+
+.mc-puntos {
+  display: flex;
+  gap: var(--ui-space-4);
+  flex: none;
+}
+
+.mc-punto {
+  width: 10px;
+  height: 10px;
+  box-sizing: border-box;
+  border-radius: var(--ui-radius-control-pill);
+  border: 1.5px solid var(--ui-color-border-default);
+}
+
+.mc-punto.is-cerrada {
+  background: var(--ui-color-bg-fill-success-default);
+  border-color: var(--ui-color-bg-fill-success-default);
+}
+
+.mc-punto.is-actual {
+  background: var(--ui-color-bg-fill-brand-default);
+  border-color: var(--ui-color-bg-fill-brand-default);
+}
+
+@media (max-width: 420px) {
+  .mc-datos { grid-template-columns: 1fr 1fr; }
+  .mc-dato:first-child { grid-column: 1 / -1; }
+  .mc-dato:last-child { text-align: left; }
+  .mc-pie { flex-direction: column; align-items: stretch; }
+  .mc-cta { width: 100%; }
 }
 
 .mc-tarjeta:has(.mc-enlace:focus-visible) {
@@ -136,8 +307,10 @@
 
 .mc-pie {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-12);
   margin-top: auto;
-  padding-top: var(--ui-space-8);
 }
 
 .mc-cta {
@@ -151,6 +324,86 @@
   flex-direction: column;
   gap: var(--ui-space-16);
   min-width: 0;
+}
+
+/* Header de Órbita (Figma "Header"): tarjeta blanca con título a la izquierda, controles centrados y Volver a la derecha */
+.enc-cabecera {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ui-space-16);
+  padding: var(--ui-space-16);
+  background: var(--ui-color-bg-surface-default);
+  border-radius: var(--ui-radius-surface-card);
+  box-shadow: var(--ui-shadow-3);
+}
+
+.enc-izq {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-16);
+  min-width: 0;
+}
+
+.enc-centro {
+  display: flex;
+  justify-content: center;
+}
+
+.enc-der {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+  .enc-cabecera {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .enc-der {
+    justify-content: flex-start;
+  }
+}
+
+.enc-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--ui-space-8);
+  border-radius: 9999px;
+  background: var(--ui-color-bg-surface-brand-default);
+  color: var(--ui-color-icon-all-colors-blue, #3658c1);
+}
+
+.enc-titulos {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.enc-nota {
+  font-weight: var(--ui-font-weight-regular);
+  color: var(--ui-color-text-tertiary);
+}
+
+.enc-titulo {
+  margin: 0;
+  font: var(--ui-font-heading-h3);
+  color: var(--ui-color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.enc-subtitulo {
+  margin: 0;
+  font: var(--ui-font-body-xs-bold, 700 12px/17.5px var(--ui-font-family-ui));
+  color: var(--ui-color-text-brand-default, #2d49a1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Estado vacío (campaña no encontrada) */
