@@ -3,7 +3,7 @@
 import { CAMPANA_FLUJO, SEMILLA, campanaFija } from '../data/semilla.js';
 import { DESCUENTO_PCT, IVA_PCT, NOMBRE_PLAZA, NOMBRE_TIPO, PLAZAS, TIPOS } from '../data/catalogos.js';
 import { fechaLocal } from '../data/fechas.js';
-import { FASES, faseAlMenos, mediosSi, nivelFase, pendientesDe, seleccionEditable } from './reglas.js';
+import { FASES, faseAlMenos, mediosSi, nivelFase, seleccionEditable } from './reglas.js';
 import { estatusDe, planInstalacion, porcentajeEn } from './instalacion.js';
 import { formatoFecha } from './formato.js';
 
@@ -17,23 +17,17 @@ export function progresoPropuesta(estado, codigo) {
   const fija = campanaFija(codigo);
   const resp = estado.campanas[codigo]?.respuestas || {};
   const total = fija ? fija.medios.length : 0;
-  let si = 0;
-  let no = 0;
-  for (const m of fija ? fija.medios : []) {
-    if (resp[m.id] === 'si') si++;
-    else if (resp[m.id] === 'no') no++;
-  }
+  // Cada medio está seleccionado ('si') o no; sin valor guardado cuenta como no seleccionado.
+  const si = fija ? fija.medios.filter((m) => resp[m.id] === 'si').length : 0;
   const c = estado.campanas[codigo];
   const confirmada = !!c && faseAlMenos(c.fase, 'Selección confirmada');
   return {
     total,
-    respondidos: si + no,
-    pendientes: total - si - no,
     si,
-    no,
+    no: total - si,
     confirmada,
     editable: seleccionEditable(estado, codigo),
-    puedeConfirmar: seleccionEditable(estado, codigo) && !confirmada && total > 0 && si + no === total
+    puedeConfirmar: seleccionEditable(estado, codigo) && !confirmada && si > 0
   };
 }
 
@@ -227,8 +221,8 @@ export function fasesDeCampana(estado, codigo) {
   if (!c) return [];
   const n = nivelFase(c.fase);
   const flujo = codigo === CAMPANA_FLUJO;
-  const pendientes = pendientesDe(estado, codigo);
-  const fase = (clave, nombre, desde, hasta, motivo, conAcciones) => {
+  const seleccionados = mediosSi(estado, codigo).length;
+  const fase =(clave, nombre, desde, hasta, motivo, conAcciones) => {
     const estadoFase = n < nivelFase(desde) ? 'bloqueada' : hasta && n >= nivelFase(hasta) ? 'consulta' : 'activa';
     return {
       clave,
@@ -238,9 +232,9 @@ export function fasesDeCampana(estado, codigo) {
       editable: flujo && conAcciones && estadoFase === 'activa'
     };
   };
-  let motivoCotizacion = 'Confirma tu selección de medios para ver la cotización.';
-  if (pendientes === 1) motivoCotizacion = 'Falta responder 1 medio. Responde todos y confirma tu selección para ver la cotización.';
-  else if (pendientes > 1) motivoCotizacion = `Faltan ${pendientes} medios por responder. Responde todos y confirma tu selección para ver la cotización.`;
+  const motivoCotizacion = seleccionados === 0
+    ? 'Selecciona los medios que quieres y confirma tu selección para ver la cotización.'
+    : 'Confirma tu selección de medios para ver la cotización.';
   const motivoReportes = n < nivelFase('Aceptada')
     ? 'Los reportes se publican cuando aceptes la cotización y termine la instalación.'
     : 'El reporte fotográfico inicial se publica al terminar la instalación.';
@@ -269,7 +263,6 @@ export function resumenCampana(estado, codigo, ahora = Date.now()) {
     fase: c.fase,
     flujo: fija.flujo,
     medios: prop.total,
-    respondidos: prop.respondidos,
     incluidos: prop.si,
     instalados: inst.instalados,
     mediosInstalacion: inst.total,

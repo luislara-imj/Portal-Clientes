@@ -8,7 +8,7 @@ const OPCIONES = [
 
 /**
  * Respuesta Sí / No de un medio: Switch segmentado de Órbita, tamaño md.
- * valor: 'si' | 'no' | undefined (vacío = sin responder; nunca hay No implícito).
+ * valor: 'si' | 'no' | undefined (vacío = No: el medio no está seleccionado).
  * readOnly: fase en consulta (muestra la respuesta sin permitir cambiarla).
  */
 export function SiNo({ medio, valor, onResponder, readOnly }) {
@@ -17,7 +17,7 @@ export function SiNo({ medio, valor, onResponder, readOnly }) {
       size="md"
       label={`¿Incluyes ${claveDe(medio)}?`}
       options={OPCIONES}
-      value={valor ?? null}
+      value={valor === 'si' ? 'si' : 'no'}
       readOnly={readOnly}
       onChange={(v) => onResponder?.(medio.id, v)}
     />

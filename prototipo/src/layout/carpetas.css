@@ -20,7 +20,7 @@
    Oscura en ambos temas (tokens --ui-color-*-folder*). */
 .cp-carpeta {
   --cp-color: var(--ui-color-bg-fill-brand-default);
-  --cp-blanco: var(--ui-color-text-folder);
+  --cp-blanco: var(--ui-color-bg-folder-paper);
   --cp-radio: 28px;
 
   position: relative;
@@ -99,7 +99,7 @@
   flex: none;
   height: var(--ui-space-4);
   border-radius: var(--ui-radius-full);
-  background: color-mix(in srgb, var(--ui-color-bg-folder-body) 22%, var(--cp-blanco));
+  background: var(--ui-color-bg-folder-line);
 }
 
 .cp-hoja-linea:nth-child(2) { width: 80%; }
@@ -168,33 +168,217 @@ a.cp-carpeta:hover .cp-hoja--3 { transform: translateX(4px) rotate(14deg); }
 
 .cp-carpeta.is-ejemplo { cursor: default; }
 
-/* ---------- Tarjeta de campaña con foto (nivel 2) ---------- */
+/* ---------- Tarjeta de campaña (nivel 2) ----------
+   Arte 1:1 dentro de un marco de 12px con el estatus encima (arriba a la derecha), nombre y vigencia, y el botón
+   "Fases" que abre la lista de fases (Popover). El recorte del arte va en .cp-tarjeta-imagen
+   (no en la tarjeta) para que el Popover no quede cortado por la tarjeta. */
 .cp-tarjeta {
-  height: 100%;
-  box-sizing: border-box;
-  gap: var(--ui-space-12);
-}
+  --cp-tarjeta-radio: 28px;
+  --cp-tarjeta-marco: var(--ui-space-12);
 
-.cp-tarjeta-cuerpo {
+  position: relative;
+  container: cp-tarjeta / inline-size;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: var(--ui-space-4);
+  gap: var(--cp-tarjeta-marco);
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: var(--cp-tarjeta-marco);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--cp-tarjeta-radio);
+  background: var(--ui-color-bg-surface-default);
+  box-shadow: var(--ui-shadow-3);
+  color: var(--ui-color-text-primary);
+}
+
+/* Arte dentro del marco con las cuatro esquinas redondeadas (28 - 8 = 20px). */
+.cp-tarjeta-imagen {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: calc(var(--cp-tarjeta-radio) - var(--ui-space-8));
+}
+
+/* Estatus sobre el arte: pastilla translúcida clara con desenfoque; conserva color e ícono. */
+.cp-tarjeta-badge {
+  position: absolute;
+  top: var(--ui-space-12);
+  right: var(--ui-space-12);
+  max-width: calc(100% - var(--ui-space-24));
+  border-radius: var(--ui-radius-control-pill);
+  background: color-mix(in srgb, var(--ui-color-bg-fill-default) 88%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.cp-tarjeta-badge .ui-badge__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Pie: nombre y vigencia a la izquierda, botón "Fases" a la derecha (rejilla de 2 columnas). */
+.cp-tarjeta-cuerpo {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "nombre pie"
+    "fecha  pie";
+  align-content: center;
+  align-items: center;
+  column-gap: var(--ui-space-12);
+  row-gap: var(--ui-space-2);
+  min-width: 0;
   padding: 0 var(--ui-space-4) var(--ui-space-4);
 }
 
 .cp-tarjeta-nombre {
-  font: var(--ui-font-body-md-semibold);
+  grid-area: nombre;
+  margin: 0;
+  overflow: hidden;
+  font: var(--ui-font-body-lg-semibold);
   color: var(--ui-color-text-primary);
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .cp-tarjeta-fecha {
+  grid-area: fecha;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  min-width: 0;
+  margin: 0;
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-secondary);
+  white-space: nowrap;
+}
+
+.cp-tarjeta-fecha::before {
+  content: "";
+  flex: none;
+  width: var(--ui-space-6);
+  height: var(--ui-space-6);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-fill-brand-default);
+}
+
+.cp-tarjeta-pie {
+  grid-area: pie;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Tarjeta estrecha (columnas angostas): el botón baja a su propia fila, alineado a la izquierda. */
+@container cp-tarjeta (max-width: 260px) {
+  .cp-tarjeta-cuerpo {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "nombre"
+      "fecha"
+      "pie";
+  }
+
+  .cp-tarjeta-pie {
+    justify-content: flex-start;
+    padding-top: var(--ui-space-8);
+  }
+}
+
+/* Botón "Fases": píldora oscura en tema claro y clara en tema oscuro, para contrastar con la tarjeta. */
+.cp-tarjeta .cp-tarjeta-boton {
+  --_bg: var(--ui-color-bg-folder-boton);
+  --_bg-hover: color-mix(in srgb, var(--ui-color-bg-folder-boton) 85%, var(--ui-color-text-folder-boton));
+  --_bg-pressed: var(--_bg-hover);
+  --_bg-disabled: var(--ui-color-bg-folder-boton);
+  --_border: transparent;
+  --_fg: var(--ui-color-text-folder-boton);
+  --_fg-disabled: var(--ui-color-text-folder-boton);
+  --_icon: var(--ui-color-text-folder-boton);
+  --_icon-disabled: var(--ui-color-text-folder-boton);
+
+  height: var(--ui-space-40);
+  padding: 0 var(--ui-space-16);
+  border: 0;
+  border-radius: var(--ui-radius-control-pill);
+  font: var(--ui-font-body-sm-semibold);
+}
+
+.cp-tarjeta .cp-tarjeta-boton:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.cp-tarjeta .cp-tarjeta-boton:disabled {
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-tarjeta .cp-tarjeta-boton { transition: none; }
+}
+
+/* El Popover se posiciona contra la tarjeta (ancla estática) y toma su ancho, para que en
+   columnas estrechas o en la primera columna no se salga de la pantalla. */
+.cp-tarjeta-pie .ui-popover-anchor { position: static; }
+
+.cp-tarjeta-pie .ui-popover {
+  left: 0;
+  right: 0;
+  width: auto;
+  max-width: none;
+  transform: none;
+}
+
+/* Lista de fases dentro del Popover. */
+.cp-fases {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cp-fase {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-12);
+  min-height: var(--ui-size-control-md);
+  padding: var(--ui-space-8) var(--ui-space-12);
+  border-radius: var(--ui-radius-8);
+  color: var(--ui-color-text-primary);
+  text-decoration: none;
+  font: var(--ui-font-body-sm-semibold);
+}
+
+a.cp-fase:hover { background: var(--ui-color-bg-surface-hover); }
+
+.cp-fase-nombre {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cp-fase-estado {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-4);
   font: var(--ui-font-body-sm-regular);
   color: var(--ui-color-text-secondary);
 }
 
-.cp-tarjeta-badge { margin-top: var(--ui-space-4); }
+.cp-fase-check { color: var(--ui-color-icon-success-default); }
+
+.cp-fase.is-bloqueada {
+  color: var(--ui-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.cp-fase.is-bloqueada .cp-fase-estado { color: var(--ui-color-text-disabled); }
 
 @media (prefers-reduced-motion: reduce) {
   .cp-carpeta,

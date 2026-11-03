@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Breadcrumbs, Icon, Logo, Modal, Popover, useToast } from '../orbita';
+import { Avatar, Breadcrumbs, IconButton, Icon, Logo, Modal, Popover, useToast } from '../orbita';
 import { useStore } from '../store/index.js';
 import { useTema } from './tema.js';
 import './layout.css';
@@ -73,7 +73,7 @@ function MenuUsuario({ onReiniciar }) {
  * controles: nodo opcional al centro del header
  * acciones: nodo opcional a la derecha, antes del menú del usuario (p. ej. un botón primario)
  */
-export function AppShell({ titulo, nota, migas, controles, acciones, children }) {
+export function AppShell({ titulo, nota, migas, controles, acciones, volver, children }) {
   const s = useStore();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -91,9 +91,20 @@ export function AppShell({ titulo, nota, migas, controles, acciones, children })
       <main className="pg">
         <header className="enc-cabecera">
           <div className="enc-izq">
-            <a className="hdr-logo" href="#/campanas" aria-label="Ir a Mis campañas">
-              <Logo variant="icon" size="lg" decorative />
-            </a>
+            {volver ? (
+              <IconButton
+                icon="arrow-left"
+                label={volver.label}
+                variant="secondary"
+                size="xs"
+                pill="pill"
+                onClick={() => navigate(volver.ruta)}
+              />
+            ) : (
+              <a className="hdr-logo" href="#/campanas" aria-label="Ir a Mis campañas">
+                <Logo variant="icon" size="lg" decorative />
+              </a>
+            )}
             <div className="enc-titulos">
               <h1 className="enc-titulo">
                 {titulo}

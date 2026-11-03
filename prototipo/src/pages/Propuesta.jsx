@@ -13,7 +13,6 @@ import '../layout/layout.css';
 import './propuesta/propuesta.css';
 
 const ESTADOS = [
-  { value: 'pendiente', label: 'Sin responder' },
   { value: 'si', label: 'Sí' },
   { value: 'no', label: 'No' }
 ];
@@ -23,12 +22,13 @@ const OPCIONES_VISTA = [
   { value: 'tabla', label: 'Tabla' }
 ];
 
-const respondido = (v) => v === 'si' || v === 'no';
+// Cada medio es Sí (seleccionado) o No; sin valor guardado cuenta como No.
+const seleccionado = (v) => v === 'si';
 
 // Sin estados elegidos pasan todos; si hay, el medio debe estar en alguno.
 function pasaEstado(valor, estados) {
   if (!estados.length) return true;
-  return estados.some((e) => (e === 'pendiente' ? !respondido(valor) : valor === e));
+  return estados.includes(seleccionado(valor) ? 'si' : 'no');
 }
 
 // Búsqueda sin acentos ni mayúsculas en la clave, el nombre y la dirección del medio.
@@ -93,7 +93,7 @@ function ContenidoPropuesta({ campana, vista }) {
 
   const tabs = TIPOS.map((t) => {
     const lista = porTipo[t];
-    return { id: t, label: NOMBRE_TIPO[t], count: `${lista.filter((m) => respondido(respuestas[m.id])).length}/${lista.length}` };
+    return { id: t, label: NOMBRE_TIPO[t], count: `${lista.filter((m) => seleccionado(respuestas[m.id])).length}/${lista.length}` };
   });
 
   const delTipo = porTipo[tipo];
@@ -166,7 +166,7 @@ function ContenidoPropuesta({ campana, vista }) {
   }
 
   return (
-    <div className="mc-cuerpo">
+    <div className="mc-cuerpo pp-cuerpo">
     <section className="pp mc-principal" aria-label="Medios propuestos">
       <div className="pp-medios">
         <Tabs
@@ -206,13 +206,13 @@ function ContenidoPropuesta({ campana, vista }) {
       }}
     />
     <aside className="mc-lateral">
-      <ResumenPropuesta progreso={progreso} cot={cot} onConfirmar={() => s.confirmarSeleccion(codigo)} />
+      <ResumenPropuesta progreso={progreso} cot={cot} onConfirmar={() => s.confirmarSeleccion(codigo)} onIrCotizacion={irACotizacion} />
     </aside>
     </div>
   );
 }
 
-// Propuesta de medios: el cliente responde Sí / No por medio y confirma su selección.
+// Propuesta de medios: el cliente selecciona los medios que quiere (Sí / No) y confirma su selección.
 // La vista (tarjetas o tabla) vive aquí porque su Switch está en el encabezado y el contenido la usa.
 export default function Propuesta() {
   const [vistaElegida, setVistaElegida] = useState(null);

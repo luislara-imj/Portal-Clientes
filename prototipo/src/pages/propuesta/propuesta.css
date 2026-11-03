@@ -92,6 +92,12 @@
   min-width: 0;
 }
 
+/* Propuesta: el panel lateral tiene la misma altura y el mismo inicio que la columna de medios. */
+.pp-cuerpo { align-items: stretch; }
+/* El margen baja el inicio del panel hasta el borde superior del panel blanco (bajo las pestañas). */
+.pp-cuerpo > .mc-lateral { position: static; display: flex; flex-direction: column; margin-top: 42px; }
+.pp-cuerpo > .mc-lateral > * { flex: 1; }
+
 .pp-panel {
   display: flex;
   flex-direction: column;
@@ -152,6 +158,10 @@
 
 .pp-grupo { box-sizing: border-box; min-width: 0; }
 
+/* Sin contorno en el contenedor del acordeón ni en el de la tabla de medios. */
+.ui-accordion.pp-grupo { border: 0; }
+.pp-grupo .ui-table { border: 0; }
+
 .pp-grupo .ui-accordion__panel { min-width: 0; }
 
 .pp-grupo__acciones {
@@ -200,53 +210,102 @@
   }
 }
 
-/* Vista tarjetas */
-.pp-rejilla {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(var(--ui-size-card-media-w), 100%), 1fr));
-  gap: var(--ui-space-16);
-  margin: 0;
-  padding: 0;
-  list-style: none;
+/* Vista tarjetas: rejilla y tarjeta de campaña (cp-rejilla--tarjetas, cp-tarjeta en carpetas.css).
+   Aquí solo lo propio del medio: rejilla, imagen 16:9, clave completa, selección, precio e interacción. */
+
+/* Interactiva: cursor de mano y elevación suave; en consulta no hay hover. */
+.pp-tarjeta {
+  transition: box-shadow var(--ui-motion-fast) ease-out, border-color var(--ui-motion-fast) ease-out;
 }
 
-.pp-rejilla__item { display: flex; min-width: 0; }
+.pp-tarjeta--interactiva { cursor: pointer; }
 
-/* Tarjeta de medio: alto completo de la fila; el pie (precio y Sí / No) siempre al fondo, así el
-   espacio que sobra queda entre el contenido y el pie y no debajo de los botones. */
-.pp-tarjeta { box-sizing: border-box; min-width: 0; height: 100%; }
+.pp-tarjeta--interactiva:hover { box-shadow: var(--ui-shadow-4); }
 
-.pp-tarjeta .ui-media-card__details { flex: 1 1 auto; }
+.pp-tarjeta:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
 
-/* Nombre o plaza en una sola línea; el texto completo aparece al pasar el cursor. */
-.pp-tarjeta .ui-media-card__plaza { max-width: 100%; min-width: 0; }
+/* Sí: borde de marca de 2 px (el segundo píxel va por dentro para no mover el contenido) y fondo sutil. */
+.cp-tarjeta.pp-tarjeta--si {
+  border-color: var(--ui-color-border-brand);
+  background: var(--ui-color-bg-surface-brand-default);
+  box-shadow:
+    inset 0 0 0 calc(var(--ui-stroke-width-2) - var(--ui-stroke-width-1)) var(--ui-color-border-brand),
+    var(--ui-shadow-3);
+}
 
-.pp-tarjeta .ui-media-card__plaza-texto {
+.cp-tarjeta.pp-tarjeta--si.pp-tarjeta--interactiva:hover {
+  box-shadow:
+    inset 0 0 0 calc(var(--ui-stroke-width-2) - var(--ui-stroke-width-1)) var(--ui-color-border-brand),
+    var(--ui-shadow-4);
+}
+
+/* Rejilla de medios: columnas de 280 px mínimo para que la clave se lea completa. */
+.pp-rejilla {
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+}
+
+/* Ilustración del medio en 16:9 a todo el ancho (la tarjeta de campaña sigue en 1:1). */
+.cp-tarjeta-imagen.pp-tarjeta-imagen {
+  aspect-ratio: 16 / 9;
+}
+
+.pp-tarjeta-imagen .im {
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+}
+
+/* Clave completa: salta de línea en lugar de cortarse con ellipsis. */
+.cp-tarjeta-nombre.pp-tarjeta-clave {
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+
+/* Check de selección: misma posición que el badge de estatus de la campaña (12 px);
+   contorno blanco de 2 px (icon-on-color: blanco en ambos temas) para distinguirse sobre
+   cualquier ilustración. */
+.pp-tarjeta-check {
+  position: absolute;
+  top: var(--ui-space-12);
+  right: var(--ui-space-12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--ui-size-control-xs);
+  height: var(--ui-size-control-xs);
+  border: var(--ui-stroke-width-2) var(--ui-stroke-style-solid) var(--ui-color-icon-on-color);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-fill-brand-default);
+  color: var(--ui-color-icon-on-color);
+  pointer-events: none;
+}
+
+/* Plaza o nombre en una sola línea con ellipsis (el punto de marca lo pone cp-tarjeta-fecha). */
+.pp-tarjeta-plaza-texto {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.pp-tarjeta .ui-media-card__cta { margin-top: auto; }
-
-.pp-tarjeta__pie {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--ui-space-8);
-  min-width: 0;
+/* Precio con descuento: Tag de marca (accent) de Órbita; solo visual (la tarjeta es el control). */
+.pp-tarjeta-precio {
+  position: absolute;
+  top: var(--ui-space-12);
+  left: var(--ui-space-12);
+  pointer-events: none;
 }
 
-/* Sí / No de lado a lado: el control ocupa el ancho y cada opción la mitad. */
-.pp-tarjeta__pie .ui-switch { display: flex; width: 100%; box-sizing: border-box; }
-.pp-tarjeta__pie .ui-switch__item { flex: 1 1 0; justify-content: center; }
+/* Tarjeta seleccionada: el tag del precio pasa a superficie blanca para no confundirse con el fondo de marca. */
+.pp-tarjeta--si .pp-tarjeta-precio { background: var(--ui-color-bg-fill-default); }
 
-.pp-tarjeta__precio {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
+@media (prefers-reduced-motion: reduce) {
+  .pp-tarjeta { transition: none; }
 }
 
 /* Tarjeta lateral "Propuesta de medios" (estilo de Acciones pendientes) */

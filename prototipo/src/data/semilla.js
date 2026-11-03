@@ -9,7 +9,7 @@ import { instante, planReportes } from './fechas.js';
 import { PLAZAS, FORMATOS_RIDER, TEXTOS_COTIZACION } from './catalogos.js';
 
 // Versión del esquema del estado guardado. Si cambia, lo guardado se descarta y se usa la semilla.
-export const VERSION = 3;
+export const VERSION = 4;
 
 export const CLIENTE = { nombre: 'Ana López', empresa: 'Cliente de ejemplo S.A.' };
 export const RESPONSABLE_COMERCIAL = 'Por asignar';
@@ -109,8 +109,8 @@ function bajio() {
     g.indoor('ZMG', { inmueble: 'galeriasGdl' }),
     g.indoor('CDMX', { inmueble: 'antara' })
   ];
-  // 5 respondidas (3 Sí, 2 No) y 3 sin responder.
-  const valores = ['si', 'no', 'si', 'si', 'no'];
+  // 3 seleccionados (Sí) y 5 no seleccionados (No).
+  const valores = ['si', 'no', 'si', 'si', 'no', 'no', 'no', 'no'];
   const respuestas = {};
   valores.forEach((v, i) => { respuestas[medios[i].id] = v; });
   return {
@@ -128,7 +128,7 @@ function bajio() {
 }
 
 // ---------------------------------------------------------------------------
-// WeCare Primavera · Cotización lista · 18 medios respondidos, 12 Sí
+// WeCare Primavera · Cotización lista · 18 medios, 12 Sí
 // ---------------------------------------------------------------------------
 function wecarePrimavera() {
   const inicio = '2026-12-01';

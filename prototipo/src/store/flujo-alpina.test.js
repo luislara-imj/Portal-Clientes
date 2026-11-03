@@ -18,20 +18,22 @@ describe('flujo completo de Alpina con tiempo simulado', () => {
     expect(e.campanas[AL].fase).toBe('Propuesta lista');
     expect(estados(e)).toEqual({ propuesta: 'activa', cotizacion: 'bloqueada', instalacion: 'bloqueada', reportes: 'bloqueada' });
 
-    // Primera respuesta → En selección.
+    // Al inicio nada está seleccionado: confirmar no hace nada.
+    expect(progresoPropuesta(e, AL)).toMatchObject({ total: medios.length, si: 0, no: medios.length, puedeConfirmar: false });
+    expect(confirmarSeleccion(e, AL, T0)).toBe(e);
+    expect(fasesDeCampana(e, AL)[1].motivo).toBe('Selecciona los medios que quieres y confirma tu selección para ver la cotización.');
+
+    // Primer medio seleccionado → En selección; ya se puede confirmar.
     e = responder(e, AL, medios[0].id, 'si');
     expect(e.campanas[AL].fase).toBe('En selección');
-    expect(progresoPropuesta(e, AL)).toMatchObject({ total: medios.length, respondidos: 1, pendientes: medios.length - 1, puedeConfirmar: false });
+    expect(progresoPropuesta(e, AL)).toMatchObject({ total: medios.length, si: 1, no: medios.length - 1, puedeConfirmar: true });
+    expect(fasesDeCampana(e, AL)[1].motivo).toBe('Confirma tu selección de medios para ver la cotización.');
 
-    // Confirmar con pendientes no hace nada.
-    expect(confirmarSeleccion(e, AL, T0)).toBe(e);
-    expect(fasesDeCampana(e, AL)[1].motivo).toContain(`Faltan ${medios.length - 1} medios`);
-
-    // Responder todo: Sí a todo y No a los camiones de MTY.
-    e = responderTodos(e, AL, { soloSinResponder: true }, 'si');
+    // Sí a todo y No a los camiones de MTY.
+    e = responderTodos(e, AL, {}, 'si');
     e = responderTodos(e, AL, { tipo: 'camiones', plaza: 'MTY' }, 'no');
     const noMty = medios.filter((m) => m.tipo === 'camiones' && m.plaza === 'MTY').length;
-    expect(progresoPropuesta(e, AL)).toMatchObject({ pendientes: 0, si: medios.length - noMty, no: noMty, puedeConfirmar: true });
+    expect(progresoPropuesta(e, AL)).toMatchObject({ si: medios.length - noMty, no: noMty, puedeConfirmar: true });
 
     // Confirmar → Cotización lista (Selección confirmada es un paso de paso).
     e = confirmarSeleccion(e, AL, T0);
@@ -144,11 +146,12 @@ describe('flujo completo de Alpina con tiempo simulado', () => {
     expect(avanzar(e, T0 + 30000).campanas[AL].fase).toBe('En reporte');
   });
 
-  it('no se acepta una cotización sin medios Sí', () => {
-    let e = responderTodos(estadoInicial(), AL, {}, 'no');
+  it('no se acepta una cotización sin medios Sí (deseleccionar todo tras confirmar)', () => {
+    let e = responderTodos(estadoInicial(), AL, {}, 'si');
     e = confirmarSeleccion(e, AL, T0);
+    e = responderTodos(e, AL, {}, 'no');
     expect(e.campanas[AL].fase).toBe('Cotización lista');
-    expect(cotizacion(e, AL)).toMatchObject({ medios: 0, total: 0, puedeAceptar: false });
+    expect(cotizacion(e, AL)).toMatchObject({ medios: 0, total: 0, puedeAceptar: false, actualizada: true });
     expect(aceptarCotizacion(e, AL, T0)).toBe(e);
   });
 

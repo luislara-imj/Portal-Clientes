@@ -15,7 +15,8 @@ describe('bloqueos de fases', () => {
   it('Bajío (En selección): propuesta activa, lo demás bloqueado con motivo', () => {
     expect(resumen(e, CODIGOS.BAJIO)).toEqual(['propuesta:activa', 'cotizacion:bloqueada', 'instalacion:bloqueada', 'reportes:bloqueada']);
     const [, cot, inst, rep] = fasesDeCampana(e, CODIGOS.BAJIO);
-    expect(cot.motivo).toBe('Faltan 3 medios por responder. Responde todos y confirma tu selección para ver la cotización.');
+    // Bajío tiene 3 medios seleccionados: solo falta confirmar.
+    expect(cot.motivo).toBe('Confirma tu selección de medios para ver la cotización.');
     expect(inst.motivo).toBe('Acepta la cotización para iniciar la instalación.');
     expect(rep.motivo).toMatch(/aceptes la cotización/);
   });

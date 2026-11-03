@@ -15,9 +15,10 @@ const medioTxt = (n) => `${n} ${n === 1 ? 'medio' : 'medios'}`;
  * El subtotal es el de los medios incluidos (Sí), con descuento, como en la cotización.
  */
 export function GrupoPlaza({ tipo, plaza, todos, visibles, respuestas, vista, editable, onResponder, onResponderTodos }) {
-  const respondidos = todos.filter((m) => respuestas[m.id] === 'si' || respuestas[m.id] === 'no').length;
-  const subtotal = redondear(todos.filter((m) => respuestas[m.id] === 'si').reduce((s, m) => s + montoConDescuentoDe(m), 0));
-  let descripcion = `${respondidos} de ${todos.length} respondidos · subtotal con descuento de los medios incluidos`;
+  const seleccionados = todos.filter((m) => respuestas[m.id] === 'si');
+  const subtotal = redondear(seleccionados.reduce((s, m) => s + montoConDescuentoDe(m), 0));
+  const n = seleccionados.length;
+  let descripcion = `${n} ${n === 1 ? 'seleccionado' : 'seleccionados'} · subtotal con descuento de los medios incluidos`;
   if (visibles.length !== todos.length) descripcion += ` · ${visibles.length} con los filtros`;
   const readOnly = !editable;
   const siNo = (m) => <SiNo medio={m} valor={respuestas[m.id]} onResponder={onResponder} readOnly={readOnly} />;
@@ -51,9 +52,9 @@ export function GrupoPlaza({ tipo, plaza, todos, visibles, respuestas, vista, ed
           selectedKeys={visibles.filter((m) => respuestas[m.id] === 'si').map((m) => m.id)}
         />
       ) : (
-        <ul className="pp-rejilla">
+        <ul className="cp-rejilla cp-rejilla--tarjetas pp-rejilla">
           {visibles.map((m) => (
-            <li key={m.id} className="pp-rejilla__item">
+            <li key={m.id}>
               <TarjetaMedio medio={m} valor={respuestas[m.id]} onResponder={onResponder} readOnly={readOnly} />
             </li>
           ))}

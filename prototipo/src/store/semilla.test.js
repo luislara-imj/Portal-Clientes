@@ -111,14 +111,16 @@ describe('semilla', () => {
     }
   });
 
-  it('Bajío: 6 a 10 medios, algunos respondidos y otros no', () => {
+  it('Bajío: 6 a 10 medios, 3 seleccionados (Sí) y el resto no seleccionados (No)', () => {
     const fija = campanaFija(CODIGOS.BAJIO);
     const resp = estadoInicial().campanas[CODIGOS.BAJIO].respuestas;
     expect(fija.medios.length).toBeGreaterThanOrEqual(6);
     expect(fija.medios.length).toBeLessThanOrEqual(10);
-    const respondidos = fija.medios.filter((m) => resp[m.id]).length;
-    expect(respondidos).toBeGreaterThan(0);
-    expect(respondidos).toBeLessThan(fija.medios.length);
+    expect(fija.medios.map((m) => resp[m.id])).toEqual(['si', 'no', 'si', 'si', 'no', 'no', 'no', 'no']);
+  });
+
+  it('Alpina empieza sin ningún medio seleccionado', () => {
+    expect(estadoInicial().campanas[CODIGOS.ALPINA]).toMatchObject({ fase: 'Propuesta lista', respuestas: {} });
   });
 
   it('WeCare: tres campañas con sus códigos, vigencias y fases', () => {
@@ -132,7 +134,7 @@ describe('semilla', () => {
     ]);
   });
 
-  it('WeCare Primavera: todo respondido con 12 Sí', () => {
+  it('WeCare Primavera: todos con valor, 12 Sí', () => {
     const fija = campanaFija(CODIGOS.WECARE_PRIMAVERA);
     const resp = estadoInicial().campanas[CODIGOS.WECARE_PRIMAVERA].respuestas;
     expect(fija.medios.every((m) => resp[m.id])).toBe(true);

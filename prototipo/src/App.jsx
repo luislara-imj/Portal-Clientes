@@ -5,7 +5,6 @@ import { aplicarTemaGuardado } from './layout/tema.js';
 import Login from './pages/Login.jsx';
 import MisCampanas from './pages/MisCampanas.jsx';
 import CarpetaMarca from './pages/CarpetaMarca.jsx';
-import DetalleCampana from './pages/DetalleCampana.jsx';
 import Propuesta from './pages/Propuesta.jsx';
 import Cotizacion from './pages/Cotizacion.jsx';
 import Instalacion from './pages/Instalacion.jsx';
@@ -30,7 +29,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/campanas" element={<MisCampanas />} />
             <Route path="/campanas/carpeta/:marca" element={<CarpetaMarca />} />
-            <Route path="/campanas/:codigo" element={<DetalleCampana />} />
+            <Route path="/campanas/:codigo" element={<Navigate to="/campanas" replace />} />
             <Route path="/campanas/:codigo/propuesta" element={<Propuesta />} />
             <Route path="/campanas/:codigo/cotizacion" element={<Cotizacion />} />
             <Route path="/campanas/:codigo/instalacion" element={<Instalacion />} />

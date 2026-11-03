@@ -40,18 +40,14 @@ export function vigencia(inicio, fin) {
 // Próxima acción según la fase: { texto, boton, fase (ruta), pendiente }.
 // `resumen` = resumenCampana(codigo) del store.
 export function proximaAccion(resumen) {
-  const { fase, medios, respondidos, instalados, mediosInstalacion, reportesPublicados, accionPendiente } = resumen;
+  const { fase, incluidos, instalados, mediosInstalacion, reportesPublicados, accionPendiente } = resumen;
   const pendiente = accionPendiente;
-  if (fase === 'Propuesta lista') {
-    return { pendiente, fase: 'propuesta', boton: 'Revisar propuesta', texto: `Revisa la propuesta y responde Sí o No en cada uno de los ${medios} medios.` };
-  }
-  if (fase === 'En selección') {
-    const faltan = medios - respondidos;
-    const texto = faltan === 0
-      ? 'Ya respondiste todos los medios. Confirma tu selección para ver la cotización.'
-      : faltan === 1
-        ? 'Falta responder 1 medio de la propuesta. Después confirma tu selección.'
-        : `Faltan ${faltan} medios por responder en la propuesta. Después confirma tu selección.`;
+  if (fase === 'Propuesta lista' || fase === 'En selección') {
+    const texto = incluidos === 0
+      ? 'Selecciona los medios que quieres'
+      : incluidos === 1
+        ? '1 medio seleccionado. Confirma tu selección.'
+        : `${incluidos} medios seleccionados. Confirma tu selección.`;
     return { pendiente, fase: 'propuesta', boton: 'Revisar propuesta', texto };
   }
   if (fase === 'Selección confirmada' || fase === 'Cotización lista') {

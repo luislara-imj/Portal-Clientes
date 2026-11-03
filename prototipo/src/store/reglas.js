@@ -3,8 +3,10 @@
 // (así el Provider no re-renderiza ni guarda de más).
 //
 // Solo la campaña del flujo (Alpina) acepta acciones; en las demás todo se ignora.
-// Fases: Propuesta lista → En selección (primera respuesta) → Selección confirmada → Cotización lista
+// Fases: Propuesta lista → En selección (primer medio seleccionado) → Selección confirmada → Cotización lista
 //        → Aceptada → En instalación → Instalada → En reporte.
+// Cada medio está seleccionado ('si') o no seleccionado ('no'); sin valor guardado cuenta como 'no'.
+// Si después se deseleccionan todos, la fase se queda en "En selección" (no regresa a "Propuesta lista").
 // "Selección confirmada" e "Instalada" son pasos de paso: confirmar deja la campaña en "Cotización lista"
 // y terminar la instalación la deja en "En reporte" (con el reporte inicial ya publicado).
 //
@@ -34,6 +36,9 @@ export const faseAlMenos = (fase, minima) => nivelFase(fase) >= nivelFase(minima
 
 const VALORES = ['si', 'no'];
 
+// Valor efectivo de un medio: solo 'si' cuenta como seleccionado; vacío u otro valor es 'no'.
+export const valorDe = (respuestas, id) => (respuestas?.[id] === 'si' ? 'si' : 'no');
+
 function conCampana(estado, codigo, cambios) {
   return {
     ...estado,
@@ -62,50 +67,43 @@ function aplicarRespuestas(estado, codigo, ids, valor) {
   const respuestas = { ...c.respuestas };
   let cambio = false;
   for (const id of ids) {
-    if (validos.has(id) && respuestas[id] !== valor) {
+    if (validos.has(id) && valorDe(respuestas, id) !== valor) {
       respuestas[id] = valor;
       cambio = true;
     }
   }
   if (!cambio) return estado;
-  const confirmada = faseAlMenos(c.fase, 'Selección confirmada');
-  return conCampana(estado, codigo, confirmada
-    ? { respuestas, fase: 'Cotización lista', cotizacionActualizada: true }
-    : { respuestas, fase: 'En selección' });
+  if (faseAlMenos(c.fase, 'Selección confirmada')) {
+    return conCampana(estado, codigo, { respuestas, fase: 'Cotización lista', cotizacionActualizada: true });
+  }
+  const primerSi = c.fase === 'Propuesta lista' && Object.values(respuestas).includes('si');
+  return conCampana(estado, codigo, primerSi ? { respuestas, fase: 'En selección' } : { respuestas });
 }
 
 export function responder(estado, codigo, medioId, valor) {
   return aplicarRespuestas(estado, codigo, [medioId], valor);
 }
 
-// filtro: { tipo?, plaza?, grupo?, solicitud?, soloSinResponder? }; las claves ausentes no filtran.
+// filtro: { tipo?, plaza?, grupo?, solicitud? }; las claves ausentes no filtran.
 export function responderTodos(estado, codigo, filtro = {}, valor) {
   const fija = campanaFija(codigo);
   if (!fija || !estado.campanas[codigo]) return estado;
-  const resp = estado.campanas[codigo].respuestas;
   const f = filtro || {};
   const ids = fija.medios
     .filter((m) => (f.tipo == null || m.tipo === f.tipo)
       && (f.plaza == null || m.plaza === f.plaza)
       && (f.grupo == null || m.grupo === f.grupo)
-      && (f.solicitud == null || m.solicitud === f.solicitud)
-      && (!f.soloSinResponder || resp[m.id] === undefined))
+      && (f.solicitud == null || m.solicitud === f.solicitud))
     .map((m) => m.id);
   return aplicarRespuestas(estado, codigo, ids, valor);
 }
 
-export function pendientesDe(estado, codigo) {
-  const fija = campanaFija(codigo);
-  const resp = estado.campanas[codigo]?.respuestas || {};
-  return fija ? fija.medios.filter((m) => !VALORES.includes(resp[m.id])).length : 0;
-}
-
-// Solo si todo tiene respuesta. Deja la campaña en "Cotización lista".
+// Solo con al menos un medio seleccionado. Deja la campaña en "Cotización lista".
 export function confirmarSeleccion(estado, codigo, ahora = Date.now()) {
   if (!seleccionEditable(estado, codigo)) return estado;
   const c = estado.campanas[codigo];
   if (faseAlMenos(c.fase, 'Selección confirmada')) return estado;
-  if (pendientesDe(estado, codigo) > 0) return estado;
+  if (mediosSi(estado, codigo).length === 0) return estado;
   return conCampana(estado, codigo, { fase: 'Cotización lista', confirmadaEn: ahora, cotizacionActualizada: false });
 }
 

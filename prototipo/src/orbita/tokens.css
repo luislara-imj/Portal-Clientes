@@ -11,8 +11,12 @@
   color-scheme: light;
   --ui-color-bg-canvas-default: #f7f8fa;
   --ui-color-bg-canvas-inverse: #1e1f21;
-  --ui-color-bg-folder-body: #2a2a2c;
-  --ui-color-bg-folder-ring: #111214;
+  --ui-color-bg-folder-body: #e3e5e9;
+  --ui-color-bg-folder-ring: #c5c9cf;
+  --ui-color-bg-folder-paper: #ffffff;
+  --ui-color-bg-folder-line: #c9ccd2;
+  --ui-color-bg-folder-boton: #2b2d31;
+  --ui-color-text-folder-boton: #ffffff;
   --ui-color-bg-overlay-default: #00000066;
   --ui-color-bg-overlay-darker: #000000b2;
   --ui-color-bg-surface-default: #ffffff;
@@ -93,8 +97,8 @@
   --ui-color-text-disabled: #babcbf;
   --ui-color-text-text-on-color: #ffffff;
   --ui-color-text-on-canvas-inverse: #ffffff;
-  --ui-color-text-folder: #ffffff;
-  --ui-color-text-folder-secondary: rgba(255, 255, 255, 0.65);
+  --ui-color-text-folder: #2b2d31;
+  --ui-color-text-folder-secondary: rgba(43, 45, 49, 0.7);
   --ui-color-text-brand-default: #2d49a1;
   --ui-color-text-brand-hover: #294291;
   --ui-color-text-brand-pressed: #243a80;
@@ -245,6 +249,8 @@
   --ui-color-bg-canvas-inverse: #f7f8fa;
   --ui-color-bg-folder-body: #2a2a2c;
   --ui-color-bg-folder-ring: #000000;
+  --ui-color-bg-folder-boton: #f0f1f2;
+  --ui-color-text-folder-boton: #1e1f21;
   --ui-color-bg-overlay-default: #00000099;
   --ui-color-bg-overlay-darker: #000000cc;
   --ui-color-bg-surface-default: #27292b;
@@ -471,6 +477,8 @@
     --ui-color-bg-canvas-inverse: #f7f8fa;
     --ui-color-bg-folder-body: #2a2a2c;
     --ui-color-bg-folder-ring: #000000;
+    --ui-color-bg-folder-boton: #f0f1f2;
+    --ui-color-text-folder-boton: #1e1f21;
     --ui-color-bg-overlay-default: #00000099;
     --ui-color-bg-overlay-darker: #000000cc;
     --ui-color-bg-surface-default: #27292b;

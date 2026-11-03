@@ -1,4 +1,4 @@
-import { Button, Icon, ProgressBar } from '../../orbita';
+import { Button, Icon } from '../../orbita';
 import { formatoMXN } from '../../store/index.js';
 
 function Dato({ etiqueta, children }) {
@@ -10,24 +10,32 @@ function Dato({ etiqueta, children }) {
   );
 }
 
-const faltanTxt = (n) => (n === 1 ? 'Falta 1 medio por responder' : `Faltan ${n} medios por responder`);
+// Texto bajo "Confirmar selección" según cuántos medios hay seleccionados.
+const textoSeleccion =(n) => {
+  if (n === 0) return 'Selecciona los medios que quieres';
+  return n === 1 ? '1 medio seleccionado. Confirma tu selección.' : `${n} medios seleccionados. Confirma tu selección.`;
+};
 
 /**
  * Tarjeta lateral "Propuesta de medios" (mismo estilo que Acciones pendientes de Mis campañas):
- * respondidos con ProgressBar, medios incluidos, inversión de la selección y con descuento,
- * y "Confirmar selección". Fija al desplazar en escritorio.
+ * medios incluidos, inversión de la selección y con descuento, y "Confirmar selección"
+ * (requiere al menos un medio seleccionado). Fija al desplazar en escritorio.
  * progreso = progresoPropuesta(codigo) · cot = cotizacion(codigo) · onConfirmar()
  */
-export function ResumenPropuesta({ progreso, cot, onConfirmar }) {
-  const { total, respondidos, pendientes, si, confirmada, editable, puedeConfirmar } = progreso;
-  const pct = total ? (respondidos / total) * 100 : 0;
+export function ResumenPropuesta({ progreso, cot, onConfirmar, onIrCotizacion }) {
+  const { si, confirmada, editable, puedeConfirmar } = progreso;
 
   let accion = null;
   if (confirmada) {
     accion = (
-      <Button variant="primary" size="sm" iconLeft="check" fullWidth disabled>
-        Selección confirmada
-      </Button>
+      <>
+        <Button variant="primary" size="sm" iconLeft="check" fullWidth disabled>
+          Selección confirmada
+        </Button>
+        <Button variant="secondary" size="sm" iconRight="chevron-right" fullWidth onClick={onIrCotizacion}>
+          Ir a cotización
+        </Button>
+      </>
     );
   } else if (editable) {
     accion = (
@@ -35,7 +43,7 @@ export function ResumenPropuesta({ progreso, cot, onConfirmar }) {
         <Button variant="primary" size="sm" fullWidth disabled={!puedeConfirmar} onClick={onConfirmar}>
           Confirmar selección
         </Button>
-        {pendientes > 0 && <span className="pp-etiqueta">{faltanTxt(pendientes)}</span>}
+        <span className="pp-etiqueta" role="status">{textoSeleccion(si)}</span>
       </>
     );
   }
@@ -49,11 +57,6 @@ export function ResumenPropuesta({ progreso, cot, onConfirmar }) {
         </h2>
       </div>
       <div className="pp-lateral__datos">
-        <div className="pp-dato pp-dato--avance">
-          <span className="pp-etiqueta">Respondidos</span>
-          <span className="pp-monto" role="status">{respondidos} de {total}</span>
-          <ProgressBar value={pct} size="xs" showPercentage={false} aria-label="Medios respondidos" />
-        </div>
         <Dato etiqueta="Medios incluidos">{si}</Dato>
         <Dato etiqueta="Inversión de la selección">{formatoMXN(cot?.subtotal ?? 0)}</Dato>
         <Dato etiqueta="Con descuento">{formatoMXN(cot?.subtotalConDescuento ?? 0)}</Dato>

@@ -25,7 +25,7 @@ describe('StoreProvider', () => {
     expect(api.cliente.nombre).toBe('Ana López');
     expect(api.campanas).toHaveLength(7);
     expect(api.fasesDeCampana(CODIGOS.ALPINA)).toHaveLength(4);
-    expect(api.progresoPropuesta(CODIGOS.ALPINA).respondidos).toBe(1);
+    expect(api.progresoPropuesta(CODIGOS.ALPINA)).toMatchObject({ si: 1, puedeConfirmar: true });
     expect(api.indicadores().totalCampanas).toBe(7);
     expect(api.plantilla(CODIGOS.ALPINA)).toMatchObject({ id: 'default', nombre: 'Plantilla Default' });
     expect(api.plantilla('NO-EXISTE').id).toBe('default');
