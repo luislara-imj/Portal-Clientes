@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500">
+  <defs>
+    <linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbcfe8"/><stop offset="1" stop-color="#ef4444"/></linearGradient>
+    <radialGradient id="b" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fef08a"/><stop offset="1" stop-color="#ea580c"/></radialGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#f)"/>
+  <g fill="#fff" opacity=".5">
+    <ellipse cx="60" cy="90" rx="14" ry="24"/><ellipse cx="80" cy="70" rx="14" ry="24" transform="rotate(70 80 70)"/>
+    <ellipse cx="330" cy="140" rx="12" ry="20"/><ellipse cx="350" cy="122" rx="12" ry="20" transform="rotate(70 350 122)"/>
+    <ellipse cx="90" cy="400" rx="12" ry="20"/><ellipse cx="320" cy="430" rx="14" ry="22" transform="rotate(40 320 430)"/>
+  </g>
+  <circle cx="200" cy="250" r="110" fill="url(#b)"/>
+  <g stroke="#7c2d12" stroke-width="6" fill="none" opacity=".8">
+    <path d="M90 250 h220"/>
+    <path d="M200 140 v220"/>
+    <path d="M125 170 q45 80 0 160"/>
+    <path d="M275 170 q-45 80 0 160"/>
+  </g>
+  <ellipse cx="200" cy="385" rx="90" ry="12" fill="#7f1d1d" opacity=".35"/>
+</svg>

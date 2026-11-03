@@ -19,7 +19,7 @@ export function Spinner({ size = 'sm', iconSize = 16, label, className }) {
           <circle className="ui-spinner__arc" cx="48" cy="48" r="44" pathLength="100" />
         </svg>
         <span className="ui-spinner__logo" aria-hidden="true">
-          <Logo size="md" decorative />
+          <Logo variant="icon" size="md" decorative />
         </span>
         {label && <span className="ui-sr-only">{label}</span>}
       </span>

@@ -73,3 +73,296 @@
   letter-spacing: var(--ui-type-body-md-tracking);
   overflow-wrap: anywhere;
 }
+
+/* Tarjeta lateral: datos de la campaña y archivos. Fija al desplazar; si crece más que la
+   ventana (muchos archivos), se desplaza por dentro. */
+.dc-aside {
+  max-height: calc(100vh - var(--ui-space-96) - var(--ui-space-16));
+  overflow-y: auto;
+  border-radius: var(--ui-radius-surface-card);
+}
+
+@media (max-width: 1024px) {
+  .dc-aside { max-height: none; overflow: visible; }
+}
+
+.dc-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+}
+
+.dc-datos-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-12);
+  margin: 0;
+  padding-top: var(--ui-space-12);
+  border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+}
+
+.dc-datos-lateral .dc-datos__valor { font: var(--ui-font-body-sm-medium); }
+
+.dc-archivos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-12);
+  padding-top: var(--ui-space-16);
+  border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+}
+
+.dc-archivos__titulo {
+  margin: 0;
+  font: var(--ui-font-body-md-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.dc-archivos__lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Tarjeta de fase (estilo de la referencia "portafolio"): encabezado, cifra con anillo,
+   barra segmentada con leyenda, botones y pie. Colores de estado de Órbita. */
+.dc-fase {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-20);
+  padding: var(--ui-space-20);
+  background: var(--ui-color-bg-surface-default);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-surface-modal);
+  box-shadow: var(--ui-shadow-1);
+  min-width: 0;
+}
+
+.dc-fase.is-bloqueada { background: var(--ui-color-bg-canvas-default); }
+
+.dc-fase__cabeza {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-12);
+}
+
+.dc-fase__icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--ui-space-48);
+  height: var(--ui-space-48);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-brand-default);
+  color: var(--ui-color-icon-brand-default);
+}
+
+.dc-fase.is-bloqueada .dc-fase__icono {
+  background: var(--ui-color-bg-fill-tertiary-default);
+  color: var(--ui-color-icon-tertiary-default);
+}
+
+.dc-fase__titulos {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dc-fase__numero {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.dc-fase__titulo {
+  margin: 0;
+  font: var(--ui-font-heading-h4);
+  color: var(--ui-color-text-primary);
+}
+
+.dc-fase__motivo {
+  flex: 1;
+  margin: 0;
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.dc-fase__principal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-16);
+}
+
+.dc-fase__cifras {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+.dc-fase__etiqueta {
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.dc-fase__cifra {
+  margin: 0;
+  font: var(--ui-font-heading-h1);
+  color: var(--ui-color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.dc-fase__de {
+  font: var(--ui-font-body-lg-medium);
+  color: var(--ui-color-text-secondary);
+}
+
+.dc-fase__nota {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.dc-anillo { flex: none; width: 88px; height: 88px; }
+
+.dc-anillo__pista {
+  fill: none;
+  stroke: var(--ui-color-bg-fill-tertiary-default);
+  stroke-width: 9;
+}
+
+.dc-anillo__valor {
+  fill: none;
+  stroke-width: 9;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.4s ease;
+}
+
+.dc-anillo__texto {
+  font: var(--ui-font-body-md-bold);
+  fill: var(--ui-color-text-primary);
+}
+
+.dc-reparto { display: flex; flex-direction: column; gap: var(--ui-space-8); }
+
+.dc-reparto__cabeza {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ui-space-8);
+}
+
+.dc-reparto__titulo {
+  font: var(--ui-font-body-sm-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.dc-reparto__derecha {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+  text-align: right;
+}
+
+.dc-reparto__barra {
+  display: flex;
+  gap: var(--ui-space-4);
+  height: var(--ui-space-8);
+}
+
+.dc-reparto__tramo {
+  flex-basis: 0;
+  min-width: var(--ui-space-4);
+  border-radius: var(--ui-radius-control-pill);
+}
+
+.dc-reparto__leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-4) var(--ui-space-12);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.dc-reparto__leyenda li { display: flex; align-items: center; gap: var(--ui-space-4); }
+
+.dc-reparto__punto {
+  width: var(--ui-space-8);
+  height: var(--ui-space-8);
+  border-radius: var(--ui-radius-control-pill);
+}
+
+/* Colores: estado de Órbita y paleta all-colors para tipos de medio */
+.dc-anillo__valor.is-brand { stroke: var(--ui-color-bg-fill-brand-default); }
+.dc-anillo__valor.is-success { stroke: var(--ui-color-bg-fill-success-default); }
+.is-brand.dc-reparto__tramo, .is-brand.dc-reparto__punto { background: var(--ui-color-bg-fill-brand-default); }
+.is-success.dc-reparto__tramo, .is-success.dc-reparto__punto { background: var(--ui-color-bg-fill-success-default); }
+.is-warning.dc-reparto__tramo, .is-warning.dc-reparto__punto { background: var(--ui-color-bg-fill-warning-default); }
+.is-neutro.dc-reparto__tramo, .is-neutro.dc-reparto__punto { background: var(--ui-color-border-default); }
+.is-blue.dc-reparto__tramo, .is-blue.dc-reparto__punto { background: var(--ui-color-bg-fill-all-colors-blue); }
+.is-cyan.dc-reparto__tramo, .is-cyan.dc-reparto__punto { background: var(--ui-color-bg-fill-all-colors-cyan); }
+.is-violet.dc-reparto__tramo, .is-violet.dc-reparto__punto { background: var(--ui-color-bg-fill-all-colors-violet); }
+.is-orange.dc-reparto__tramo, .is-orange.dc-reparto__punto { background: var(--ui-color-bg-fill-all-colors-orange); }
+.is-magenta.dc-reparto__tramo, .is-magenta.dc-reparto__punto { background: var(--ui-color-bg-fill-all-colors-magenta); }
+
+.dc-fase__acciones {
+  display: flex;
+  gap: var(--ui-space-8);
+  margin-top: auto;
+}
+
+.dc-fase__pie {
+  margin: 0;
+  padding-top: var(--ui-space-12);
+  border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  font: var(--ui-font-caption-xs);
+  color: var(--ui-color-text-tertiary);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Contenedor de las tarjetas de fase, igual al de Mis campañas */
+.dc-contenedor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  padding: var(--ui-space-16);
+  background: var(--ui-color-bg-surface-default);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-surface-card);
+  min-width: 0;
+}
+
+.dc-contenedor__titulo {
+  margin: 0;
+  font: var(--ui-font-body-md-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+/* Escritorio: el contenedor llega como máximo al alto de la ventana. Si las tarjetas caben no hay
+   scroll; si no caben, se desplazan solo dentro del contenedor. */
+@media (min-width: 1025px) {
+  .pg:has(.dc-contenedor) { padding-bottom: var(--ui-space-24); }
+
+  .dc-contenedor {
+    /* 24 (arriba) + 64 (header) + 24 (separación) + 24 (abajo) */
+    max-height: calc(100vh - var(--ui-space-24) * 3 - var(--ui-space-64));
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .dc-contenedor > .dc-rejilla {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    align-content: start;
+    /* Aire para el anillo de foco y las sombras al desplazar */
+    margin: calc(var(--ui-space-4) * -1);
+    padding: var(--ui-space-4);
+  }
+}

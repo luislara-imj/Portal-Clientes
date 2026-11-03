@@ -205,7 +205,7 @@ export function reportes(estado, codigo) {
       ? null
       : r.tipo === 'inicial'
         ? 'Se publica al terminar la instalación.'
-        : `Se publica el ${formatoFecha(r.publicacion)}.`
+        : `Se publica el ${formatoFecha(r.publicacion)}.` // mensual y final
   }));
   return {
     disponible: faseAlMenos(c.fase, 'Instalada'),

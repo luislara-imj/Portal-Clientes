@@ -109,12 +109,20 @@ describe('flujo completo de Alpina con tiempo simulado', () => {
 
     // Los mensuales se publican al llegar su fecha.
     e = avanzar(e, new Date(2026, 10, 30, 9).getTime());
-    expect(reportes(e, AL).lista.map((r) => r.estado)).toEqual(['publicado', 'publicado', 'bloqueado']);
+    expect(reportes(e, AL).lista.map((r) => r.estado)).toEqual(['publicado', 'publicado', 'bloqueado', 'bloqueado']);
     e = avanzar(e, new Date(2026, 11, 31, 9).getTime());
     expect(reportes(e, AL).publicados).toBe(3);
+    const final = reportes(e, AL).lista.at(-1);
+    expect(final).toMatchObject({ tipo: 'final', publicacion: '2027-01-01', estado: 'bloqueado', motivo: 'Se publica el 1 ene 2027.' });
 
-    // Indicadores reflejan los medios instalados de Alpina.
-    expect(indicadores(e, T0 + 31000).mediosInstalados).toBe(8 + 31 + inst31.total);
+    // El final se publica al día siguiente del fin de la campaña.
+    const t = new Date(2027, 0, 1, 9).getTime();
+    e = avanzar(e, t);
+    expect(reportes(e, AL).publicados).toBe(4);
+    expect(reportes(e, AL).lista.at(-1)).toMatchObject({ tipo: 'final', estado: 'publicado', publicadoEn: t, motivo: null });
+
+    // Indicadores reflejan los medios instalados de Alpina (fijos: Cocacola 8, Solaria 31, WeCare Otoño 8, WeCare Invierno 31).
+    expect(indicadores(e, T0 + 31000).mediosInstalados).toBe(8 + 31 + 8 + 31 + inst31.total);
   });
 
   it('al recargar mucho después de aceptar, avanzar pone todo al día de un paso', () => {

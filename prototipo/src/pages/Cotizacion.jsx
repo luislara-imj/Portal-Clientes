@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Badge, Button, Card, useToast } from '../orbita';
+import { Badge, Button, Card, useToast } from '../orbita';
+import { useToastUnaVez } from '../layout/useToastUnaVez.js';
 import { formatoFecha, formatoMXN, useStore } from '../store/index.js';
 import { PaginaCampana } from '../layout/PaginaCampana.jsx';
 import { rutaCampana, vigencia } from '../layout/campanas.js';
@@ -19,6 +20,12 @@ function ContenidoCotizacion({ campana }) {
   const { codigo } = campana;
 
   const fase = s.fasesDeCampana(codigo).find((f) => f.clave === 'cotizacion');
+  // Aviso como Toast, una sola vez al entrar, si la cotización cambió después de confirmar.
+  const cotActual = s.cotizacion(codigo);
+  useToastUnaVez(cotActual?.actualizada && !cotActual?.aceptada && fase?.estado !== 'bloqueada' ? 'cot-actualizada' : null, {
+    color: 'info',
+    title: 'Actualizamos la cotización con tus últimos cambios'
+  });
   if (!fase || fase.estado === 'bloqueada') return <Bloqueada motivo={fase?.motivo} />;
 
   const cot = s.cotizacion(codigo);
@@ -46,9 +53,6 @@ function ContenidoCotizacion({ campana }) {
 
   return (
     <div className="cot">
-      {cot.actualizada && !cot.aceptada && (
-        <Alert stage="info" title="Actualizamos la cotización con tus últimos cambios" live />
-      )}
 
       <Card as="section" padding="lg" aria-labelledby="cot-datos-t">
         <div className="pg-fila">

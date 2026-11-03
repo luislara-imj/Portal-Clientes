@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useState } from 'react';
 import { CAMPANA_FLUJO, SEMILLA, campanaFija, medioFijo } from '../data/semilla.js';
+import { PLANTILLAS_REPORTE } from '../data/catalogos.js';
 import { reducer } from './reglas.js';
 import { almacenPorDefecto, cargarEstado, guardarEstado } from './persistencia.js';
 import {
@@ -52,6 +53,11 @@ export function StoreProvider({ children, almacen, reloj = Date.now, intervaloMs
     confirmarSeleccion: (codigo, t = reloj()) => dispatch({ type: 'confirmarSeleccion', codigo, ahora: t }),
     aceptarCotizacion: (codigo, t = reloj()) => dispatch({ type: 'aceptarCotizacion', codigo, ahora: t }),
     avanzar: (t = reloj()) => dispatch({ type: 'avanzar', ahora: t }),
+    agregarArchivo: (codigo, archivo) => dispatch({ type: 'agregarArchivo', codigo, archivo }),
+    quitarArchivo: (codigo, archivoId) => dispatch({ type: 'quitarArchivo', codigo, archivoId }),
+    archivos: (codigo) => estado.campanas[codigo]?.archivos ?? [],
+    elegirPlantilla: (codigo, plantillaId) => dispatch({ type: 'elegirPlantilla', codigo, plantillaId }),
+    plantilla: (codigo) => PLANTILLAS_REPORTE.find((p) => p.id === estado.campanas[codigo]?.plantilla) ?? PLANTILLAS_REPORTE[0],
     reiniciar: () => dispatch({ type: 'reiniciar' }),
     // Selectores
     fasesDeCampana: (codigo) => fasesDeCampana(estado, codigo),

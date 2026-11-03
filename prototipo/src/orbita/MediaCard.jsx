@@ -8,7 +8,7 @@ import './MediaCard.css';
 
 /**
  * Tarjeta de medio (§3.1, "Card Catalogo / Inventario"). 250 × 311 en Figma.
- * image ({ src, alt }) · mediaType ("ESPECTACULAR") · mediaKey (clave) · plaza (texto del link)
+ * image ({ src, alt }) · imageNode: nodo propio en el área de imagen (p. ej. una ilustración SVG) · mediaType ("ESPECTACULAR") · mediaKey (clave) · plaza (texto del link)
  * plazaHref / onPlazaClick · formats: [{ label, color?, icon? }] (fila format_type)
  * status: { label, color: 'success' | 'gray' | …, icon? } (_Estatus medio, p. ej. Disponible / Inactivo)
  * exclusive: ícono de exclusividad · actions: nodos de la fila CTA (32 de alto)
@@ -16,6 +16,7 @@ import './MediaCard.css';
  */
 export function MediaCard({
   image,
+  imageNode,
   mediaType,
   mediaKey,
   plaza,
@@ -37,7 +38,7 @@ export function MediaCard({
       aria-disabled={disabled || undefined}
     >
       <div className="ui-media-card__image">
-        <Picture src={image?.src} alt={image?.alt ?? ''} ratio="16:9" radius="none" fill />
+        {imageNode ?? <Picture src={image?.src} alt={image?.alt ?? ''} ratio="16:9" radius="none" fill />}
         {exclusive && (
           <span className="ui-media-card__exclusive">
             <Tooltip label="Exclusivo" placement="bottom">
@@ -73,7 +74,7 @@ export function MediaCard({
                 {plaza}
               </a>
             ) : (
-              <span>{plaza}</span>
+              <span className="ui-media-card__plaza-texto" title={typeof plaza === 'string' ? plaza : undefined}>{plaza}</span>
             )}
           </span>
         )}

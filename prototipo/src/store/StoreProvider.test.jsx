@@ -23,11 +23,13 @@ describe('StoreProvider', () => {
     );
     expect(api.estado.campanas[CODIGOS.ALPINA].fase).toBe('En selección');
     expect(api.cliente.nombre).toBe('Ana López');
-    expect(api.campanas).toHaveLength(5);
+    expect(api.campanas).toHaveLength(7);
     expect(api.fasesDeCampana(CODIGOS.ALPINA)).toHaveLength(4);
     expect(api.progresoPropuesta(CODIGOS.ALPINA).respondidos).toBe(1);
-    expect(api.indicadores().totalCampanas).toBe(5);
-    for (const accion of ['responder', 'responderTodos', 'confirmarSeleccion', 'aceptarCotizacion', 'avanzar', 'reiniciar']) {
+    expect(api.indicadores().totalCampanas).toBe(7);
+    expect(api.plantilla(CODIGOS.ALPINA)).toMatchObject({ id: 'default', nombre: 'Plantilla Default' });
+    expect(api.plantilla('NO-EXISTE').id).toBe('default');
+    for (const accion of ['responder', 'responderTodos', 'confirmarSeleccion', 'aceptarCotizacion', 'avanzar', 'elegirPlantilla', 'reiniciar']) {
       expect(typeof api[accion]).toBe('function');
     }
   });

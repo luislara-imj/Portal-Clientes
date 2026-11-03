@@ -2,14 +2,32 @@
   display: inline-flex;
   align-items: center;
   flex: none;
-  color: var(--ui-color-text-primary);
-  font-family: var(--ui-font-family-ui);
-  font-weight: var(--ui-font-weight-bold);
-  letter-spacing: var(--ui-font-tracking-tight);
-  line-height: 1;
   user-select: none;
 }
 
-.ui-logo--sm { font-size: var(--ui-size-icon-md); }
-.ui-logo--md { font-size: var(--ui-size-icon-lg); }
-.ui-logo--lg { font-size: var(--ui-size-icon-xl); }
+.ui-logo__img {
+  display: block;
+  height: 100%;
+  width: auto;
+}
+
+/* Full: marca + texto (24 × 31 en Figma) */
+.ui-logo--full.ui-logo--sm { height: var(--ui-space-24); }
+.ui-logo--full.ui-logo--md { height: var(--ui-space-32); }
+.ui-logo--full.ui-logo--lg { height: var(--ui-space-48); }
+
+/* Icon: solo la marca (24 × 24 en Figma) */
+.ui-logo--icon.ui-logo--sm { height: var(--ui-space-20); }
+.ui-logo--icon.ui-logo--md { height: var(--ui-space-24); }
+.ui-logo--icon.ui-logo--lg { height: var(--ui-space-32); }
+
+/* Versión del texto según el tema (OBP Light / OBP Dark) */
+.ui-logo__oscuro { display: none; }
+
+[data-theme="dark"] .ui-logo__claro { display: none; }
+[data-theme="dark"] .ui-logo__oscuro { display: block; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ui-logo__claro { display: none; }
+  :root:not([data-theme="light"]) .ui-logo__oscuro { display: block; }
+}

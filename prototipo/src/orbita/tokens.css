@@ -11,6 +11,8 @@
   color-scheme: light;
   --ui-color-bg-canvas-default: #f7f8fa;
   --ui-color-bg-canvas-inverse: #1e1f21;
+  --ui-color-bg-folder-body: #2a2a2c;
+  --ui-color-bg-folder-ring: #111214;
   --ui-color-bg-overlay-default: #00000066;
   --ui-color-bg-overlay-darker: #000000b2;
   --ui-color-bg-surface-default: #ffffff;
@@ -91,6 +93,8 @@
   --ui-color-text-disabled: #babcbf;
   --ui-color-text-text-on-color: #ffffff;
   --ui-color-text-on-canvas-inverse: #ffffff;
+  --ui-color-text-folder: #ffffff;
+  --ui-color-text-folder-secondary: rgba(255, 255, 255, 0.65);
   --ui-color-text-brand-default: #2d49a1;
   --ui-color-text-brand-hover: #294291;
   --ui-color-text-brand-pressed: #243a80;
@@ -239,6 +243,8 @@
   color-scheme: dark;
   --ui-color-bg-canvas-default: #1e1f21;
   --ui-color-bg-canvas-inverse: #f7f8fa;
+  --ui-color-bg-folder-body: #2a2a2c;
+  --ui-color-bg-folder-ring: #000000;
   --ui-color-bg-overlay-default: #00000099;
   --ui-color-bg-overlay-darker: #000000cc;
   --ui-color-bg-surface-default: #27292b;
@@ -319,6 +325,8 @@
   --ui-color-text-disabled: #616469;
   --ui-color-text-text-on-color: #ffffff;
   --ui-color-text-on-canvas-inverse: #313336;
+  --ui-color-text-folder: #ffffff;
+  --ui-color-text-folder-secondary: rgba(255, 255, 255, 0.65);
   --ui-color-text-brand-default: #e3e9fc;
   --ui-color-text-brand-hover: #f1f4fe;
   --ui-color-text-brand-pressed: #ffffff;
@@ -461,6 +469,8 @@
     color-scheme: dark;
     --ui-color-bg-canvas-default: #1e1f21;
     --ui-color-bg-canvas-inverse: #f7f8fa;
+    --ui-color-bg-folder-body: #2a2a2c;
+    --ui-color-bg-folder-ring: #000000;
     --ui-color-bg-overlay-default: #00000099;
     --ui-color-bg-overlay-darker: #000000cc;
     --ui-color-bg-surface-default: #27292b;
@@ -541,6 +551,8 @@
     --ui-color-text-disabled: #616469;
     --ui-color-text-text-on-color: #ffffff;
     --ui-color-text-on-canvas-inverse: #313336;
+    --ui-color-text-folder: #ffffff;
+    --ui-color-text-folder-secondary: rgba(255, 255, 255, 0.65);
     --ui-color-text-brand-default: #e3e9fc;
     --ui-color-text-brand-hover: #f1f4fe;
     --ui-color-text-brand-pressed: #ffffff;

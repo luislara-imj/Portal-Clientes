@@ -1,0 +1,206 @@
+/* Mis campañas por carpetas: nivel 1 (una carpeta por marca) y nivel 2 (tarjetas con foto).
+   Solo tokens --ui-*; ningún color literal. */
+
+.cp-rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+  gap: var(--ui-space-24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cp-rejilla > li { min-width: 0; }
+
+.cp-rejilla--tarjetas { gap: var(--ui-space-16); }
+
+/* ---------- Carpeta (nivel 1) ----------
+   Tarjeta cuadrada con anillo oscuro: arriba la zona de color de la marca con hojas/artes
+   de fondo; abajo el cuerpo oscuro (SVG) cuyo borde superior sube en curva hacia la derecha.
+   Oscura en ambos temas (tokens --ui-color-*-folder*). */
+.cp-carpeta {
+  --cp-color: var(--ui-color-bg-fill-brand-default);
+  --cp-blanco: var(--ui-color-text-folder);
+  --cp-radio: 28px;
+
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 4px solid var(--ui-color-bg-folder-ring);
+  border-radius: var(--cp-radio);
+  background: var(--ui-color-bg-folder-body);
+  box-shadow: var(--ui-shadow-3);
+  color: var(--ui-color-text-folder);
+  text-decoration: none;
+  transition: transform var(--ui-motion-fast) ease-out, box-shadow var(--ui-motion-fast) ease-out;
+}
+
+.cp-carpeta--brand { --cp-color: var(--ui-color-bg-fill-brand-default); }
+.cp-carpeta--danger { --cp-color: var(--ui-color-bg-fill-danger-default); }
+.cp-carpeta--success { --cp-color: var(--ui-color-bg-fill-success-default); }
+.cp-carpeta--warning { --cp-color: var(--ui-color-bg-fill-warning-default); }
+.cp-carpeta--info { --cp-color: var(--ui-color-bg-fill-info-default); }
+
+/* Zona de color: llega por debajo del cuerpo para que la curva no deje huecos. */
+.cp-zona {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 62%;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--cp-color) 75%, var(--cp-blanco)) 0%,
+    var(--cp-color) 70%
+  );
+}
+
+/* Hojas: hasta 3, en la mitad derecha, ancladas abajo (la base queda tras el cuerpo). */
+.cp-hojas {
+  position: absolute;
+  inset: 0;
+}
+
+.cp-hoja {
+  position: absolute;
+  top: 18%;
+  width: 30%;
+  aspect-ratio: 3 / 4;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  box-sizing: border-box;
+  padding: var(--ui-space-12) var(--ui-space-8);
+  overflow: hidden;
+  border-radius: var(--ui-radius-6);
+  background: var(--cp-blanco);
+  box-shadow: var(--ui-shadow-2);
+  transform-origin: 50% 100%;
+  transition: transform var(--ui-motion-fast) ease-out;
+}
+
+.cp-hoja--1 { left: 42%; transform: rotate(-14deg); }
+.cp-hoja--2 { left: 53%; transform: rotate(-4deg); }
+.cp-hoja--3 { left: 64%; transform: rotate(8deg); }
+
+.cp-hoja-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Líneas simuladas de la hoja sin arte. */
+.cp-hoja-linea {
+  display: block;
+  flex: none;
+  height: var(--ui-space-4);
+  border-radius: var(--ui-radius-full);
+  background: color-mix(in srgb, var(--ui-color-bg-folder-body) 22%, var(--cp-blanco));
+}
+
+.cp-hoja-linea:nth-child(2) { width: 80%; }
+.cp-hoja-linea:nth-child(3) { width: 60%; }
+
+/* Cuerpo oscuro con la curva (pestaña) hacia la derecha. */
+.cp-forma {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--ui-color-bg-folder-body);
+  pointer-events: none;
+}
+
+.cp-cuerpo {
+  position: absolute;
+  inset: 55% 0 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--ui-space-2);
+  box-sizing: border-box;
+  padding: var(--ui-space-8) var(--ui-space-16) var(--ui-space-12);
+  min-width: 0;
+}
+
+.cp-nombre {
+  font: var(--ui-font-heading-h4);
+  color: var(--ui-color-text-folder);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cp-conteo {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-folder-secondary);
+}
+
+.cp-pie {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  margin-top: var(--ui-space-4);
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-folder-secondary);
+}
+
+/* Pastilla "Ejemplo" dentro de la zona de color, arriba a la izquierda. */
+.cp-ejemplo {
+  position: absolute;
+  top: var(--ui-space-16);
+  left: var(--ui-space-16);
+  z-index: 1;
+}
+
+a.cp-carpeta:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ui-shadow-4);
+}
+
+a.cp-carpeta:hover .cp-hoja--1 { transform: translateX(-4px) rotate(-20deg); }
+a.cp-carpeta:hover .cp-hoja--2 { transform: rotate(-5deg); }
+a.cp-carpeta:hover .cp-hoja--3 { transform: translateX(4px) rotate(14deg); }
+
+.cp-carpeta.is-ejemplo { cursor: default; }
+
+/* ---------- Tarjeta de campaña con foto (nivel 2) ---------- */
+.cp-tarjeta {
+  height: 100%;
+  box-sizing: border-box;
+  gap: var(--ui-space-12);
+}
+
+.cp-tarjeta-cuerpo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ui-space-4);
+  padding: 0 var(--ui-space-4) var(--ui-space-4);
+}
+
+.cp-tarjeta-nombre {
+  font: var(--ui-font-body-md-semibold);
+  color: var(--ui-color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.cp-tarjeta-fecha {
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.cp-tarjeta-badge { margin-top: var(--ui-space-4); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-carpeta,
+  .cp-hoja { transition: none; }
+  a.cp-carpeta:hover { transform: none; }
+  a.cp-carpeta:hover .cp-hoja--1 { transform: rotate(-14deg); }
+  a.cp-carpeta:hover .cp-hoja--2 { transform: rotate(-4deg); }
+  a.cp-carpeta:hover .cp-hoja--3 { transform: rotate(8deg); }
+}

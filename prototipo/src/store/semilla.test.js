@@ -10,13 +10,15 @@ const CLAVE_RUTA = /^R-(CDMX|ZMG|MTY)\d{2}$/;
 const NOMBRE_RUTA = /^(Integral|Semi-integral|Medallón|Medio medallón) · (Urbana|Hotelera|AAA|AA|A)$/;
 
 describe('semilla', () => {
-  it('tiene el cliente y las cinco campañas de la spec con su fase inicial', () => {
+  it('tiene el cliente y las siete campañas con su fase inicial', () => {
     expect(SEMILLA.cliente).toEqual({ nombre: 'Ana López', empresa: 'Cliente de ejemplo S.A.' });
     expect(SEMILLA.responsableComercial).toBe('Por asignar');
     expect(SEMILLA.campanas.map((c) => [c.codigo, c.nombre, c.faseInicial])).toEqual([
       [CODIGOS.ALPINA, 'Alpina Leche', 'Propuesta lista'],
       [CODIGOS.BAJIO, 'Bajío Otoño', 'En selección'],
-      [CODIGOS.NORTENA, 'Norteña Navidad', 'Cotización lista'],
+      [CODIGOS.WECARE_PRIMAVERA, 'WeCare Primavera', 'Cotización lista'],
+      [CODIGOS.WECARE_OTONO, 'WeCare Otoño', 'En instalación'],
+      [CODIGOS.WECARE_INVIERNO, 'WeCare Invierno', 'En reporte'],
       [CODIGOS.COCACOLA, 'Cocacola Zero', 'En instalación'],
       [CODIGOS.SOLARIA, 'Solaria Verano', 'En reporte']
     ]);
@@ -119,11 +121,39 @@ describe('semilla', () => {
     expect(respondidos).toBeLessThan(fija.medios.length);
   });
 
-  it('Norteña: todo respondido con 12 Sí', () => {
-    const fija = campanaFija(CODIGOS.NORTENA);
-    const resp = estadoInicial().campanas[CODIGOS.NORTENA].respuestas;
+  it('WeCare: tres campañas con sus códigos, vigencias y fases', () => {
+    const datos = [CODIGOS.WECARE_PRIMAVERA, CODIGOS.WECARE_OTONO, CODIGOS.WECARE_INVIERNO]
+      .map((codigo) => campanaFija(codigo))
+      .map((c) => [c.codigo, c.nombre, c.inicio, c.fin, c.faseInicial, c.flujo]);
+    expect(datos).toEqual([
+      ['WCR-0031-WECARE-WECARE_PRIMAVERA-DIC-2026', 'WeCare Primavera', '2026-12-01', '2026-12-31', 'Cotización lista', 'consulta'],
+      ['WCR-0032-WECARE-WECARE_OTONO-NOV-2026', 'WeCare Otoño', '2026-11-01', '2026-11-30', 'En instalación', 'consulta'],
+      ['WCR-0033-WECARE-WECARE_INVIERNO-OCT-2026', 'WeCare Invierno', '2026-10-01', '2026-10-31', 'En reporte', 'consulta']
+    ]);
+  });
+
+  it('WeCare Primavera: todo respondido con 12 Sí', () => {
+    const fija = campanaFija(CODIGOS.WECARE_PRIMAVERA);
+    const resp = estadoInicial().campanas[CODIGOS.WECARE_PRIMAVERA].respuestas;
     expect(fija.medios.every((m) => resp[m.id])).toBe(true);
     expect(fija.medios.filter((m) => resp[m.id] === 'si')).toHaveLength(12);
+  });
+
+  it('WeCare Otoño: 20 Sí con 8 Instalado, 4 En instalación, 8 Por instalar', () => {
+    const e = estadoInicial();
+    const resp = e.campanas[CODIGOS.WECARE_OTONO].respuestas;
+    expect(Object.values(resp).filter((v) => v === 'si')).toHaveLength(20);
+    const inst = instalacion(e, CODIGOS.WECARE_OTONO, Date.now());
+    expect([inst.total, inst.instalados, inst.enInstalacion, inst.porInstalar]).toEqual([20, 8, 4, 8]);
+  });
+
+  it('WeCare Invierno: 31 medios instalados y reportes inicial, octubre y final publicados', () => {
+    const e = estadoInicial();
+    const inst = instalacion(e, CODIGOS.WECARE_INVIERNO, Date.now());
+    expect([inst.total, inst.instalados]).toEqual([31, 31]);
+    expect(e.campanas[CODIGOS.WECARE_INVIERNO].reportes.map((r) => [r.id, r.estado])).toEqual([
+      ['inicial', 'publicado'], ['2026-10', 'publicado'], ['final', 'publicado']
+    ]);
   });
 
   it('Cocacola: 20 Sí con 8 Instalado, 4 En instalación, 8 Por instalar', () => {
@@ -142,7 +172,7 @@ describe('semilla', () => {
     expect([inst.total, inst.instalados]).toEqual([31, 31]);
     const reportes = e.campanas[CODIGOS.SOLARIA].reportes;
     expect(reportes.map((r) => [r.id, r.estado])).toEqual([
-      ['inicial', 'publicado'], ['2026-06', 'publicado'], ['2026-07', 'publicado'], ['2026-08', 'publicado']
+      ['inicial', 'publicado'], ['2026-06', 'publicado'], ['2026-07', 'publicado'], ['2026-08', 'publicado'], ['final', 'publicado']
     ]);
   });
 });

@@ -4,7 +4,9 @@ import { aceptarCotizacion, avanzar, confirmarSeleccion, reducer, responder, res
 import { cotizacion, fasesDeCampana, indicadores, instalacion, progresoPropuesta, reportes } from './selectores.js';
 
 const T = new Date(2026, 9, 30, 12).getTime(); // 30 oct 2026
-const CONSULTA = [CODIGOS.BAJIO, CODIGOS.NORTENA, CODIGOS.COCACOLA, CODIGOS.SOLARIA];
+const CONSULTA = [
+  CODIGOS.BAJIO, CODIGOS.WECARE_PRIMAVERA, CODIGOS.WECARE_OTONO, CODIGOS.WECARE_INVIERNO, CODIGOS.COCACOLA, CODIGOS.SOLARIA
+];
 const resumen = (e, codigo) => fasesDeCampana(e, codigo).map((f) => `${f.clave}:${f.estado}`);
 
 describe('bloqueos de fases', () => {
@@ -18,8 +20,16 @@ describe('bloqueos de fases', () => {
     expect(rep.motivo).toMatch(/aceptes la cotización/);
   });
 
-  it('Norteña (Cotización lista): cotización activa, instalación y reportes bloqueados', () => {
-    expect(resumen(e, CODIGOS.NORTENA)).toEqual(['propuesta:activa', 'cotizacion:activa', 'instalacion:bloqueada', 'reportes:bloqueada']);
+  it('WeCare Primavera (Cotización lista): cotización activa, instalación y reportes bloqueados', () => {
+    expect(resumen(e, CODIGOS.WECARE_PRIMAVERA)).toEqual(['propuesta:activa', 'cotizacion:activa', 'instalacion:bloqueada', 'reportes:bloqueada']);
+  });
+
+  it('WeCare Otoño (En instalación): propuesta y cotización en consulta, reportes bloqueados', () => {
+    expect(resumen(e, CODIGOS.WECARE_OTONO)).toEqual(['propuesta:consulta', 'cotizacion:consulta', 'instalacion:activa', 'reportes:bloqueada']);
+  });
+
+  it('WeCare Invierno (En reporte): fases pasadas en consulta, reportes activos', () => {
+    expect(resumen(e, CODIGOS.WECARE_INVIERNO)).toEqual(['propuesta:consulta', 'cotizacion:consulta', 'instalacion:consulta', 'reportes:activa']);
   });
 
   it('Cocacola (En instalación): propuesta y cotización en consulta, reportes bloqueados', () => {
@@ -43,14 +53,16 @@ describe('bloqueos de fases', () => {
 
   it('cotización solo disponible desde la confirmación', () => {
     expect(cotizacion(e, CODIGOS.BAJIO).disponible).toBe(false);
-    expect(cotizacion(e, CODIGOS.NORTENA).disponible).toBe(true);
-    expect(cotizacion(e, CODIGOS.NORTENA).puedeAceptar).toBe(false);
-    expect(instalacion(e, CODIGOS.NORTENA, T)).toMatchObject({ disponible: false, total: 0 });
+    expect(cotizacion(e, CODIGOS.WECARE_PRIMAVERA).disponible).toBe(true);
+    expect(cotizacion(e, CODIGOS.WECARE_PRIMAVERA).puedeAceptar).toBe(false);
+    expect(instalacion(e, CODIGOS.WECARE_PRIMAVERA, T)).toMatchObject({ disponible: false, total: 0 });
+    expect(reportes(e, CODIGOS.WECARE_OTONO).disponible).toBe(false);
+    expect(reportes(e, CODIGOS.WECARE_INVIERNO).disponible).toBe(true);
     expect(reportes(e, CODIGOS.COCACOLA).disponible).toBe(false);
   });
 });
 
-describe('acciones ignoradas en las otras cuatro campañas', () => {
+describe('acciones ignoradas en las otras seis campañas', () => {
   it('ninguna acción cambia el estado', () => {
     const e = estadoInicial();
     for (const codigo of CONSULTA) {
@@ -80,9 +92,10 @@ describe('acciones ignoradas en las otras cuatro campañas', () => {
 });
 
 describe('indicadores globales', () => {
-  it('con la semilla: 4 activas (Solaria terminó), 3 con acción pendiente, 39 medios instalados', () => {
+  it('con la semilla: 6 activas (Solaria terminó), 3 con acción pendiente, 78 medios instalados', () => {
+    // Instalados: Cocacola 8 + Solaria 31 + WeCare Otoño 8 + WeCare Invierno 31.
     expect(indicadores(estadoInicial(), T)).toEqual({
-      totalCampanas: 5, activas: 4, conAccionPendiente: 3, mediosInstalados: 39
+      totalCampanas: 7, activas: 6, conAccionPendiente: 3, mediosInstalados: 78
     });
   });
 });

@@ -26,7 +26,7 @@
 /* Resumen fijo bajo la barra superior */
 .pp-resumen {
   position: sticky;
-  top: var(--ui-size-appbar);
+  top: calc(var(--ui-space-16) + var(--ui-space-64) + var(--ui-space-12));
   z-index: var(--ui-z-sticky);
   display: flex;
   flex-wrap: wrap;
@@ -103,16 +103,36 @@
   background: var(--ui-color-bg-surface-default);
 }
 
+/* .pp-panel define display: flex y anularía el atributo hidden de las pestañas inactivas */
+.pp-panel[hidden] {
+  display: none;
+}
+
 .pp-panel:focus-visible {
   outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
   outline-offset: var(--ui-focus-ring-offset);
 }
 
-.pp-filtros {
+/* Barra dentro de la sección blanca: búsqueda a la izquierda y botón de filtros */
+.pp-barra {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
-  gap: var(--ui-space-12) var(--ui-space-24);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-12);
+  min-width: 0;
+}
+
+.pp-buscar {
+  width: min(280px, 100%);
+}
+
+/* Contenido del popover de filtros: Plaza y Estado apilados */
+.pp-filtros {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ui-space-16);
   min-width: 0;
 }
 
@@ -192,20 +212,100 @@
 
 .pp-rejilla__item { display: flex; min-width: 0; }
 
-.pp-tarjeta { box-sizing: border-box; min-width: 0; }
+/* Tarjeta de medio: alto completo de la fila; el pie (precio y Sí / No) siempre al fondo, así el
+   espacio que sobra queda entre el contenido y el pie y no debajo de los botones. */
+.pp-tarjeta { box-sizing: border-box; min-width: 0; height: 100%; }
+
+.pp-tarjeta .ui-media-card__details { flex: 1 1 auto; }
+
+/* Nombre o plaza en una sola línea; el texto completo aparece al pasar el cursor. */
+.pp-tarjeta .ui-media-card__plaza { max-width: 100%; min-width: 0; }
+
+.pp-tarjeta .ui-media-card__plaza-texto {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pp-tarjeta .ui-media-card__cta { margin-top: auto; }
 
 .pp-tarjeta__pie {
   display: flex;
   flex: 1 1 auto;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--ui-space-8);
   min-width: 0;
 }
+
+/* Sí / No de lado a lado: el control ocupa el ancho y cada opción la mitad. */
+.pp-tarjeta__pie .ui-switch { display: flex; width: 100%; box-sizing: border-box; }
+.pp-tarjeta__pie .ui-switch__item { flex: 1 1 0; justify-content: center; }
 
 .pp-tarjeta__precio {
   display: flex;
   flex-direction: column;
   min-width: 0;
+}
+
+/* Tarjeta lateral "Propuesta de medios" (estilo de Acciones pendientes) */
+.pp-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+}
+
+.pp-lateral__datos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-12);
+  padding-top: var(--ui-space-12);
+  border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+}
+
+.pp-lateral .pp-dato--avance { min-width: 0; }
+
+.pp-lateral__accion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+  text-align: center;
+}
+
+.pp-herramientas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-12);
+}
+
+/* Escritorio: la columna de medios ocupa el alto de la ventana; pestañas, búsqueda y filtros
+   quedan fijos y solo se desplazan las tarjetas o la tabla. */
+@media (min-width: 1025px) {
+  .pg:has(.pp-medios) { padding-bottom: var(--ui-space-24); }
+
+  .pp.mc-principal {
+    /* 24 (arriba) + 64 (header) + 24 (separación) + 24 (abajo) */
+    height: calc(100vh - var(--ui-space-24) * 3 - var(--ui-space-64));
+    min-height: 420px;
+  }
+
+  .pp-medios {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .pp-medios > .pp-panel:not([hidden]) {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .pp-panel > .pp-grupos {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    /* Aire para el anillo de foco y las sombras al desplazar */
+    margin: calc(var(--ui-space-4) * -1);
+    padding: var(--ui-space-4);
+  }
 }

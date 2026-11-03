@@ -1,6 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faAnglesLeft,
+  faBroom,
+  faSliders,
+  faCloudArrowUp,
+  faFile,
+  faFilePowerpoint,
+  faCircle,
+  faTrashCan,
   faAnglesRight,
   faArrowDown,
   faArrowLeft,
@@ -32,6 +39,8 @@ import {
   faLocationDot,
   faLock,
   faMagnifyingGlass,
+  faMagnifyingGlassPlus,
+  faMagnifyingGlassMinus,
   faMinus,
   faMoon,
   faPlus,
@@ -98,6 +107,15 @@ const ICONS = {
   user: faUser,
   shapes: faShapes,
   exclusive: faCrown,
+  file: faFile,
+  'file-powerpoint': faFilePowerpoint,
+  dot: faCircle,
+  trash: faTrashCan,
+  upload: faCloudArrowUp,
+  broom: faBroom,
+  sliders: faSliders,
+  'zoom-in': faMagnifyingGlassPlus,
+  'zoom-out': faMagnifyingGlassMinus,
 };
 
 export const ICON_NAMES = Object.keys(ICONS);

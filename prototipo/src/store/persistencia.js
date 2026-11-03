@@ -23,7 +23,8 @@ export function esEstadoValido(datos) {
       && FASES.includes(c.fase)
       && !!c.respuestas && typeof c.respuestas === 'object'
       && Object.values(c.respuestas).every((v) => v === 'si' || v === 'no')
-      && Array.isArray(c.reportes);
+      && Array.isArray(c.reportes)
+      && typeof c.plantilla === 'string';
   });
 }
 

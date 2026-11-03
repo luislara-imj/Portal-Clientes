@@ -56,3 +56,29 @@
   outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
   outline-offset: var(--ui-focus-ring-offset);
 }
+
+/* Scroll bar de Órbita: 6 px, pista bg/fill/hover e indicador bg/brand/default, ambos pill. */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ui-color-bg-fill-hover);
+  border-radius: var(--ui-radius-control-pill);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ui-color-bg-fill-brand-default);
+  border-radius: var(--ui-radius-control-pill);
+}
+
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* Firefox no tiene ::-webkit-scrollbar: usa la versión estándar (más delgada posible). */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ui-color-bg-fill-brand-default) var(--ui-color-bg-fill-hover);
+  }
+}

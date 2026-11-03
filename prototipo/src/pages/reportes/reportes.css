@@ -1,14 +1,5 @@
 /* Reportes y visor de reporte: solo maquetación con tokens --ui-*. */
 
-/* --- Indicadores ------------------------------------------------------- */
-.rp-kpis {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--ui-size-card-kpi-w), 1fr));
-  gap: var(--ui-space-16);
-}
-
-.rp-kpis .ui-kpi-card { min-width: 0; }
-
 /* --- Bloqueo ------------------------------------------------------------ */
 .rp-bloqueo {
   flex-direction: row;

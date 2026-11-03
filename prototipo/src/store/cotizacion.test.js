@@ -42,7 +42,9 @@ function verificarCuadre(q, estado, codigo) {
 
 describe('cuadre de la cotización', () => {
   it.each([
-    ['Norteña', CODIGOS.NORTENA, 12],
+    ['WeCare Primavera', CODIGOS.WECARE_PRIMAVERA, 12],
+    ['WeCare Otoño', CODIGOS.WECARE_OTONO, 20],
+    ['WeCare Invierno', CODIGOS.WECARE_INVIERNO, 31],
     ['Cocacola', CODIGOS.COCACOLA, 20],
     ['Solaria', CODIGOS.SOLARIA, 31]
   ])('%s', (_, codigo, mediosSi) => {
@@ -71,9 +73,10 @@ describe('cuadre de la cotización', () => {
     verificarCuadre(q2, e, CODIGOS.ALPINA);
   });
 
-  it('Norteña cuadra con los montos esperados', () => {
-    const q = cotizacion(estadoInicial(), CODIGOS.NORTENA);
-    expect([q.subtotal, q.descuento, q.subtotalConDescuento, q.iva, q.total]).toEqual([1206000, 120600, 1085400, 173664, 1259064]);
+  it('WeCare Primavera cuadra con los montos esperados', () => {
+    // Sitios 674,000 + camiones 268,500 + indoor 70,000 + vallas 76,000 + riders 34,000 = 1,122,500.
+    const q = cotizacion(estadoInicial(), CODIGOS.WECARE_PRIMAVERA);
+    expect([q.subtotal, q.descuento, q.subtotalConDescuento, q.iva, q.total]).toEqual([1122500, 112250, 1010250, 161640, 1171890]);
   });
 });
 

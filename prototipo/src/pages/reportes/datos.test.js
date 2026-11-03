@@ -51,7 +51,7 @@ describe('datos de reportes', () => {
     const s = storeDe(e, fin);
     const lista = s.reportes(AL).lista;
     expect(lista.map((r) => [r.id, r.estado])).toEqual([
-      ['inicial', 'publicado'], ['2026-11', 'bloqueado'], ['2026-12', 'bloqueado']
+      ['inicial', 'publicado'], ['2026-11', 'bloqueado'], ['2026-12', 'bloqueado'], ['final', 'bloqueado']
     ]);
     expect(lista[1].motivo).toContain('30 nov 2026');
 

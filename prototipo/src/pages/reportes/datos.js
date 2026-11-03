@@ -173,3 +173,45 @@ export function agruparPorPlazaYTipo(medios) {
 }
 
 export const cuantos = (n) => `${n} ${n === 1 ? 'medio' : 'medios'}`;
+
+// Días de calendario entre dos fechas 'AAAA-MM-DD' (b − a), sin depender de la zona horaria.
+function diasEntre(a, b) {
+  const utc = (iso) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    return Date.UTC(y, m - 1, d);
+  };
+  return Math.round((utc(b) - utc(a)) / 86400000);
+}
+
+/**
+ * Estado de la campaña para la 6ª tarjeta del dashboard. inicio, fin y hoy en 'AAAA-MM-DD'.
+ * { estado: 'por-iniciar' | 'activa' | 'finalizada', titulo, valor, dia, total }
+ * - total (M): días del periodo, inicio y fin incluidos.
+ * - activa: dia (N) = días desde el inicio hasta hoy, ambos incluidos → "Día N de M".
+ * - por iniciar: "Inicia en N días" (N = días que faltan para el inicio).
+ * - finalizada: "M días".
+ */
+export function estadoCampana(inicio, fin, hoy) {
+  const total = diasEntre(inicio, fin) + 1;
+  if (hoy < inicio) {
+    const faltan = diasEntre(hoy, inicio);
+    return {
+      estado: 'por-iniciar',
+      titulo: 'Campaña por iniciar',
+      valor: `Inicia en ${faltan} ${faltan === 1 ? 'día' : 'días'}`,
+      dia: 0,
+      total
+    };
+  }
+  if (hoy > fin) {
+    return { estado: 'finalizada', titulo: 'Campaña finalizada', valor: `${total} ${total === 1 ? 'día' : 'días'}`, dia: total, total };
+  }
+  const dia = diasEntre(inicio, hoy) + 1;
+  return { estado: 'activa', titulo: 'Campaña activa', valor: `Día ${dia} de ${total}`, dia, total };
+}
+
+// Impactos de un medio en un reporte: inicial y mensual = impactos del mes; final = impactos totales.
+export function impactosEnReporte(m, reporte) {
+  const v = reporte?.tipo === 'final' ? m.impactosTotales : m.impactos;
+  return v > 0 ? numero.format(v) : SIN_DATO;
+}

@@ -431,3 +431,29 @@
 
   .ins-pasos { justify-content: flex-start; gap: var(--ui-space-16); }
 }
+
+/* Escritorio: el contenedor llega hasta abajo (24 px del borde, igual que arriba) y cada columna
+   se desplaza por dentro si sus tarjetas no caben. */
+@media (min-width: 768px) {
+  .pg:has(.ins-drill) { padding-bottom: var(--ui-space-24); }
+
+  .ins-drill.ui-card {
+    display: flex;
+    flex-direction: column;
+    /* 24 (arriba) + 64 (header) + 24 (separación) + 24 (abajo) */
+    height: calc(100vh - var(--ui-space-24) * 3 - var(--ui-space-64));
+    min-height: 480px;
+    box-sizing: border-box;
+  }
+
+  .ins-drill .ins-cols {
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+  }
+
+  .ins-drill .ins-col {
+    min-height: 0;
+    overflow-y: auto;
+  }
+}

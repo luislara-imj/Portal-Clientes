@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500">
+  <defs>
+    <linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#fef08a"/></linearGradient>
+    <linearGradient id="c" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4ade80"/><stop offset="1" stop-color="#15803d"/></linearGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#f)"/>
+  <circle cx="90" cy="110" r="55" fill="#facc15"/>
+  <circle cx="90" cy="110" r="80" fill="#facc15" opacity=".25"/>
+  <path d="M0 330 Q100 280 200 320 T400 300 V500 H0Z" fill="#fde68a"/>
+  <path d="M0 420 Q100 380 200 420 T400 410 V500 H0Z" fill="#06b6d4" opacity=".7"/>
+  <path d="M260 300 v-120 q0 -10 -6 -10" stroke="#78350f" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <g fill="#16a34a"><ellipse cx="225" cy="175" rx="45" ry="12" transform="rotate(20 225 175)"/><ellipse cx="290" cy="175" rx="45" ry="12" transform="rotate(-20 290 175)"/><ellipse cx="250" cy="155" rx="40" ry="11" transform="rotate(-60 250 155)"/></g>
+  <path d="M60 310 q10 -38 60 -42 l40 -26 q12 -6 30 -6 h40 q18 0 28 16 l14 20 q30 4 32 26 v12z" fill="url(#c)"/>
+  <circle cx="110" cy="312" r="22" fill="#111827"/><circle cx="110" cy="312" r="9" fill="#e5e7eb"/>
+  <circle cx="250" cy="312" r="22" fill="#111827"/><circle cx="250" cy="312" r="9" fill="#e5e7eb"/>
+</svg>

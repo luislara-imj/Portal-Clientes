@@ -183,6 +183,13 @@ export const FORMATOS_RIDER = {
   'Blitz Premium 360': { familia: 'Blitz Premium', descripcion: 'Unidades premium, cobertura total', precio: 74000 }
 };
 
+// Plantillas de reporte que el cliente puede elegir (catálogo fijo).
+export const PLANTILLAS_REPORTE = [
+  { id: 'default', nombre: 'Plantilla Default', cargada: '2025-10-12' },
+  { id: 'corporativa', nombre: 'Plantilla Corporativa v.1', cargada: '2025-10-12' },
+  { id: 'brand', nombre: 'Plantilla Brand', cargada: '2025-10-12' }
+];
+
 // Textos de la cotización (iguales para todas las campañas).
 export const TEXTOS_COTIZACION = {
   incluye: [

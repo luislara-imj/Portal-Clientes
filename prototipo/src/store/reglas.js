@@ -15,6 +15,7 @@
 
 import { CAMPANA_FLUJO, campanaFija, estadoInicial } from '../data/semilla.js';
 import { fechaLocal } from '../data/fechas.js';
+import { PLANTILLAS_REPORTE } from '../data/catalogos.js';
 import { finDelPlan, planInstalacion } from './instalacion.js';
 
 export const FASES = [
@@ -127,7 +128,7 @@ export function aceptarCotizacion(estado, codigo, ahora = Date.now()) {
 // Recalcula la fase y los reportes de Alpina según el tiempo:
 // - pasa a "En instalación" en cuanto corre el tiempo tras aceptar;
 // - al terminar la instalación: "Instalada", publica el reporte inicial (fecha = fin) y pasa a "En reporte";
-// - con la instalación terminada, publica cada reporte mensual cuando la fecha local llega a su publicación.
+// - con la instalación terminada, publica cada reporte mensual y el final cuando la fecha local llega a su publicación.
 export function avanzar(estado, ahora = Date.now()) {
   const codigo = CAMPANA_FLUJO;
   const c = estado.campanas[codigo];
@@ -150,8 +151,9 @@ export function avanzar(estado, ahora = Date.now()) {
   }
   if (faseAlMenos(fase, 'Instalada')) {
     const hoy = fechaLocal(ahora);
-    if (reportes.some((r) => r.tipo === 'mensual' && r.estado !== 'publicado' && hoy >= r.publicacion)) {
-      reportes = reportes.map((r) => (r.tipo === 'mensual' && r.estado !== 'publicado' && hoy >= r.publicacion
+    const toca = (r) => (r.tipo === 'mensual' || r.tipo === 'final') && r.estado !== 'publicado' && hoy >= r.publicacion;
+    if (reportes.some(toca)) {
+      reportes = reportes.map((r) => (toca(r)
         ? { ...r, estado: 'publicado', publicadoEn: ahora }
         : r));
       cambio = true;
@@ -163,6 +165,32 @@ export function avanzar(estado, ahora = Date.now()) {
 
 export function reiniciar() {
   return estadoInicial();
+}
+
+// Archivos de la campaña (imagen, Illustrator, Photoshop). Se pueden subir en cualquier fase
+// y en cualquier campaña; el prototipo solo guarda los datos del archivo, no su contenido.
+export function agregarArchivo(estado, codigo, archivo) {
+  const c = estado.campanas[codigo];
+  if (!c || !archivo?.id) return estado;
+  const archivos = c.archivos ?? [];
+  if (archivos.some((a) => a.id === archivo.id)) return estado;
+  return conCampana(estado, codigo, { archivos: [...archivos, archivo] });
+}
+
+export function quitarArchivo(estado, codigo, archivoId) {
+  const c = estado.campanas[codigo];
+  if (!c) return estado;
+  const archivos = (c.archivos ?? []).filter((a) => a.id !== archivoId);
+  if (archivos.length === (c.archivos ?? []).length) return estado;
+  return conCampana(estado, codigo, { archivos });
+}
+
+// Plantilla de reporte de la campaña (catálogo fijo). Vale en cualquier campaña; ids desconocidos se ignoran.
+export function elegirPlantilla(estado, codigo, plantillaId) {
+  const c = estado.campanas[codigo];
+  if (!c || !PLANTILLAS_REPORTE.some((p) => p.id === plantillaId)) return estado;
+  if (c.plantilla === plantillaId) return estado;
+  return conCampana(estado, codigo, { plantilla: plantillaId });
 }
 
 export function reducer(estado, accion) {
@@ -177,6 +205,12 @@ export function reducer(estado, accion) {
       return aceptarCotizacion(estado, accion.codigo, accion.ahora);
     case 'avanzar':
       return avanzar(estado, accion.ahora);
+    case 'agregarArchivo':
+      return agregarArchivo(estado, accion.codigo, accion.archivo);
+    case 'quitarArchivo':
+      return quitarArchivo(estado, accion.codigo, accion.archivoId);
+    case 'elegirPlantilla':
+      return elegirPlantilla(estado, accion.codigo, accion.plantillaId);
     case 'reiniciar':
       return reiniciar();
     default:

@@ -1,0 +1,238 @@
+/* Gráficas de Reportes (Graficas.jsx): solo tokens --ui-*. */
+
+/* Rampa secuencial de un tono a partir del color de marca, de oscuro (1) a claro (6).
+   Se mezcla con la superficie, así funciona en tema claro y oscuro. */
+.gr {
+  --rp-serie-1: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 100%, var(--ui-color-bg-surface-default));
+  --rp-serie-2: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 80%, var(--ui-color-bg-surface-default));
+  --rp-serie-3: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 62%, var(--ui-color-bg-surface-default));
+  --rp-serie-4: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 46%, var(--ui-color-bg-surface-default));
+  --rp-serie-5: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 32%, var(--ui-color-bg-surface-default));
+  --rp-serie-6: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 18%, var(--ui-color-bg-surface-default));
+
+  min-width: 0;
+  color: var(--ui-color-text-primary);
+}
+
+/* --- Tooltip (caja con borde y sombra de Órbita) ----------------------------- */
+.gr-tip {
+  position: absolute;
+  z-index: var(--ui-layer-surface-tooltip);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-4) var(--ui-space-8);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+  border-radius: var(--ui-radius-surface-tooltip);
+  background: var(--ui-color-bg-surface-default);
+  box-shadow: var(--ui-shadow-3);
+  color: var(--ui-color-text-primary);
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+  white-space: nowrap;
+  pointer-events: none;
+  /* --gr-tip-x: 0% (pegado a la izquierda del punto) a -100% (a la derecha); queda arriba del punto. */
+  transform: translate(var(--gr-tip-x, -50%), calc(-100% - var(--ui-space-8)));
+}
+
+.gr-tip__titulo { font: var(--ui-font-body-xs-bold); }
+
+.gr-tip__fila {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+}
+
+.gr-tip__fila strong {
+  margin-left: var(--ui-space-4);
+  font: var(--ui-font-body-xs-bold);
+}
+
+.gr-tip__punto {
+  flex: none;
+  width: var(--ui-space-8);
+  height: var(--ui-space-8);
+  border-radius: var(--ui-radius-full);
+}
+
+/* --- Dona -------------------------------------------------------------------- */
+.gr-dona {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--ui-space-16);
+}
+
+.gr-dona--ninguna { justify-content: center; }
+
+.gr-dona__lienzo {
+  position: relative;
+  flex: none;
+  width: var(--gr-tamano, 140px);
+  height: var(--gr-tamano, 140px);
+}
+
+.gr-dona__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Separador de 2 px del color de la superficie entre segmentos. */
+.gr-seg {
+  stroke: var(--ui-color-bg-surface-default);
+  stroke-width: var(--ui-stroke-width-2);
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transform-box: view-box;
+  transform-origin: center;
+  cursor: pointer;
+  transition: transform var(--ui-motion-fast);
+}
+
+.gr-seg.is-activo { transform: scale(1.04); }
+
+.gr-seg:focus { outline: none; }
+
+.gr-seg:focus-visible {
+  stroke: var(--ui-focus-ring-color);
+  stroke-width: var(--ui-stroke-width-3);
+}
+
+/* Leyenda: muestra redondeada 24 × 12 + texto. */
+.gr-leyenda {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gr-leyenda__item {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  font: var(--ui-font-body-sm-regular);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+}
+
+.gr-leyenda__muestra {
+  flex: none;
+  width: var(--ui-space-24);
+  height: var(--ui-space-12);
+  border-radius: var(--ui-radius-full);
+  box-shadow: inset 0 0 0 var(--ui-stroke-width-1) var(--ui-color-border-subtle);
+}
+
+/* --- Barras ------------------------------------------------------------------ */
+.gr-barras {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  column-gap: var(--ui-space-8);
+  row-gap: var(--ui-space-4);
+  min-height: 120px;
+  /* Media etiqueta del eje sobresale arriba de la línea del 100 %. */
+  padding-top: var(--ui-space-6);
+}
+
+.gr-barras__eje {
+  position: relative;
+  grid-column: 1;
+  grid-row: 1;
+  min-width: var(--ui-space-24);
+}
+
+.gr-barras__marca {
+  position: absolute;
+  right: 0;
+  transform: translateY(50%);
+  color: var(--ui-color-text-tertiary);
+  font: var(--ui-font-body-xs-regular);
+  font-size: var(--ui-font-size-2xs);
+  line-height: 1;
+  letter-spacing: var(--ui-type-body-xs-tracking);
+  font-variant-numeric: tabular-nums;
+}
+
+.gr-barras__area {
+  position: relative;
+  display: flex;
+  grid-column: 2;
+  grid-row: 1;
+  align-items: stretch;
+}
+
+.gr-barras__guia {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+}
+
+.gr-barras__col {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 0;
+}
+
+.gr-barras__barra {
+  position: relative; /* sobre las líneas guía */
+  display: block;
+  width: min(56px, 64%);
+  min-height: var(--ui-stroke-width-2);
+  border-radius: var(--ui-radius-4) var(--ui-radius-4) 0 0;
+  cursor: pointer;
+  transition: filter var(--ui-motion-fast);
+}
+
+.gr-barras__barra.is-activo { filter: brightness(1.1); }
+
+.gr-barras__barra:focus { outline: none; }
+
+.gr-barras__barra:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.gr-barras__x {
+  display: flex;
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.gr-barras__etiqueta {
+  flex: 1 1 0;
+  min-width: 0;
+  color: var(--ui-color-text-secondary);
+  text-align: center;
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+  overflow-wrap: anywhere;
+}
+
+/* Tema oscuro: la rampa se aclara hacia el color de texto, para que los pasos claros no se pierdan en la superficie oscura. */
+:root[data-theme="dark"] .gr {
+  --rp-serie-1: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 100%, var(--ui-color-text-primary));
+  --rp-serie-2: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 80%, var(--ui-color-text-primary));
+  --rp-serie-3: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 62%, var(--ui-color-text-primary));
+  --rp-serie-4: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 46%, var(--ui-color-text-primary));
+  --rp-serie-5: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 32%, var(--ui-color-text-primary));
+  --rp-serie-6: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 18%, var(--ui-color-text-primary));
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .gr {
+  --rp-serie-1: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 100%, var(--ui-color-text-primary));
+  --rp-serie-2: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 80%, var(--ui-color-text-primary));
+  --rp-serie-3: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 62%, var(--ui-color-text-primary));
+  --rp-serie-4: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 46%, var(--ui-color-text-primary));
+  --rp-serie-5: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 32%, var(--ui-color-text-primary));
+  --rp-serie-6: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 18%, var(--ui-color-text-primary));
+  }
+}

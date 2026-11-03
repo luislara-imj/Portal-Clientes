@@ -28,17 +28,19 @@ export function GrupoPlaza({ tipo, plaza, todos, visibles, respuestas, vista, ed
       className="pp-grupo"
       title={`${plaza} · ${medioTxt(todos.length)} · ${formatoMXN(subtotal)}`}
       description={descripcion}
+      actions={
+        editable && (
+          <div className="pp-grupo__acciones" role="group" aria-label={`Responder todos los medios de ${plaza}`}>
+            <Button variant="secondary" size="xs" aria-label={`Todos Sí en ${plaza}`} onClick={() => onResponderTodos(plaza, 'si')}>
+              Todos Sí
+            </Button>
+            <Button variant="secondary" size="xs" aria-label={`Todos No en ${plaza}`} onClick={() => onResponderTodos(plaza, 'no')}>
+              Todos No
+            </Button>
+          </div>
+        )
+      }
     >
-      {editable && (
-        <div className="pp-grupo__acciones" role="group" aria-label={`Responder todos los medios de ${plaza}`}>
-          <Button variant="secondary" size="xs" aria-label={`Todos Sí en ${plaza}`} onClick={() => onResponderTodos(plaza, 'si')}>
-            Todos Sí
-          </Button>
-          <Button variant="secondary" size="xs" aria-label={`Todos No en ${plaza}`} onClick={() => onResponderTodos(plaza, 'no')}>
-            Todos No
-          </Button>
-        </div>
-      )}
       {vista === 'tabla' ? (
         <Table
           className="pp-tabla"

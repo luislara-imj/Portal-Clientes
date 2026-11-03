@@ -9,7 +9,7 @@ import { instante, planReportes } from './fechas.js';
 import { PLAZAS, FORMATOS_RIDER, TEXTOS_COTIZACION } from './catalogos.js';
 
 // Versión del esquema del estado guardado. Si cambia, lo guardado se descarta y se usa la semilla.
-export const VERSION = 1;
+export const VERSION = 3;
 
 export const CLIENTE = { nombre: 'Ana López', empresa: 'Cliente de ejemplo S.A.' };
 export const RESPONSABLE_COMERCIAL = 'Por asignar';
@@ -17,7 +17,9 @@ export const RESPONSABLE_COMERCIAL = 'Por asignar';
 export const CODIGOS = {
   ALPINA: 'JRA-0021-ALPINA-ALPINA_LECHE-NOV-2026',
   BAJIO: 'MLR-0009-BAJIO-BAJIO_OTOÑO-NOV-2026',
-  NORTENA: 'NAV-0014-NORTEÑA-NORTEÑA_NAVIDAD-DIC-2026',
+  WECARE_PRIMAVERA: 'WCR-0031-WECARE-WECARE_PRIMAVERA-DIC-2026',
+  WECARE_OTONO: 'WCR-0032-WECARE-WECARE_OTONO-NOV-2026',
+  WECARE_INVIERNO: 'WCR-0033-WECARE-WECARE_INVIERNO-OCT-2026',
   COCACOLA: 'JRA-0016-COCACOLA-COCACOLA_ZERO-OCT-2026',
   SOLARIA: 'JRA-0005-SOLARIA-SOLARIA_VERANO-JUN-2026'
 };
@@ -35,6 +37,8 @@ function estadoBase(cambios) {
     instalacionFin: null,
     cotizacionActualizada: false,
     reportes: [],
+    archivos: [],
+    plantilla: 'default',
     ...cambios
   };
 }
@@ -124,39 +128,39 @@ function bajio() {
 }
 
 // ---------------------------------------------------------------------------
-// Norteña Navidad · Cotización lista · 18 medios respondidos, 12 Sí
+// WeCare Primavera · Cotización lista · 18 medios respondidos, 12 Sí
 // ---------------------------------------------------------------------------
-function nortena() {
+function wecarePrimavera() {
   const inicio = '2026-12-01';
-  const fin = '2027-01-06';
-  const g = crearGenerador({ prefijo: 'nt', semilla: 20261201, consecutivo: 701, inicio, fin, meses: 1 });
+  const fin = '2026-12-31';
+  const g = crearGenerador({ prefijo: 'wp', semilla: 20261202, consecutivo: 3101, inicio, fin, meses: 1 });
   const vallas = { inicio: '2026-12-01', fin: '2026-12-15' };
   const lista = [
-    ['si', g.sitio('ZMG', { codigo: 'ESP', calle: 'vallarta', numero: 3233, precio: 185000 })],
-    ['si', g.sitio('ZMG', { codigo: 'PAN', calle: 'lopezMateos', numero: 2375, precio: 142000 })],
-    ['si', g.sitio('MTY', { codigo: 'ESP', calle: 'constitucion', numero: 2050, precio: 168000 })],
-    ['si', g.sitio('CDMX', { codigo: 'ESP', calle: 'perifericoSur', numero: 4020, precio: 210000 })],
-    ['no', g.sitio('MTY', { codigo: 'CAR' })],
-    ['no', g.sitio('CDMX', { codigo: 'PAR' })],
-    ['si', g.camion('ZMG', { formato: 'Semi-integral', unidades: 4, precio: 18500, recorrido: ['Av. Vallarta', 'Centro'] })],
-    ['si', g.camion('MTY', { formato: 'Integral', unidades: 3, precio: 32000, recorrido: ['Ciudad Universitaria', 'Contry'] })],
-    ['si', g.camion('CDMX', { formato: 'Semi-integral', unidades: 5, precio: 19000, recorrido: ['Tasqueña', 'Centro Histórico'] })],
-    ['no', g.camion('MTY', { formato: 'Medallón' })],
-    ['si', g.indoor('CDMX', { inmueble: 'santaFe', formato: 'Backlight', precio: 48000 })],
-    ['si', g.indoor('MTY', { inmueble: 'valleOriente', formato: 'Tótem', precio: 22000 })],
-    ['no', g.indoor('ZMG', { inmueble: 'andares' })],
-    ['no', g.indoor('CDMX', { inmueble: 'aicm' })],
-    ...g.vallas('MTY', { formato: 'Valla en camión 3.5 t', unidades: 1, ...vallas }).map((m) => ['si', m]),
-    ...g.vallas('CDMX', { formato: 'Valla en camión 3.5 t', unidades: 1, ...vallas }).map((m) => ['si', m]),
-    ...g.riders('Blitz 360', { plaza: 'ZMG', unidades: 2, meses: 1, inicio: '2026-12-12', fin: '2026-12-21' })
+    ['si', g.sitio('ZMG', { codigo: 'ESP', calle: 'chapultepec', numero: 1120, precio: 176000 })],
+    ['si', g.sitio('ZMG', { codigo: 'PAN', calle: 'acueducto', numero: 4850, precio: 138000 })],
+    ['si', g.sitio('MTY', { codigo: 'ESP', calle: 'garzaSada', numero: 1890, precio: 162000 })],
+    ['si', g.sitio('CDMX', { codigo: 'ESP', calle: 'ejercito', numero: 980, precio: 198000 })],
+    ['no', g.sitio('MTY', { codigo: 'CAR', calle: 'ruizCortines' })],
+    ['no', g.sitio('CDMX', { codigo: 'PAR', calle: 'insurgentesNorte' })],
+    ['si', g.camion('ZMG', { formato: 'Semi-integral', unidades: 4, precio: 18000, recorrido: ['Zapopan Centro', 'Plaza del Sol'] })],
+    ['si', g.camion('MTY', { formato: 'Integral', unidades: 3, precio: 33000, recorrido: ['Guadalupe', 'San Pedro'] })],
+    ['si', g.camion('CDMX', { formato: 'Semi-integral', unidades: 5, precio: 19500, recorrido: ['Observatorio', 'Pantitlán'] })],
+    ['no', g.camion('MTY', { formato: 'Medallón', recorrido: ['Apodaca', 'Centro'] })],
+    ['si', g.indoor('CDMX', { inmueble: 'perisur', formato: 'Backlight', precio: 46000 })],
+    ['si', g.indoor('MTY', { inmueble: 'sorianaCumbres', formato: 'Tótem', precio: 24000 })],
+    ['no', g.indoor('ZMG', { inmueble: 'plazaDelSol' })],
+    ['no', g.indoor('CDMX', { inmueble: 'walmartTlalpan' })],
+    ...g.vallas('MTY', { formato: 'Valla en camioneta', unidades: 1, ...vallas }).map((m) => ['si', m]),
+    ...g.vallas('CDMX', { formato: 'Valla en camioneta', unidades: 1, ...vallas }).map((m) => ['si', m]),
+    ...g.riders('Mass Awareness 180', { plaza: 'ZMG', unidades: 2, meses: 1, inicio: '2026-12-12', fin: '2026-12-21' })
       .map((m, i) => [i === 0 ? 'si' : 'no', m])
   ];
   return {
-    codigo: CODIGOS.NORTENA,
-    nombre: 'Norteña Navidad',
+    codigo: CODIGOS.WECARE_PRIMAVERA,
+    nombre: 'WeCare Primavera',
     inicio,
     fin,
-    emision: '2026-10-15',
+    emision: '2026-10-16',
     faseInicial: 'Cotización lista',
     flujo: 'consulta',
     medios: ordenarPorTipo(lista.map(([, m]) => m)),
@@ -164,8 +168,117 @@ function nortena() {
     estadoInicial: estadoBase({
       fase: 'Cotización lista',
       respuestas: Object.fromEntries(lista.map(([r, m]) => [m.id, r])),
-      confirmadaEn: instante('2026-10-24'),
+      confirmadaEn: instante('2026-10-26'),
       reportes: planReportes(inicio, fin)
+    })
+  };
+}
+
+// ---------------------------------------------------------------------------
+// WeCare Otoño · En instalación · 20 Sí (8 Instalado, 4 En instalación, 8 Por instalar) + 3 No
+// ---------------------------------------------------------------------------
+function wecareOtono() {
+  const inicio = '2026-11-01';
+  const fin = '2026-11-30';
+  const g = crearGenerador({ prefijo: 'wo', semilla: 20261103, consecutivo: 3201, inicio, fin, meses: 1 });
+  const I = ['Instalado', 100, '2026-10-19', '2026-10-27'];
+  const E = (pct) => ['En instalación', pct, '2026-10-26', '2026-11-04'];
+  const P = ['Por instalar', 0, '2026-11-03', '2026-11-11'];
+  const IC = ['Instalado', 100, '2026-10-19', '2026-10-29'];
+  const PC = ['Por instalar', 0, '2026-11-03', '2026-11-13'];
+  const lista = [
+    [I, g.sitio('CDMX', { codigo: 'ESP', calle: 'masaryk', numero: 410 })],
+    [I, g.sitio('CDMX', { codigo: 'ESP', calle: 'viaducto', numero: 1650 })],
+    [E(50), g.sitio('CDMX', { codigo: 'PAN', calle: 'universidad', numero: 1200 })],
+    [P, g.sitio('CDMX', { codigo: 'PAN', calle: 'churubusco', numero: 860 })],
+    [I, g.sitio('ZMG', { codigo: 'ESP', calle: 'marianoOtero', numero: 3500 })],
+    [I, g.sitio('ZMG', { codigo: 'ESP', calle: 'guadalupe', numero: 1420 })],
+    [E(60), g.sitio('ZMG', { codigo: 'ESP', calle: 'revolucion', numero: 2100 })],
+    [P, g.sitio('ZMG', { codigo: 'PAN', calle: 'independencia', numero: 640 })],
+    [P, g.sitio('ZMG', { codigo: 'PAN', calle: 'perifericoNorte', numero: 1800 })],
+    [I, g.sitio('MTY', { codigo: 'ESP', calle: 'fundidora', numero: 501 })],
+    [E(40), g.sitio('MTY', { codigo: 'ESP', calle: 'moronesPrieto', numero: 3800 })],
+    [P, g.sitio('MTY', { codigo: 'PAN', calle: 'gomezMorin', numero: 950 })],
+    [null, g.sitio('CDMX', { codigo: 'CAR', calle: 'zaragoza' })],
+    [IC, g.camion('ZMG', { formato: 'Semi-integral', ruta: 41, recorrido: ['Tlajomulco', 'Centro'] })],
+    [['En instalación', 70, '2026-10-26', '2026-11-06'], g.camion('ZMG', { formato: 'Semi-integral', ruta: 17, recorrido: ['Huentitán', 'Plaza del Sol'] })],
+    [PC, g.camion('ZMG', { formato: 'Integral', ruta: 52, recorrido: ['El Salto', 'Centro'] })],
+    [IC, g.camion('MTY', { formato: 'Integral', ruta: 9, recorrido: ['Escobedo', 'Parque Fundidora'] })],
+    [PC, g.camion('MTY', { formato: 'Semi-integral', ruta: 33, recorrido: ['Cumbres', 'Centro'] })],
+    [null, g.camion('ZMG', { formato: 'Medallón', recorrido: ['Centro', 'Tlaquepaque'] })],
+    [I, g.indoor('CDMX', { inmueble: 'perisur' })],
+    [P, g.indoor('CDMX', { inmueble: 'aicm' })],
+    [P, g.indoor('ZMG', { inmueble: 'aeroGdl' })],
+    [null, g.indoor('MTY', { inmueble: 'valleOriente' })]
+  ];
+  return {
+    codigo: CODIGOS.WECARE_OTONO,
+    nombre: 'WeCare Otoño',
+    inicio,
+    fin,
+    emision: '2026-09-24',
+    faseInicial: 'En instalación',
+    flujo: 'consulta',
+    medios: lista.map(([, m]) => m),
+    instalacionFija: instalacionDe(lista),
+    estadoInicial: estadoBase({
+      fase: 'En instalación',
+      respuestas: Object.fromEntries(lista.map(([inst, m]) => [m.id, inst ? 'si' : 'no'])),
+      confirmadaEn: instante('2026-10-01'),
+      aceptadaEn: instante('2026-10-08'),
+      instalacionInicio: instante('2026-10-19'),
+      reportes: planReportes(inicio, fin)
+    })
+  };
+}
+
+// ---------------------------------------------------------------------------
+// WeCare Invierno · En reporte · 31 Sí, todos instalados + 4 No · reportes inicial, octubre y final
+// ---------------------------------------------------------------------------
+function wecareInvierno() {
+  const inicio = '2026-10-01';
+  const fin = '2026-10-31';
+  const g = crearGenerador({ prefijo: 'wi', semilla: 20261004, consecutivo: 3301, inicio, fin, meses: 1 });
+  const I = ['Instalado', 100, '2026-09-17', '2026-09-25'];
+  const repetir = (n, crear) => Array.from({ length: n }, () => [I, crear()]);
+  const lista = [
+    ...repetir(4, () => g.sitio('CDMX', { codigo: 'ESP' })),
+    ...repetir(3, () => g.sitio('CDMX', { codigo: 'PAN' })),
+    ...repetir(5, () => g.sitio('ZMG', { codigo: 'ESP' })),
+    ...repetir(2, () => g.sitio('ZMG', { codigo: 'PAN' })),
+    ...repetir(4, () => g.sitio('MTY', { codigo: 'ESP' })),
+    [null, g.sitio('ZMG', { codigo: 'MUR' })],
+    [null, g.sitio('MTY', { codigo: 'CAR' })],
+    [null, g.sitio('CDMX', { codigo: 'PTP' })],
+    ...repetir(3, () => g.camion('ZMG', { formato: 'Semi-integral' })),
+    ...repetir(3, () => g.camion('CDMX', { formato: 'Integral' })),
+    [null, g.camion('MTY', { formato: 'Medio medallón' })],
+    ...repetir(2, () => g.indoor('CDMX')),
+    ...repetir(3, () => g.indoor('ZMG')),
+    ...repetir(2, () => g.indoor('MTY'))
+  ];
+  const reportes = planReportes(inicio, fin).map((r) => {
+    const publicacion = r.tipo === 'inicial' ? '2026-09-26' : r.publicacion;
+    return { ...r, publicacion, publicadoEn: instante(publicacion), estado: 'publicado' };
+  });
+  return {
+    codigo: CODIGOS.WECARE_INVIERNO,
+    nombre: 'WeCare Invierno',
+    inicio,
+    fin,
+    emision: '2026-08-27',
+    faseInicial: 'En reporte',
+    flujo: 'consulta',
+    medios: lista.map(([, m]) => m),
+    instalacionFija: instalacionDe(lista),
+    estadoInicial: estadoBase({
+      fase: 'En reporte',
+      respuestas: Object.fromEntries(lista.map(([inst, m]) => [m.id, inst ? 'si' : 'no'])),
+      confirmadaEn: instante('2026-09-03'),
+      aceptadaEn: instante('2026-09-10'),
+      instalacionInicio: instante('2026-09-17'),
+      instalacionFin: instante('2026-09-25'),
+      reportes
     })
   };
 }
@@ -229,7 +342,7 @@ function cocacola() {
 }
 
 // ---------------------------------------------------------------------------
-// Solaria Verano · En reporte · 31 Sí, todos instalados + 4 No · reportes inicial, junio, julio, agosto
+// Solaria Verano · En reporte · 31 Sí, todos instalados + 4 No · reportes inicial, junio, julio, agosto y final
 // ---------------------------------------------------------------------------
 function solaria() {
   const inicio = '2026-06-01';
@@ -312,7 +425,7 @@ export const SEMILLA = congelar({
   responsableComercial: RESPONSABLE_COMERCIAL,
   textosCotizacion: TEXTOS_COTIZACION,
   // Orden de la spec (sección 4).
-  campanas: [alpina(), bajio(), nortena(), cocacola(), solaria()]
+  campanas: [alpina(), bajio(), wecarePrimavera(), wecareOtono(), wecareInvierno(), cocacola(), solaria()]
 });
 
 const POR_CODIGO = new Map(SEMILLA.campanas.map((c) => [c.codigo, c]));

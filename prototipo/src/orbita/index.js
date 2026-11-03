@@ -35,3 +35,5 @@ export { Logo } from './Logo.jsx';
 export { AppBar } from './AppBar.jsx';
 export { useFocusTrap } from './useFocusTrap.js';
 export { cx } from './cx.js';
+export { FileDropzone, FileItem } from './FileUploader.jsx';
+export { FilterPanel, FilterGroup } from './FilterPanel.jsx';

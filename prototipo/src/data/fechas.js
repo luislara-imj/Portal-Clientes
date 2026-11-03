@@ -44,8 +44,16 @@ export function mesesDelPeriodo(inicio, fin) {
   return lista;
 }
 
-// Plan de reportes de una campaña: inicial (al terminar la instalación) y uno por mes del periodo,
-// con publicación el último día de cada mes. Todos empiezan bloqueados.
+// Día siguiente de una fecha 'AAAA-MM-DD'.
+export function diaSiguiente(iso) {
+  const [a, m, d] = iso.split('-').map(Number);
+  const f = new Date(Date.UTC(a, m - 1, d + 1));
+  return fechaIso(f.getUTCFullYear(), f.getUTCMonth(), f.getUTCDate());
+}
+
+// Plan de reportes de una campaña: inicial (al terminar la instalación), uno por mes del periodo
+// con publicación el último día de cada mes, y el final (todo el periodo) al día siguiente del fin.
+// Todos empiezan bloqueados.
 export function planReportes(inicio, fin) {
   const mensuales = mesesDelPeriodo(inicio, fin).map(({ anio, mes0 }) => {
     const primero = fechaIso(anio, mes0, 1);
@@ -72,6 +80,16 @@ export function planReportes(inicio, fin) {
       publicadoEn: null,
       estado: 'bloqueado'
     },
-    ...mensuales
+    ...mensuales,
+    {
+      id: 'final',
+      tipo: 'final',
+      nombre: 'Reporte final',
+      periodoInicio: inicio,
+      periodoFin: fin,
+      publicacion: diaSiguiente(fin),
+      publicadoEn: null,
+      estado: 'bloqueado'
+    }
   ];
 }

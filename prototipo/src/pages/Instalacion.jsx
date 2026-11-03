@@ -1,9 +1,7 @@
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Accordion, Alert, Card, Divider, Icon, ProgressBar } from '../orbita';
+import { Accordion, Card, Divider, Icon } from '../orbita';
 import { useStore } from '../store/index.js';
 import { PaginaCampana } from '../layout/PaginaCampana.jsx';
-import { rutaCampana } from '../layout/campanas.js';
 import { agrupar, resumir } from './instalacion/pasos.js';
 import {
   ICONO_PLAZA, ICONO_TIPO, Marcador, PanelLineaDeTiempo, TarjetaAvance, TarjetaSitio, textosMedio, useEsMovil
@@ -20,17 +18,6 @@ function Bloqueada({ motivo }) {
       </span>
       <h2 id="ins-bloq-t" className="pg-subtitulo">Instalación bloqueada</h2>
       <p className="pg-texto">{motivo}</p>
-    </Card>
-  );
-}
-
-function AvanceGeneral({ inst }) {
-  return (
-    <Card as="section" padding="lg" aria-labelledby="ins-avance-t">
-      <div className="pg-pila pg-pila--md">
-        <h2 id="ins-avance-t" className="pg-subtitulo">Avance general</h2>
-        <ProgressBar value={inst.porcentaje} size="sm" label={`${inst.instalados} de ${inst.total} medios instalados`} />
-      </div>
     </Card>
   );
 }
@@ -217,7 +204,6 @@ function Recorrido({ codigo, inst }) {
 
 function ContenidoInstalacion({ codigo }) {
   const s = useStore();
-  const navigate = useNavigate();
   const fase = s.fasesDeCampana(codigo).find((f) => f.clave === 'instalacion');
   if (!fase || fase.estado === 'bloqueada') return <Bloqueada motivo={fase?.motivo || 'Acepta la cotización para iniciar la instalación.'} />;
 
@@ -230,21 +216,9 @@ function ContenidoInstalacion({ codigo }) {
       </Card>
     );
   }
-  const reportes = s.fasesDeCampana(codigo).find((f) => f.clave === 'reportes');
 
   return (
     <>
-      <AvanceGeneral inst={inst} />
-      {inst.completa && (
-        <Alert
-          stage="success"
-          live
-          title="Instalación completa. Ya puedes ver tu reporte fotográfico inicial."
-          actions={reportes && reportes.estado !== 'bloqueada'
-            ? [{ label: 'Ver reportes', onClick: () => navigate(rutaCampana(codigo, 'reportes')) }]
-            : undefined}
-        />
-      )}
       <Recorrido codigo={codigo} inst={inst} />
     </>
   );

@@ -7,9 +7,11 @@ import './Accordion.css';
  * Accordion de Órbita (§13).
  * title · description · children (contenido) · defaultOpen / open + onToggle(open)
  * empty: estado "empty" (sin contenido, deshabilitado).
+ * actions: botones que se muestran en el encabezado, a la izquierda del chevron, también con el
+ * acordeón cerrado. Van fuera del botón del encabezado (no se anidan botones).
  * El encabezado completo es un botón con aria-expanded; el chevron replica el Icon button tertiary 32.
  */
-export function Accordion({ title, description, children, defaultOpen = false, open: openProp, onToggle, empty = false, className }) {
+export function Accordion({ title, description, actions, children, defaultOpen = false, open: openProp, onToggle, empty = false, className }) {
   const [inner, setInner] = useState(defaultOpen);
   const open = !empty && (openProp ?? inner);
   const id = useId();
@@ -23,6 +25,7 @@ export function Accordion({ title, description, children, defaultOpen = false, o
 
   return (
     <section className={cx('ui-accordion', open && 'is-open', empty && 'is-empty', className)}>
+      <div className={cx('ui-accordion__bar', actions && 'has-actions')}>
       <h3 className="ui-accordion__heading">
         <button
           type="button"
@@ -42,6 +45,8 @@ export function Accordion({ title, description, children, defaultOpen = false, o
           </span>
         </button>
       </h3>
+      {actions && <div className="ui-accordion__actions">{actions}</div>}
+      </div>
       <div id={`${id}-panel`} role="region" aria-labelledby={`${id}-btn`} className="ui-accordion__panel" hidden={!open}>
         {children}
       </div>

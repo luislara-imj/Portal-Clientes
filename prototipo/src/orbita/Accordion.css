@@ -91,3 +91,35 @@
 .ui-accordion.is-empty .ui-accordion__description { color: var(--ui-color-text-disabled); }
 
 .ui-accordion.is-empty .ui-accordion__chevron { color: var(--ui-color-icon-disabled); }
+
+/* Acciones en el encabezado: a la izquierda del chevron y visibles con el acordeón cerrado.
+   El botón del encabezado ocupa toda la barra; las acciones quedan encima, sin anidarse. */
+.ui-accordion__bar { position: relative; }
+
+.ui-accordion__bar.has-actions .ui-accordion__header {
+  padding-right: 0;
+}
+
+.ui-accordion__bar.has-actions .ui-accordion__titles {
+  padding-right: var(--ui-accordion-actions-w, 200px);
+}
+
+.ui-accordion__actions {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--ui-size-control-xs) + var(--ui-space-12));
+  display: flex;
+  gap: var(--ui-space-8);
+  transform: translateY(-50%);
+}
+
+/* Pantallas angostas: las acciones bajan debajo del título para no encimarse. */
+@media (max-width: 600px) {
+  .ui-accordion__bar.has-actions .ui-accordion__titles { padding-right: 0; }
+
+  .ui-accordion__actions {
+    position: static;
+    margin-top: var(--ui-space-8);
+    transform: none;
+  }
+}
