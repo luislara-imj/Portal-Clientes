@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Badge, Button, Card, useToast } from '../orbita';
 import { useToastUnaVez } from '../layout/useToastUnaVez.js';
-import { formatoFecha, formatoMXN, useStore } from '../store/index.js';
+import { formatoFecha, formatoMXN, mediosSi, useStore } from '../store/index.js';
 import { PaginaCampana } from '../layout/PaginaCampana.jsx';
+import { FilaArtes, ModalArtes } from '../layout/ArtesCampana.jsx';
 import { rutaCampana, vigencia } from '../layout/campanas.js';
-import { Bloqueada, ModalAceptar, Montos, TablaTipo } from './cotizacion/partes.jsx';
+import { Bloqueada, MediosCotizados, ModalAceptar, ModalIncluye, Montos } from './cotizacion/partes.jsx';
 import '../layout/layout.css';
 
 export default function Cotizacion() {
@@ -17,6 +18,9 @@ function ContenidoCotizacion({ campana }) {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [confirmando, setConfirmando] = useState(false);
+  const [viendoIncluye, setViendoIncluye] = useState(false);
+  // Modal de artes: null (cerrado) | { aviso } (aviso = se abrió desde "Aceptar" sin artes).
+  const [artes, setArtes] = useState(null);
   const { codigo } = campana;
 
   const fase = s.fasesDeCampana(codigo).find((f) => f.clave === 'cotizacion');
@@ -41,87 +45,87 @@ function ContenidoCotizacion({ campana }) {
     navigate(rutaCampana(codigo, 'instalacion'));
   };
 
+  // Sin artes no se arranca: en vez de la confirmación se abre el modal de artes con el aviso.
+  const pedirAceptar = () => {
+    if (s.archivos(codigo).length === 0) setArtes({ aviso: true });
+    else setConfirmando(true);
+  };
+
   const descargar = () => toast({ title: 'La descarga estará disponible en la versión final', color: 'info' });
 
   const datos = [
-    ['Código', codigo],
-    ['Cliente', `${s.cliente.nombre} · ${s.cliente.empresa}`],
     ['Vigencia', textoVigencia],
+    ['Fecha de emisión', formatoFecha(campana.emision)],
     ['Responsable comercial', s.semilla.responsableComercial],
-    ['Fecha de emisión', formatoFecha(campana.emision)]
+    ['Cliente', `${s.cliente.nombre} · ${s.cliente.empresa}`]
   ];
 
   return (
-    <div className="cot">
-
-      <Card as="section" padding="lg" aria-labelledby="cot-datos-t">
-        <div className="pg-fila">
-          <h2 id="cot-datos-t" className="pg-subtitulo">Datos de la cotización</h2>
-          {cot.aceptada && (
-            <Badge color="success" theme="soft" icon="check">
-              Aceptada el {formatoFecha(estadoCampana.aceptadaEn)}
-            </Badge>
-          )}
-        </div>
-        <dl className="cot-datos">
-          {datos.map(([etiqueta, valor]) => (
-            <div key={etiqueta} className="cot-dato">
-              <dt>{etiqueta}</dt>
-              <dd>{valor}</dd>
-            </div>
-          ))}
-        </dl>
+    <div className="mc-cuerpo cot">
+      <Card as="section" padding="md" className="mc-principal cot-principal" aria-labelledby={cot.tipos.length === 0 ? 'cot-vacio-t' : 'cot-medios-t'}>
+        {cot.tipos.length === 0 ? (
+          <>
+            <h2 id="cot-vacio-t" className="pg-subtitulo">Medios cotizados</h2>
+            <p className="pg-texto">No hay medios incluidos en la cotización. Marca Sí en la propuesta para cotizarlos.</p>
+          </>
+        ) : (
+          <MediosCotizados key={codigo} tipos={cot.tipos} medios={mediosSi(s.estado, codigo)} />
+        )}
       </Card>
 
-      <div className="cot-cuerpo">
-        <div className="cot-tablas">
-          {cot.tipos.length === 0 && (
-            <Card padding="lg">
-              <p className="pg-texto">No hay medios incluidos en la cotización. Marca Sí en la propuesta para cotizarlos.</p>
-            </Card>
-          )}
-          {cot.tipos.map((t) => <TablaTipo key={t.tipo} tipo={t} />)}
-        </div>
+      <aside className="mc-lateral cot-lateral" aria-label="Datos y resumen de la cotización">
+        <Card as="section" padding="md" aria-labelledby="cot-datos-t">
+          <div className="pg-fila">
+            <h2 id="cot-datos-t" className="pg-subtitulo">Datos de la cotización</h2>
+            {cot.aceptada && (
+              <Badge color="success" theme="soft" icon="check">
+                Aceptada el {formatoFecha(estadoCampana.aceptadaEn)}
+              </Badge>
+            )}
+          </div>
+          <dl className="cot-datos">
+            {datos.map(([etiqueta, valor]) => (
+              <div key={etiqueta} className="cot-dato">
+                <dt>{etiqueta}</dt>
+                <dd>{valor}</dd>
+              </div>
+            ))}
+          </dl>
+        </Card>
 
-        <aside className="cot-cierre" aria-labelledby="cot-cierre-t">
-          <Card padding="lg">
-            <div className="pg-pila pg-pila--md">
-              <h2 id="cot-cierre-t" className="pg-subtitulo">Resumen</h2>
-              <Montos
-                filas={[
-                  ['Subtotal', formatoMXN(cot.subtotal)],
-                  [`Descuento (${cot.descuentoPct}%)`, `-${formatoMXN(cot.descuento)}`],
-                  ['Subtotal con descuento', formatoMXN(cot.subtotalConDescuento)],
-                  [`IVA ${cot.ivaPct}%`, formatoMXN(cot.iva)],
-                  ['Total con IVA', formatoMXN(cot.total), true]
-                ]}
-              />
-              <div className="cot-acciones">
-                {puedeAceptar && (
-                  <Button variant="primary" size="lg" fullWidth onClick={() => setConfirmando(true)}>
-                    Aceptar y arrancar campaña
-                  </Button>
-                )}
-                <Button variant="secondary" size="md" fullWidth iconLeft="download" onClick={descargar}>
-                  Descargar PDF
-                </Button>
-              </div>
-            </div>
-          </Card>
-          <Card padding="lg">
-            <div className="pg-pila pg-pila--md">
-              <div className="pg-pila">
-                <h3 className="pg-subtitulo">Tu campaña incluye</h3>
-                <ul className="cot-lista">
-                  {cot.textos.incluye.map((t) => <li key={t}>{t}</li>)}
-                </ul>
-              </div>
-              <p className="pg-texto">Condiciones de pago: 50% anticipo y 50% contra instalación.</p>
-              <p className="pg-texto">Precios sujetos a disponibilidad.</p>
-            </div>
-          </Card>
-        </aside>
-      </div>
+        <Card as="section" padding="md" className="cot-resumen" aria-labelledby="cot-cierre-t">
+          <h2 id="cot-cierre-t" className="pg-subtitulo">Resumen</h2>
+          <div className="cot-resumen__montos">
+            <Montos
+              filas={[
+                ['Subtotal', formatoMXN(cot.subtotal)],
+                [`Descuento (${cot.descuentoPct}%)`, `-${formatoMXN(cot.descuento)}`],
+                ['Subtotal con descuento', formatoMXN(cot.subtotalConDescuento)],
+                [`IVA ${cot.ivaPct}%`, formatoMXN(cot.iva)],
+                ['Total con IVA', formatoMXN(cot.total), true]
+              ]}
+            />
+          </div>
+          <FilaArtes codigo={codigo} onAbrir={() => setArtes({ aviso: false })} />
+          <div className="cot-acciones">
+            {puedeAceptar && (
+              <Button variant="primary" size="lg" fullWidth onClick={pedirAceptar}>
+                Aceptar y arrancar campaña
+              </Button>
+            )}
+            <Button variant="secondary" size="md" fullWidth iconLeft="download" onClick={descargar}>
+              Descargar PDF
+            </Button>
+            <Button variant="tertiary" size="sm" fullWidth onClick={() => setViendoIncluye(true)}>
+              Qué incluye tu campaña
+            </Button>
+          </div>
+        </Card>
+      </aside>
+
+      <ModalArtes codigo={codigo} open={!!artes} aviso={!!artes?.aviso} onClose={() => setArtes(null)} />
+
+      <ModalIncluye open={viendoIncluye} onClose={() => setViendoIncluye(false)} incluye={cot.textos.incluye} />
 
       <ModalAceptar
         open={confirmando}

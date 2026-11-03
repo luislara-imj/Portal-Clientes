@@ -6,10 +6,10 @@
 
 import { crearGenerador } from './medios.js';
 import { instante, planReportes } from './fechas.js';
-import { PLAZAS, FORMATOS_RIDER, TEXTOS_COTIZACION } from './catalogos.js';
+import { PLAZAS, FORMATOS_RIDER, TEXTOS_COTIZACION, URL_DRIVE_ARTES, nombreCarpetaDrive } from './catalogos.js';
 
 // Versión del esquema del estado guardado. Si cambia, lo guardado se descarta y se usa la semilla.
-export const VERSION = 4;
+export const VERSION = 6;
 
 export const CLIENTE = { nombre: 'Ana López', empresa: 'Cliente de ejemplo S.A.' };
 export const RESPONSABLE_COMERCIAL = 'Por asignar';
@@ -38,10 +38,32 @@ function estadoBase(cambios) {
     cotizacionActualizada: false,
     reportes: [],
     archivos: [],
+    // Carpeta de artes en Google Drive (simulada): null hasta que se crea; luego { nombre, url, creadaEn }.
+    carpetaDrive: null,
     plantilla: 'default',
     ...cambios
   };
 }
+
+// Artes ya subidos a Drive en las campañas de consulta (solo metadatos). Cada archivo es
+// [nombre, tamaño en bytes, extra?]; extra { arte: true } marca el arte principal de la campaña
+// (la imagen que se ve en su tarjeta), que el modal muestra como miniatura.
+function artesEnDrive(marca, codigo, aceptadaIso, archivos) {
+  const creadaEn = instante(aceptadaIso);
+  return {
+    carpetaDrive: { nombre: nombreCarpetaDrive(marca, codigo), url: URL_DRIVE_ARTES, creadaEn },
+    archivos: archivos.map(([nombre, tamano, extra], i) => ({
+      id: `${codigo}-arte-${i + 1}`,
+      nombre,
+      tipo: nombre.split('.').pop().toUpperCase(),
+      tamano: Math.round(tamano),
+      subidoEn: creadaEn + (i + 1) * 3600000,
+      ...extra
+    }))
+  };
+}
+
+const MB = 1024 * 1024;
 
 // ---------------------------------------------------------------------------
 // Alpina Leche · Propuesta lista · flujo completo
@@ -80,6 +102,7 @@ function alpina() {
   }
   return {
     codigo: CODIGOS.ALPINA,
+    marca: 'Alpina',
     nombre: 'Alpina Leche',
     inicio,
     fin,
@@ -115,6 +138,7 @@ function bajio() {
   valores.forEach((v, i) => { respuestas[medios[i].id] = v; });
   return {
     codigo: CODIGOS.BAJIO,
+    marca: 'Bajío',
     nombre: 'Bajío Otoño',
     inicio,
     fin,
@@ -123,7 +147,12 @@ function bajio() {
     flujo: 'consulta',
     medios,
     instalacionFija: null,
-    estadoInicial: estadoBase({ fase: 'En selección', respuestas, reportes: planReportes(inicio, fin) })
+    estadoInicial: estadoBase({
+      fase: 'En selección',
+      respuestas,
+      reportes: planReportes(inicio, fin),
+      ...artesEnDrive('Bajío', CODIGOS.BAJIO, '2026-10-22', [['Bajio_Otono_Arte_Principal.webp', 772492, { arte: true }]])
+    })
   };
 }
 
@@ -157,6 +186,7 @@ function wecarePrimavera() {
   ];
   return {
     codigo: CODIGOS.WECARE_PRIMAVERA,
+    marca: 'WeCare',
     nombre: 'WeCare Primavera',
     inicio,
     fin,
@@ -169,7 +199,8 @@ function wecarePrimavera() {
       fase: 'Cotización lista',
       respuestas: Object.fromEntries(lista.map(([r, m]) => [m.id, r])),
       confirmadaEn: instante('2026-10-26'),
-      reportes: planReportes(inicio, fin)
+      reportes: planReportes(inicio, fin),
+      ...artesEnDrive('WeCare', CODIGOS.WECARE_PRIMAVERA, '2026-10-27', [['WeCare_Primavera_Arte_Principal.jpg', 30894, { arte: true }]])
     })
   };
 }
@@ -213,6 +244,7 @@ function wecareOtono() {
   ];
   return {
     codigo: CODIGOS.WECARE_OTONO,
+    marca: 'WeCare',
     nombre: 'WeCare Otoño',
     inicio,
     fin,
@@ -222,6 +254,7 @@ function wecareOtono() {
     medios: lista.map(([, m]) => m),
     instalacionFija: instalacionDe(lista),
     estadoInicial: estadoBase({
+      ...artesEnDrive('WeCare', CODIGOS.WECARE_OTONO, '2026-10-08', [['WeCare_Otono_Arte_Principal.jpg', 48170, { arte: true }], ['WeCare_Otono_Espectacular_12x7.ai', 48.6 * MB], ['WeCare_Otono_Camion_Semi.psd', 312.4 * MB], ['WeCare_Otono_Indoor_Pack.zip', 1.2 * 1024 * MB]]),
       fase: 'En instalación',
       respuestas: Object.fromEntries(lista.map(([inst, m]) => [m.id, inst ? 'si' : 'no'])),
       confirmadaEn: instante('2026-10-01'),
@@ -263,6 +296,7 @@ function wecareInvierno() {
   });
   return {
     codigo: CODIGOS.WECARE_INVIERNO,
+    marca: 'WeCare',
     nombre: 'WeCare Invierno',
     inicio,
     fin,
@@ -272,6 +306,7 @@ function wecareInvierno() {
     medios: lista.map(([, m]) => m),
     instalacionFija: instalacionDe(lista),
     estadoInicial: estadoBase({
+      ...artesEnDrive('WeCare', CODIGOS.WECARE_INVIERNO, '2026-09-10', [['WeCare_Invierno_Arte_Principal.jpg', 39266, { arte: true }], ['WeCare_Invierno_Espectacular.ai', 52.3 * MB], ['WeCare_Invierno_Camiones.psd', 287.9 * MB]]),
       fase: 'En reporte',
       respuestas: Object.fromEntries(lista.map(([inst, m]) => [m.id, inst ? 'si' : 'no'])),
       confirmadaEn: instante('2026-09-03'),
@@ -322,6 +357,7 @@ function cocacola() {
   ];
   return {
     codigo: CODIGOS.COCACOLA,
+    marca: 'Coca-Cola',
     nombre: 'Cocacola Zero',
     inicio,
     fin,
@@ -331,6 +367,7 @@ function cocacola() {
     medios: lista.map(([, m]) => m),
     instalacionFija: instalacionDe(lista),
     estadoInicial: estadoBase({
+      ...artesEnDrive('Coca-Cola', CODIGOS.COCACOLA, '2026-09-25', [['CocaColaZero_Arte_Principal.jpg', 65517, { arte: true }], ['CocaColaZero_Panoramico_12x4.ai', 61.7 * MB], ['CocaColaZero_Integral_Camion.psd', 405.2 * MB], ['CocaColaZero_Indoor_Backlight.zip', 860.5 * MB]]),
       fase: 'En instalación',
       respuestas: Object.fromEntries(lista.map(([inst, m]) => [m.id, inst ? 'si' : 'no'])),
       confirmadaEn: instante('2026-09-18'),
@@ -372,6 +409,7 @@ function solaria() {
   });
   return {
     codigo: CODIGOS.SOLARIA,
+    marca: 'Solaria',
     nombre: 'Solaria Verano',
     inicio,
     fin,
@@ -381,6 +419,7 @@ function solaria() {
     medios: lista.map(([, m]) => m),
     instalacionFija: instalacionDe(lista),
     estadoInicial: estadoBase({
+      ...artesEnDrive('Solaria', CODIGOS.SOLARIA, '2026-05-11', [['Solaria_Verano_Arte_Principal.jpg', 54941, { arte: true }], ['Solaria_Verano_Espectacular.ai', 39.8 * MB], ['Solaria_Verano_Camion_Integral.psd', 356.1 * MB], ['Solaria_Verano_Indoor.zip', 640.3 * MB]]),
       fase: 'En reporte',
       respuestas: Object.fromEntries(lista.map(([inst, m]) => [m.id, inst ? 'si' : 'no'])),
       confirmadaEn: instante('2026-05-04'),

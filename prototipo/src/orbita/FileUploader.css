@@ -47,6 +47,15 @@
   background: var(--ui-color-bg-surface-default);
 }
 
+.ui-file-item__miniatura {
+  flex: none;
+  width: var(--ui-space-40);
+  height: var(--ui-space-40);
+  object-fit: cover;
+  border-radius: var(--ui-radius-control-sm);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+}
+
 .ui-file-item__formato {
   position: relative;
   display: flex;

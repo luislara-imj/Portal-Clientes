@@ -56,6 +56,8 @@ export function StoreProvider({ children, almacen, reloj = Date.now, intervaloMs
     agregarArchivo: (codigo, archivo) => dispatch({ type: 'agregarArchivo', codigo, archivo }),
     quitarArchivo: (codigo, archivoId) => dispatch({ type: 'quitarArchivo', codigo, archivoId }),
     archivos: (codigo) => estado.campanas[codigo]?.archivos ?? [],
+    crearCarpetaDrive: (codigo, t = reloj()) => dispatch({ type: 'crearCarpetaDrive', codigo, ahora: t }),
+    carpetaDrive: (codigo) => estado.campanas[codigo]?.carpetaDrive ?? null,
     elegirPlantilla: (codigo, plantillaId) => dispatch({ type: 'elegirPlantilla', codigo, plantillaId }),
     plantilla: (codigo) => PLANTILLAS_REPORTE.find((p) => p.id === estado.campanas[codigo]?.plantilla) ?? PLANTILLAS_REPORTE[0],
     reiniciar: () => dispatch({ type: 'reiniciar' }),

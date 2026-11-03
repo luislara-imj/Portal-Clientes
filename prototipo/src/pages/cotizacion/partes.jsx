@@ -1,57 +1,79 @@
-import { Button, Card, Icon, Modal, Table } from '../../orbita';
-import { formatoFecha, formatoMXN } from '../../store/index.js';
+import { useState } from 'react';
+import { Button, Card, Icon, Modal } from '../../orbita';
+import { formatoMXN } from '../../store/index.js';
+import { NOMBRE_PLAZA } from '../../data/catalogos.js';
+import { claveDe, esUnidad, montoConDescuentoDe } from '../propuesta/formatos.js';
+import { mediosDeLineas, plazasDe, tiposOrdenados } from './capas.js';
 import './cotizacion.css';
 
-const DIA_MS = 24 * 60 * 60 * 1000;
+// Medios cotizados: fila de tarjetas por tipo (seleccionable) y, debajo, los medios del tipo elegido
+// agrupados por plaza. El tipo elegido vive aquí; si la cotización cambia y ya no existe, se usa el primero.
+export function MediosCotizados({ tipos, medios }) {
+  const [elegido, setElegido] = useState(null);
+  const visibles = tiposOrdenados(tipos);
+  const tipo = visibles.find((t) => t.tipo === elegido) || visibles[0] || null;
+  const porId = porIdDe(medios);
 
-function diasEntre(inicio, fin) {
-  const [a1, m1, d1] = inicio.split('-').map(Number);
-  const [a2, m2, d2] = fin.split('-').map(Number);
-  return Math.round((Date.UTC(a2, m2 - 1, d2) - Date.UTC(a1, m1 - 1, d1)) / DIA_MS) + 1;
-}
-
-// Vallas: el periodo completo se cobra como una unidad de tiempo (días). Resto: meses.
-export function tiempoDeServicio(linea) {
-  if (linea.tipo === 'vallas' && linea.inicio && linea.fin) {
-    const dias = diasEntre(linea.inicio, linea.fin);
-    return dias === 1 ? '1 día' : `${dias} días`;
-  }
-  return linea.meses === 1 ? '1 mes' : `${linea.meses} meses`;
-}
-
-const COLUMNAS = [
-  { key: 'ciudad', header: 'Ciudad', render: (l) => l.ciudad || '—' },
-  { key: 'formato', header: 'Formato' },
-  { key: 'detalle', header: 'Detalle', render: (l) => l.detalle || '—' },
-  { key: 'clave', header: 'Clave IMJ', sticky: true },
-  { key: 'unidades', header: 'Unidades', type: 'number' },
-  { key: 'tiempo', header: 'Tiempo de servicio', render: tiempoDeServicio },
-  { key: 'inicio', header: 'Inicio', render: (l) => formatoFecha(l.inicio) },
-  { key: 'fin', header: 'Fin', render: (l) => formatoFecha(l.fin) },
-  { key: 'precio', header: 'Precio unitario', type: 'number', render: (l) => formatoMXN(l.precio) },
-  { key: 'precioDescuento', header: 'Precio con descuento', type: 'number', render: (l) => formatoMXN(l.precioDescuento) },
-  { key: 'total', header: 'Total', type: 'number', render: (l) => formatoMXN(l.total) }
-];
-
-// Una tabla por tipo de medio con su subtotal (suma de la columna Total) al pie.
-export function TablaTipo({ tipo }) {
-  const tituloId = `cot-tipo-${tipo.tipo}`;
+  if (!tipo) return null;
   return (
-    <section className="pg-pila pg-pila--md" aria-labelledby={tituloId}>
-      <h3 id={tituloId} className="pg-subtitulo">{tipo.nombre}</h3>
-      <Table
-        caption={`Cotización de ${tipo.nombre}`}
-        columns={COLUMNAS}
-        rows={tipo.lineas}
-        rowKey="id"
-        footer={(
-          <p className="cot-pie-tabla pg-parrafo">
-            <span>Subtotal {tipo.nombre}</span>
-            <strong>{formatoMXN(tipo.subtotalConDescuento)}</strong>
-          </p>
-        )}
-      />
-    </section>
+    <>
+      <div className="cot-cabecera">
+        <h2 id="cot-medios-t" className="pg-subtitulo">{tipo.nombre}</h2>
+        <p className="pg-texto cot-cabecera__resumen">
+          {textoMedios(tipo.medios)} · {formatoMXN(tipo.subtotalConDescuento)} con descuento
+        </p>
+      </div>
+      <ul className="cot-rejilla" aria-label="Tipos de medio cotizados">
+        {visibles.map((t) => (
+          <li key={t.tipo}>
+            <Card
+              padding="md"
+              className="cot-tarjeta"
+              aria-pressed={t.tipo === tipo.tipo}
+              onClick={() => setElegido(t.tipo)}
+            >
+              <span className="cot-tarjeta__nombre">{t.nombre}</span>
+              <span className="cot-tarjeta__medios">{textoMedios(t.medios)}</span>
+              <span className="cot-tarjeta__monto">{formatoMXN(t.subtotalConDescuento)}</span>
+              <span className="cot-tarjeta__plazas">{plazasDe(t).map((p) => p.plaza || 'Sin plaza').join(' · ')}</span>
+            </Card>
+          </li>
+        ))}
+      </ul>
+      <div className="cot-plazas" role="region" aria-labelledby="cot-medios-t" tabIndex={0}>
+        {plazasDe(tipo).map((p) => (
+          <section key={p.plaza} className="cot-plaza" aria-label={p.nombre}>
+            <h3 className="cot-plaza__titulo">
+              {p.nombre} · {textoMedios(p.medios)} · {formatoMXN(p.subtotalConDescuento)}
+            </h3>
+            <ListaMedios medios={mediosDeLineas(p.lineas, porId)} />
+          </section>
+        ))}
+      </div>
+    </>
+  );
+}
+
+const textoMedios = (n) => (n === 1 ? '1 medio' : `${n} medios`);
+const porIdDe = (medios) => new Map(medios.map((m) => [m.id, m]));
+
+// Medios de una plaza: identificador (claveDe, como la propuesta), línea secundaria de la propuesta y precio con descuento.
+function ListaMedios({ medios }) {
+  return (
+    <ul className="cot-medios">
+      {medios.map((m) => {
+        const secundaria = esUnidad(m) ? NOMBRE_PLAZA[m.plaza] : m.nombre;
+        return (
+          <li key={m.id} className="cot-medio">
+            <div className="cot-medio__texto">
+              <span className="cot-medio__clave">{claveDe(m)}</span>
+              {secundaria && <span className="cot-medio__detalle">{secundaria}</span>}
+            </div>
+            <span className="cot-medio__precio">{formatoMXN(montoConDescuentoDe(m))}</span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -100,6 +122,26 @@ export function ModalAceptar({ open, onCancelar, onAceptar, datos }) {
       <div className="cot-modal-cuerpo">
         <p className="pg-parrafo">Al aceptar, la campaña arranca y ya no podrás cambiar la selección de medios.</p>
         <Montos filas={datos} />
+      </div>
+    </Modal>
+  );
+}
+
+// Modal informativo: qué incluye la campaña y condiciones de la cotización.
+export function ModalIncluye({ open, onClose, incluye }) {
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      size="sm"
+      title="Qué incluye tu campaña"
+    >
+      <div className="cot-modal-cuerpo">
+        <ul className="cot-lista">
+          {incluye.map((t) => <li key={t}>{t}</li>)}
+        </ul>
+        <p className="pg-texto">Condiciones de pago: 50% anticipo y 50% contra instalación.</p>
+        <p className="pg-texto">Precios sujetos a disponibilidad.</p>
       </div>
     </Modal>
   );

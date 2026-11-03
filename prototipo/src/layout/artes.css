@@ -1,0 +1,113 @@
+/* Artes de la campaña (Google Drive simulado): fila en tarjetas y modal. */
+.ar-fila-bloque {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+}
+
+.ar-fila {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  min-width: 0;
+  cursor: pointer;
+}
+
+.ar-fila__icono { flex: none; color: var(--ui-color-icon-secondary-default); }
+
+.ar-fila__texto {
+  flex: 1;
+  min-width: 0;
+  font: var(--ui-font-body-sm-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.ar-fila__estado { font: var(--ui-font-body-sm-regular); }
+.ar-fila__estado.is-pendiente { color: var(--ui-color-text-warning-default); }
+.ar-fila__estado.is-listo { color: var(--ui-color-text-success-default); }
+
+.ar-fila__boton { flex: none; }
+
+/* Modal */
+.ar-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  min-width: 0;
+}
+
+.ar-creando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-8);
+  padding: var(--ui-space-32) var(--ui-space-16);
+  font: var(--ui-font-body-sm-medium);
+  color: var(--ui-color-text-secondary);
+}
+
+.ar-drive {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-8) var(--ui-space-16);
+  min-width: 0;
+}
+
+.ar-drive__textos {
+  display: flex;
+  flex: 1 1 16rem;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+.ar-drive__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  font: var(--ui-font-body-xs-semibold);
+  color: var(--ui-color-text-success-default);
+}
+
+.ar-drive__carpeta {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+.ar-drive__icono { flex: none; color: var(--ui-color-icon-secondary-default); }
+
+.ar-drive__nombre {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: var(--ui-font-body-sm-medium);
+  color: var(--ui-color-text-primary);
+}
+
+.ar-drive__abrir {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-4);
+  border-radius: var(--ui-radius-4);
+  font: var(--ui-font-body-sm-semibold);
+  color: var(--ui-color-text-link-default);
+  text-decoration: none;
+}
+
+.ar-drive__abrir:hover { color: var(--ui-color-text-link-hover); text-decoration: underline; }
+.ar-drive__abrir:active { color: var(--ui-color-text-link-pressed); }
+
+.ar-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

@@ -201,3 +201,9 @@ export const TEXTOS_COTIZACION = {
   condicionesPago: '50% anticipo y 50% contra instalación.',
   aclaraciones: 'Precios en MXN, sujetos a disponibilidad. Vigencia de la cotización: 15 días.'
 };
+
+// Carpeta de Google Drive donde viven los artes de las campañas (simulación: la misma carpeta real para todas).
+export const URL_DRIVE_ARTES = 'https://drive.google.com/drive/folders/1eOOv2f95m5bVMeCm6_eZC1xxBCdDWna3?usp=sharing';
+
+// Nombre de la carpeta de artes de una campaña en Drive.
+export const nombreCarpetaDrive = (marca, codigo) => `OBP / ${marca} / ${codigo} / Artes`;

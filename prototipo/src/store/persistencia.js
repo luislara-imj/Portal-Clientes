@@ -24,6 +24,8 @@ export function esEstadoValido(datos) {
       && !!c.respuestas && typeof c.respuestas === 'object'
       && Object.values(c.respuestas).every((v) => v === 'si' || v === 'no')
       && Array.isArray(c.reportes)
+      && Array.isArray(c.archivos)
+      && (c.carpetaDrive === null || (typeof c.carpetaDrive === 'object' && typeof c.carpetaDrive.url === 'string'))
       && typeof c.plantilla === 'string';
   });
 }

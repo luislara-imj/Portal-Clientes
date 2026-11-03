@@ -15,9 +15,9 @@
 // `cotizacionActualizada: true` para que la UI muestre el aviso. No hace falta volver a confirmar.
 // El aviso se limpia al aceptar la cotización.
 
-import { CAMPANA_FLUJO, campanaFija, estadoInicial } from '../data/semilla.js';
+import { CAMPANA_FLUJO, CLIENTE, campanaFija, estadoInicial } from '../data/semilla.js';
 import { fechaLocal } from '../data/fechas.js';
-import { PLANTILLAS_REPORTE } from '../data/catalogos.js';
+import { PLANTILLAS_REPORTE, URL_DRIVE_ARTES, nombreCarpetaDrive } from '../data/catalogos.js';
 import { finDelPlan, planInstalacion } from './instalacion.js';
 
 export const FASES = [
@@ -183,6 +183,17 @@ export function quitarArchivo(estado, codigo, archivoId) {
   return conCampana(estado, codigo, { archivos });
 }
 
+// Carpeta de artes en Google Drive (simulada). Se crea una sola vez por campaña; si ya existe no cambia nada.
+// Nombre con la marca de la campaña (o el cliente si no tiene marca); la URL es la misma carpeta real para todas.
+export function crearCarpetaDrive(estado, codigo, ahora = Date.now()) {
+  const c = estado.campanas[codigo];
+  if (!c || c.carpetaDrive) return estado;
+  const marca = campanaFija(codigo)?.marca || CLIENTE.empresa;
+  return conCampana(estado, codigo, {
+    carpetaDrive: { nombre: nombreCarpetaDrive(marca, codigo), url: URL_DRIVE_ARTES, creadaEn: ahora }
+  });
+}
+
 // Plantilla de reporte de la campaña (catálogo fijo). Vale en cualquier campaña; ids desconocidos se ignoran.
 export function elegirPlantilla(estado, codigo, plantillaId) {
   const c = estado.campanas[codigo];
@@ -207,6 +218,8 @@ export function reducer(estado, accion) {
       return agregarArchivo(estado, accion.codigo, accion.archivo);
     case 'quitarArchivo':
       return quitarArchivo(estado, accion.codigo, accion.archivoId);
+    case 'crearCarpetaDrive':
+      return crearCarpetaDrive(estado, accion.codigo, accion.ahora);
     case 'elegirPlantilla':
       return elegirPlantilla(estado, accion.codigo, accion.plantillaId);
     case 'reiniciar':

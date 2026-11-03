@@ -5,6 +5,8 @@ import {
   faSliders,
   faCloudArrowUp,
   faFile,
+  faFolderOpen,
+  faArrowUpRightFromSquare,
   faFilePowerpoint,
   faCircle,
   faTrashCan,
@@ -116,6 +118,8 @@ const ICONS = {
   sliders: faSliders,
   'zoom-in': faMagnifyingGlassPlus,
   'zoom-out': faMagnifyingGlassMinus,
+  drive: faFolderOpen, // Free no incluye la marca de Google Drive en solid; carpeta abierta
+  'external-link': faArrowUpRightFromSquare,
 };
 
 export const ICON_NAMES = Object.keys(ICONS);

@@ -78,16 +78,21 @@ export function FileDropzone({ accept, maxBytes, ayuda, errorTexto, onFiles, dis
  * Loader de Órbita (tarjeta de archivo), tamaño SM. Estados: Loader (con % y tiempo restante),
  * Complete y Error.
  * nombre · formato (texto corto: PNG, AI…) · detalle (texto bajo el nombre)
+ * miniatura: src opcional de una imagen; sustituye al ícono de formato
  * progreso: 0–100 (solo en Loader) · estado: 'cargando' | 'completo' | 'error'
  * onQuitar · onReintentar (solo en Error)
  */
-export function FileItem({ nombre, formato, detalle, progreso = 0, estado = 'completo', onQuitar, onReintentar, className }) {
+export function FileItem({ nombre, formato, detalle, miniatura, progreso = 0, estado = 'completo', onQuitar, onReintentar, className }) {
   return (
     <div className={cx('ui-file-item', `is-${estado}`, className)}>
-      <span className="ui-file-item__formato" aria-hidden="true">
-        <Icon name="file" size={24} />
-        <span className="ui-file-item__etiqueta">{formato}</span>
-      </span>
+      {miniatura ? (
+        <img className="ui-file-item__miniatura" src={miniatura} alt="" />
+      ) : (
+        <span className="ui-file-item__formato" aria-hidden="true">
+          <Icon name="file" size={24} />
+          <span className="ui-file-item__etiqueta">{formato}</span>
+        </span>
+      )}
       <div className="ui-file-item__textos">
         <p className="ui-file-item__nombre" title={nombre}>{nombre}</p>
         <p className="ui-file-item__detalle">{estado === 'error' ? 'Error al cargar el archivo.' : detalle}</p>
