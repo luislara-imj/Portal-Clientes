@@ -13,8 +13,9 @@ const medioTxt = (n) => `${n} ${n === 1 ? 'medio' : 'medios'}`;
  * (solo si la selección es editable) y la vista elegida (tarjetas o tabla).
  * todos: medios del grupo (sin filtrar) · visibles: los que pasan los filtros.
  * El subtotal es el de los medios incluidos (Sí), con descuento, como en la cotización.
+ * onVerDetalles(id): abre el drawer de detalle (desde la tarjeta o la clave de la tabla).
  */
-export function GrupoPlaza({ tipo, plaza, todos, visibles, respuestas, vista, editable, onResponder, onResponderTodos }) {
+export function GrupoPlaza({ tipo, plaza, todos, visibles, respuestas, vista, editable, onResponder, onResponderTodos, onVerDetalles }) {
   const seleccionados = todos.filter((m) => respuestas[m.id] === 'si');
   const subtotal = redondear(seleccionados.reduce((s, m) => s + montoConDescuentoDe(m), 0));
   const n = seleccionados.length;
@@ -46,7 +47,7 @@ export function GrupoPlaza({ tipo, plaza, todos, visibles, respuestas, vista, ed
         <Table
           className="pp-tabla"
           caption={`${NOMBRE_TIPO[tipo]} en ${plaza}`}
-          columns={columnasDe(tipo, siNo)}
+          columns={columnasDe(tipo, siNo, onVerDetalles)}
           rows={visibles}
           rowKey="id"
           selectedKeys={visibles.filter((m) => respuestas[m.id] === 'si').map((m) => m.id)}
@@ -55,7 +56,7 @@ export function GrupoPlaza({ tipo, plaza, todos, visibles, respuestas, vista, ed
         <ul className="cp-rejilla cp-rejilla--tarjetas pp-rejilla">
           {visibles.map((m) => (
             <li key={m.id}>
-              <TarjetaMedio medio={m} valor={respuestas[m.id]} onResponder={onResponder} readOnly={readOnly} />
+              <TarjetaMedio medio={m} valor={respuestas[m.id]} onResponder={onResponder} onVerDetalles={onVerDetalles} readOnly={readOnly} />
             </li>
           ))}
         </ul>

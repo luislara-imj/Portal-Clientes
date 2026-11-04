@@ -1,0 +1,433 @@
+/* Cotización formal (hoja carta) y su vista previa. Solo tokens --ui-*: la hoja lleva data-theme="light",
+   así que es papel blanco (OBP Light) aunque el portal esté en tema oscuro. */
+
+.doc {
+  --doc-tinta: var(--ui-color-text-primary);
+  --doc-tinta-2: var(--ui-color-text-secondary);
+  --doc-tinta-3: var(--ui-color-text-tertiary);
+  --doc-marca: var(--ui-color-bg-fill-brand-default);
+  --doc-marca-texto: var(--ui-color-text-brand-default);
+  --doc-marca-suave: var(--ui-color-bg-surface-brand-default);
+  --doc-linea: var(--ui-color-border-subtle);
+  --doc-linea-fuerte: var(--ui-color-border-default);
+  --doc-gris: var(--ui-color-bg-surface-secondary-default);
+  --doc-exito: var(--ui-color-text-success-default);
+  --doc-sobre-color: var(--ui-color-text-text-on-color);
+
+  box-sizing: border-box;
+  width: 816px; /* 8.5 in a 96 dpi */
+  min-height: 1056px; /* 11 in */
+  margin: 0 auto;
+  padding: 48px 56px;
+  background: var(--ui-color-bg-surface-default);
+  color: var(--doc-tinta);
+  color-scheme: light;
+  font-family: var(--ui-font-family-ui);
+  font-size: 11px;
+  line-height: 1.45;
+  box-shadow: var(--ui-shadow-5);
+}
+
+.doc h1,
+.doc h2,
+.doc h3,
+.doc p,
+.doc dl,
+.doc dd,
+.doc ul { margin: 0; }
+
+.doc-etiqueta {
+  font-size: 9px;
+  font-weight: var(--ui-font-weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--doc-tinta-3);
+}
+
+/* ---------- Encabezado ---------- */
+.doc-encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 20px;
+  border-bottom: 3px solid var(--doc-marca);
+}
+
+.doc-marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.doc-marca__logo { height: 48px; width: auto; }
+
+.doc-marca__nombre {
+  font-size: 20px;
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: 0.04em;
+  color: var(--doc-marca-texto);
+}
+
+.doc-marca__lema { font-size: 10px; color: var(--doc-tinta-2); }
+.doc-marca__contacto { font-size: 10px; color: var(--doc-tinta-3); }
+
+.doc-titulo { text-align: right; }
+
+.doc-titulo h1 {
+  font-size: 26px;
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: 0.12em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--doc-tinta);
+}
+
+.doc-titulo dl {
+  display: grid;
+  gap: 2px;
+  margin-top: 8px;
+}
+
+.doc-titulo dl > div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.doc-titulo dt { color: var(--doc-tinta-3); }
+.doc-titulo dd { font-weight: var(--ui-font-weight-semibold); }
+
+/* ---------- Cliente y campaña ---------- */
+.doc-partes {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.doc-parte {
+  padding: 12px 14px;
+  border: 1px solid var(--doc-linea);
+  border-radius: 8px;
+}
+
+.doc-parte__titulo {
+  margin-bottom: 6px;
+  font-size: 9px;
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--doc-marca-texto);
+}
+
+.doc-parte__fila {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.doc-parte__fila dt { color: var(--doc-tinta-3); }
+.doc-parte__fila dd { font-weight: var(--ui-font-weight-semibold); overflow-wrap: anywhere; }
+
+.doc-intro {
+  margin: 18px 0 4px !important;
+  color: var(--doc-tinta-2);
+}
+
+/* ---------- Tablas por tipo de medio ---------- */
+.doc-tipo { margin-top: 16px; }
+
+.doc-tipo__titulo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: 6px 6px 0 0;
+  background: var(--doc-marca);
+  color: var(--doc-sobre-color);
+  font-size: 11px;
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.doc-tipo__titulo span {
+  font-weight: var(--ui-font-weight-regular);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.doc-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.doc-tabla th,
+.doc-tabla td {
+  padding: 5px 6px;
+  border-bottom: 1px solid var(--doc-linea);
+  text-align: left;
+  vertical-align: top;
+}
+
+.doc-tabla thead th {
+  background: var(--doc-gris);
+  border-bottom: 1px solid var(--doc-linea-fuerte);
+  font-size: 8.5px;
+  font-weight: var(--ui-font-weight-semibold);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--doc-tinta-2);
+}
+
+.doc-tabla tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--doc-gris) 50%, var(--ui-color-bg-surface-default)); }
+.doc-tabla tr { break-inside: avoid; }
+
+.doc-tabla tfoot th,
+.doc-tabla tfoot td {
+  border-bottom: 0;
+  background: var(--doc-marca-suave);
+  font-weight: var(--ui-font-weight-bold);
+  color: var(--doc-tinta);
+}
+
+.doc-tabla .doc-der { text-align: right; white-space: nowrap; }
+.doc-num { width: 18px; color: var(--doc-tinta-3); }
+.doc-medio strong { display: block; font-weight: var(--ui-font-weight-semibold); }
+.doc-medio span,
+.doc-periodo span { display: block; color: var(--doc-tinta-3); }
+.doc-clave { font-size: 9px; font-weight: var(--ui-font-weight-semibold); white-space: nowrap; }
+.doc-periodo { min-width: 64px; }
+.doc-importe { font-weight: var(--ui-font-weight-semibold); }
+
+/* ---------- Totales ---------- */
+.doc-cierre {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  align-items: start;
+  gap: 24px;
+  margin-top: 20px;
+  break-inside: avoid;
+}
+
+.doc-letra {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px dashed var(--doc-linea-fuerte);
+  border-radius: 8px;
+}
+
+.doc-letra p {
+  font-size: 10.5px;
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: 1.5;
+}
+
+.doc-totales {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.doc-totales th,
+.doc-totales td {
+  padding: 4px 0;
+  white-space: nowrap;
+  font-weight: var(--ui-font-weight-regular);
+}
+
+.doc-totales th { text-align: left; color: var(--doc-tinta-2); }
+.doc-totales td { text-align: right; font-weight: var(--ui-font-weight-semibold); }
+.doc-totales__descuento td { color: var(--doc-exito); }
+
+.doc-totales tfoot th,
+.doc-totales tfoot td {
+  padding: 8px 10px;
+  background: var(--doc-marca);
+  color: var(--doc-sobre-color);
+  font-size: 14px;
+  font-weight: var(--ui-font-weight-bold);
+}
+
+.doc-totales tfoot th { border-radius: 6px 0 0 6px; }
+.doc-totales tfoot td { border-radius: 0 6px 6px 0; }
+
+/* ---------- Condiciones y firmas ---------- */
+.doc-condiciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--doc-linea);
+  break-inside: avoid;
+}
+
+.doc-condiciones ul {
+  display: grid;
+  gap: 3px;
+  padding-left: 16px;
+}
+
+.doc-condiciones p { margin-bottom: 10px; color: var(--doc-tinta-2); }
+
+.doc-firmas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  margin-top: 56px;
+  break-inside: avoid;
+}
+
+.doc-firma {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.doc-firma__linea {
+  align-self: stretch;
+  height: 0;
+  margin-bottom: 6px;
+  border-top: 1px solid var(--doc-tinta);
+}
+
+.doc-firma__sello {
+  align-self: stretch;
+  margin-bottom: 6px;
+  padding: 6px;
+  border: 1.5px solid var(--doc-exito);
+  border-radius: 6px;
+  color: var(--doc-exito);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.doc-firma span:last-child { color: var(--doc-tinta-3); }
+
+.doc-pie {
+  margin-top: 32px;
+  padding-top: 10px;
+  border-top: 1px solid var(--doc-linea);
+  font-size: 9px;
+  color: var(--doc-tinta-3);
+  text-align: center;
+}
+
+/* ---------- Vista previa a pantalla completa ---------- */
+.pdf-capa {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-layer-dialog-modal);
+  display: flex;
+  flex-direction: column;
+  background: var(--ui-color-bg-overlay-darker);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  animation: pdf-entrada var(--ui-motion-base) ease-out;
+}
+
+.pdf-barra {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-12);
+  padding: var(--ui-space-12) var(--ui-space-24);
+  background: var(--ui-color-bg-surface-default);
+  border-bottom: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+  box-shadow: var(--ui-shadow-2);
+}
+
+.pdf-barra__texto {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pdf-barra__texto strong {
+  font: var(--ui-font-body-lg-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.pdf-barra__texto span {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.pdf-lienzo {
+  flex: 1;
+  overflow: auto;
+  padding: var(--ui-space-32) var(--ui-space-16);
+}
+
+@keyframes pdf-entrada {
+  from { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pdf-capa { animation: none; }
+}
+
+/* Celular (solo pantalla): la hoja carta se escala para caber a lo ancho, como un visor de PDF de app;
+   la barra deja el título y las acciones en una línea. Al imprimir no aplica. */
+@media screen and (max-width: 600px) {
+  .pdf-barra {
+    gap: var(--ui-space-8);
+    padding: calc(var(--ui-space-8) + env(safe-area-inset-top)) var(--ui-space-12) var(--ui-space-8);
+  }
+
+  .pdf-barra__texto strong { font: var(--ui-font-body-md-semibold); }
+  .pdf-barra__texto span { display: none; }
+  .pdf-lienzo { padding: var(--ui-space-12) var(--ui-space-12) calc(var(--ui-space-24) + env(safe-area-inset-bottom)); }
+  .pdf-lienzo .doc { zoom: 0.5; }
+}
+
+@media screen and (max-width: 420px) {
+  .pdf-lienzo .doc { zoom: 0.43; }
+}
+
+@media screen and (max-width: 360px) {
+  .pdf-lienzo .doc { zoom: 0.38; }
+}
+
+/* ---------- Impresión: solo la hoja ---------- */
+@media print {
+  @page {
+    size: letter;
+    margin: 12mm;
+  }
+
+  body > *:not(.pdf-capa) { display: none !important; }
+
+  body { background: none !important; }
+
+  .pdf-capa {
+    position: static;
+    display: block;
+    background: none;
+    animation: none;
+  }
+
+  .pdf-barra { display: none; }
+
+  .pdf-lienzo {
+    overflow: visible;
+    padding: 0;
+  }
+
+  .doc {
+    width: auto;
+    min-height: 0;
+    padding: 0;
+    box-shadow: none;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

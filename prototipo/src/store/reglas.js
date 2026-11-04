@@ -15,7 +15,7 @@
 // `cotizacionActualizada: true` para que la UI muestre el aviso. No hace falta volver a confirmar.
 // El aviso se limpia al aceptar la cotización.
 
-import { CAMPANA_FLUJO, CLIENTE, campanaFija, estadoInicial } from '../data/semilla.js';
+import { CAMPANA_FLUJO, CLIENTE, campanaFija, estadoInicial, perfilInicial } from '../data/semilla.js';
 import { fechaLocal } from '../data/fechas.js';
 import { PLANTILLAS_REPORTE, URL_DRIVE_ARTES, nombreCarpetaDrive } from '../data/catalogos.js';
 import { finDelPlan, planInstalacion } from './instalacion.js';
@@ -165,6 +165,12 @@ export function reiniciar() {
   return estadoInicial();
 }
 
+// Perfil (Configuración de la cuenta): reemplaza los datos del usuario y de la empresa.
+export function guardarPerfil(estado, perfil) {
+  if (!perfil || typeof perfil.usuario !== 'object' || typeof perfil.empresa !== 'object') return estado;
+  return { ...estado, perfil: { usuario: { ...perfil.usuario }, empresa: { ...perfil.empresa } } };
+}
+
 // Archivos de la campaña (imagen, Illustrator, Photoshop). Se pueden subir en cualquier fase
 // y en cualquier campaña; el prototipo solo guarda los datos del archivo, no su contenido.
 export function agregarArchivo(estado, codigo, archivo) {
@@ -223,7 +229,10 @@ export function reducer(estado, accion) {
     case 'elegirPlantilla':
       return elegirPlantilla(estado, accion.codigo, accion.plantillaId);
     case 'reiniciar':
-      return reiniciar();
+      // Reinicia el avance de la demo; el perfil es configuración del usuario y se conserva.
+      return { ...reiniciar(), perfil: estado?.perfil ?? perfilInicial() };
+    case 'guardarPerfil':
+      return guardarPerfil(estado, accion.perfil);
     default:
       return estado;
   }

@@ -1,0 +1,44 @@
+/* Arte de campaña vacío (ArteVacio): fondo de marca con trama suave, ícono y textos centrados. */
+.av {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-6);
+  width: 100%;
+  height: 100%;
+  padding: var(--ui-space-16);
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at 20% 15%, var(--ui-color-bg-surface-default) 0, transparent 45%),
+    repeating-linear-gradient(135deg, transparent 0 14px, var(--ui-color-bg-surface-default) 14px 15px),
+    var(--ui-color-bg-surface-brand-default);
+  text-align: center;
+}
+
+.av-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-56);
+  height: var(--ui-space-56);
+  margin-bottom: var(--ui-space-4);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-default);
+  color: var(--ui-color-icon-brand-default);
+  box-shadow: var(--ui-shadow-2);
+}
+
+.av-titulo {
+  font: var(--ui-font-body-md-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.av-texto {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.av--compacto { gap: var(--ui-space-4); }
+.av--compacto .av-icono { width: var(--ui-space-40); height: var(--ui-space-40); }
+.av--compacto .av-titulo { font: var(--ui-font-body-sm-semibold); }

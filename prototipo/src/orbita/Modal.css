@@ -109,3 +109,33 @@
   justify-content: flex-end;
   margin-left: auto;
 }
+
+/* Celular: el modal sube desde abajo como hoja de app (ancho completo, esquinas superiores redondas,
+   respeta la barra inferior del sistema). Los de tamaño xs (confirmaciones) siguen centrados. */
+@media (max-width: 600px) {
+  .ui-modal-layer:has(> .ui-modal:not(.ui-modal--xs)) {
+    align-items: flex-end;
+    padding: calc(var(--ui-space-24) + env(safe-area-inset-top)) 0 0;
+  }
+
+  .ui-modal:not(.ui-modal--xs) {
+    max-width: none;
+    max-height: calc(100dvh - var(--ui-space-24) - env(safe-area-inset-top));
+    border-radius: var(--ui-radius-16) var(--ui-radius-16) 0 0;
+    animation: ui-modal-hoja var(--ui-motion-base) cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ui-modal:not(.ui-modal--xs) .ui-modal__header { padding: var(--ui-space-12) var(--ui-space-16); min-height: var(--ui-space-56); }
+  .ui-modal:not(.ui-modal--xs) .ui-modal__title { font: var(--ui-font-heading-h5); }
+  .ui-modal:not(.ui-modal--xs) .ui-modal__body { padding: var(--ui-space-12); }
+  .ui-modal:not(.ui-modal--xs) .ui-modal__footer { padding-bottom: calc(var(--ui-space-16) + env(safe-area-inset-bottom)); }
+  .ui-modal:not(.ui-modal--xs) > :last-child:not(.ui-modal__footer) { padding-bottom: calc(var(--ui-space-8) + env(safe-area-inset-bottom)); }
+}
+
+@keyframes ui-modal-hoja {
+  from { transform: translateY(var(--ui-space-48)); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-modal { animation: none !important; }
+}

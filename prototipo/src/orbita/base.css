@@ -82,3 +82,15 @@
     scrollbar-color: var(--ui-color-bg-fill-brand-default) var(--ui-color-bg-fill-hover);
   }
 }
+
+/* Celular (experiencia de app): barras de desplazamiento nativas (sin la barra azul de escritorio), sin el
+   destello gris al tocar, y campos de texto a 16 px para que iOS no haga zoom al enfocarlos. */
+@media (max-width: 600px) {
+  ::-webkit-scrollbar { width: 0; height: 0; }
+
+  html { -webkit-tap-highlight-color: transparent; }
+
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select { font-size: 16px !important; }
+}

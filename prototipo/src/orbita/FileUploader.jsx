@@ -12,8 +12,21 @@ import './FileUploader.css';
  * accept: extensiones permitidas en minúsculas (['jpg', 'png', 'ai', 'psd'])
  * maxBytes: peso máximo por archivo · ayuda: texto bajo el título (formatos y peso)
  * onFiles(files): recibe los archivos válidos; los rechazados muestran el error.
+ * Opcionales: titulo · icono · boton (texto del botón) · children: contenido extra bajo el botón (p. ej. formatos).
  */
-export function FileDropzone({ accept, maxBytes, ayuda, errorTexto, onFiles, disabled = false, className }) {
+export function FileDropzone({
+  accept,
+  maxBytes,
+  ayuda,
+  errorTexto,
+  onFiles,
+  disabled = false,
+  titulo = 'Arrastra y suelta tus archivos',
+  icono = 'file',
+  boton = 'Seleccionar archivos',
+  className,
+  children
+}) {
   const inputRef = useRef(null);
   const ayudaId = useId();
   const [arrastrando, setArrastrando] = useState(false);
@@ -45,8 +58,8 @@ export function FileDropzone({ accept, maxBytes, ayuda, errorTexto, onFiles, dis
         if (!disabled) recibir(e.dataTransfer.files);
       }}
     >
-      <Icon name="file" size={32} className="ui-dropzone__icono" />
-      <p className="ui-dropzone__titulo">Arrastra y suelta tus archivos</p>
+      <Icon name={icono} size={32} className="ui-dropzone__icono" />
+      <p className="ui-dropzone__titulo">{titulo}</p>
       <p id={ayudaId} className="ui-dropzone__ayuda" role={error ? 'alert' : undefined}>
         {error ? errorTexto : ayuda}
       </p>
@@ -57,8 +70,9 @@ export function FileDropzone({ accept, maxBytes, ayuda, errorTexto, onFiles, dis
         aria-describedby={ayudaId}
         onClick={() => inputRef.current?.click()}
       >
-        Seleccionar archivos
+        {boton}
       </Button>
+      {children}
       <input
         ref={inputRef}
         type="file"
@@ -78,18 +92,18 @@ export function FileDropzone({ accept, maxBytes, ayuda, errorTexto, onFiles, dis
  * Loader de Órbita (tarjeta de archivo), tamaño SM. Estados: Loader (con % y tiempo restante),
  * Complete y Error.
  * nombre · formato (texto corto: PNG, AI…) · detalle (texto bajo el nombre)
- * miniatura: src opcional de una imagen; sustituye al ícono de formato
+ * miniatura: src opcional de una imagen; sustituye al ícono de formato · icono: ícono del formato (por defecto file)
  * progreso: 0–100 (solo en Loader) · estado: 'cargando' | 'completo' | 'error'
  * onQuitar · onReintentar (solo en Error)
  */
-export function FileItem({ nombre, formato, detalle, miniatura, progreso = 0, estado = 'completo', onQuitar, onReintentar, className }) {
+export function FileItem({ nombre, formato, detalle, miniatura, icono = 'file', progreso = 0, estado = 'completo', onQuitar, onReintentar, className }) {
   return (
     <div className={cx('ui-file-item', `is-${estado}`, className)}>
       {miniatura ? (
         <img className="ui-file-item__miniatura" src={miniatura} alt="" />
       ) : (
         <span className="ui-file-item__formato" aria-hidden="true">
-          <Icon name="file" size={24} />
+          <Icon name={icono} size={24} />
           <span className="ui-file-item__etiqueta">{formato}</span>
         </span>
       )}

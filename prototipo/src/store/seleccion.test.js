@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CODIGOS, campanaFija, estadoInicial } from '../data/semilla.js';
 import { confirmarSeleccion, responder, responderTodos } from './reglas.js';
 import { progresoPropuesta } from './selectores.js';
-import { TarjetaMedio } from '../pages/propuesta/TarjetaMedio.jsx';
+import { siguienteValor } from '../pages/propuesta/TarjetaMedio.jsx';
 
 // Modelo de selección: cada medio está seleccionado ('si') o no ('no'); sin valor cuenta como 'no'.
 const AL = CODIGOS.ALPINA;
@@ -26,13 +26,8 @@ describe('selección de medios (seleccionado / no seleccionado)', () => {
     expect(responderTodos(e, AL, {}, 'no')).toBe(e);
   });
 
-  it('el clic en la tarjeta alterna: no seleccionado → Sí, Sí → No, No → Sí', () => {
-    const clics = [];
-    const clic = (valor) => TarjetaMedio({ medio: medios[0], valor, onResponder: (id, v) => clics.push([id, v]) }).props.onClick();
-    clic(undefined);
-    clic('si');
-    clic('no');
-    expect(clics).toEqual([[medios[0].id, 'si'], [medios[0].id, 'no'], [medios[0].id, 'si']]);
+  it('el botón Incluir de la tarjeta alterna: no seleccionado → Sí, Sí → No, No → Sí', () => {
+    expect([undefined, 'si', 'no'].map(siguienteValor)).toEqual(['si', 'no', 'si']);
 
     // En el store: alternar el mismo medio deja el valor guardado igual al último clic.
     let e = responder(estadoInicial(), AL, medios[0].id, 'si');

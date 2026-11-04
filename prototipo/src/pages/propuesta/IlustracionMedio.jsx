@@ -124,17 +124,32 @@ function Valla() {
   );
 }
 
-function Rider() {
+// Brand rider: auto particular o de plataforma (Uber, DiDi) rotulado con vinil. 360 = rotulado completo;
+// 180 = vinil solo en las puertas.
+const CARROCERIA =
+  'M46 134 Q38 134 38 124 V110 Q38 100 50 98 L98 94 L120 66 Q124 62 132 62 H194 Q202 62 208 68 L234 94 L268 98 Q282 100 282 114 V124 Q282 134 272 134 Z';
+
+function Rider({ completo }) {
   return (
     <Escena>
-      <rect className="im-panel" x="140" y="44" width="70" height="56" rx="6" />
-      <rect className="im-acento" x="150" y="58" width="40" height="8" rx="4" />
-      <rect className="im-acento-suave" x="150" y="72" width="30" height="6" rx="3" />
-      <path className="im-estructura" d="M110 116 H222 L236 132 H96 Z" />
-      <rect className="im-estructura" x="214" y="92" width="8" height="28" />
-      <rect className="im-estructura" x="206" y="88" width="26" height="6" rx="3" />
-      <circle className="im-rueda" cx="112" cy="140" r="14" />
-      <circle className="im-rueda" cx="226" cy="140" r="14" />
+      <path className={completo ? 'im-panel' : 'im-estructura'} d={CARROCERIA} />
+      <path className="im-vidrio" d="M124 70 H158 V94 H106 Z" />
+      <path className="im-vidrio" d="M166 70 H198 Q202 70 205 73 L224 94 H166 Z" />
+      {!completo && <rect className="im-panel" x="98" y="100" width="130" height="30" rx="4" />}
+      <rect className="im-acento" x={completo ? 62 : 108} y="106" width="64" height="9" rx="4.5" />
+      <rect className="im-acento-suave" x={completo ? 62 : 108} y="119" width={completo ? 120 : 90} height="6" rx="3" />
+      {completo && (
+        <>
+          <circle className="im-acento" cx="226" cy="114" r="11" />
+          <circle className="im-acento-suave" cx="226" cy="114" r="5" />
+          <rect className="im-acento" x="140" y="58" width="26" height="6" rx="3" />
+        </>
+      )}
+      <rect className="im-acento" x="272" y="104" width="8" height="6" rx="2" />
+      <circle className="im-rueda" cx="88" cy="136" r="15" />
+      <circle className="im-rueda" cx="232" cy="136" r="15" />
+      <circle className="im-nube" cx="88" cy="136" r="5" />
+      <circle className="im-nube" cx="232" cy="136" r="5" />
     </Escena>
   );
 }
@@ -171,7 +186,7 @@ export function IlustracionMedio({ medio }) {
   else if (medio.tipo === 'camiones') Dibujo = Camion;
   else if (medio.tipo === 'indoor') Dibujo = Indoor;
   else if (medio.tipo === 'vallas') Dibujo = Valla;
-  else Dibujo = Rider;
+  else return <Rider completo={String(medio.formato).includes('360')} />;
   return <Dibujo />;
 }
 

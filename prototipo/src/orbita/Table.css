@@ -184,8 +184,30 @@
 }
 
 .ui-table__empty {
-  color: var(--ui-color-text-tertiary);
+  color: var(--ui-color-text-secondary);
   text-align: center;
+}
+
+/* Tabla vacía: ícono en círculo y mensaje, centrados con aire. */
+.ui-table__td.ui-table__empty { padding-block: var(--ui-space-40); }
+
+.ui-table__empty-contenido {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-space-8);
+  font: var(--ui-font-body-sm-regular);
+}
+
+.ui-table__empty-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-48);
+  height: var(--ui-space-48);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-brand-default);
+  color: var(--ui-color-icon-brand-default);
 }
 
 .ui-table__footer {

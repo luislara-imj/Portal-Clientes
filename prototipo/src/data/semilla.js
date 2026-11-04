@@ -12,6 +12,21 @@ import { PLAZAS, FORMATOS_RIDER, TEXTOS_COTIZACION, URL_DRIVE_ARTES, nombreCarpe
 export const VERSION = 6;
 
 export const CLIENTE = { nombre: 'Ana López', empresa: 'Cliente de ejemplo S.A.' };
+
+// Perfil editable desde Configuración de la cuenta: datos del contacto (usuario) y de su empresa.
+// foto y logo son data URL (imagen reducida) o null.
+export function perfilInicial() {
+  return {
+    usuario: { nombre: CLIENTE.nombre, puesto: 'Gerente de marketing', correo: 'ana.lopez@clientedeejemplo.mx', telefono: '', foto: null },
+    empresa: {
+      nombreComercial: CLIENTE.empresa,
+      razonSocial: 'Cliente de ejemplo S.A. de C.V.',
+      telefono: '',
+      direccion: '',
+      logo: null
+    }
+  };
+}
 export const RESPONSABLE_COMERCIAL = 'Por asignar';
 
 export const CODIGOS = {
@@ -484,5 +499,5 @@ export function medioFijo(codigo, medioId) {
 export function estadoInicial() {
   const campanas = {};
   for (const c of SEMILLA.campanas) campanas[c.codigo] = JSON.parse(JSON.stringify(c.estadoInicial));
-  return { version: VERSION, campanas };
+  return { version: VERSION, campanas, perfil: perfilInicial() };
 }

@@ -66,14 +66,14 @@ function ContenidoTestigo({ campana, reporte, medio }) {
     return <ReportesBloqueados motivo={fase?.motivo || 'Los reportes se publican al terminar la instalación.'} accion={volver} />;
   }
   if (!reporte) {
-    return <ReportesBloqueados titulo="Reporte no encontrado" motivo="No existe un reporte publicado para consultar este medio." accion={volver} />;
+    return <ReportesBloqueados tono="busqueda" titulo="No encontramos este reporte" motivo="No existe un reporte publicado para consultar este medio." accion={volver} />;
   }
   if (reporte.estado !== 'publicado') {
     const motivo = reporte.publicacion ? `Se publica el ${fechaCorta(reporte.publicacion)}.` : reporte.motivo || 'Este reporte aún no se publica.';
-    return <ReportesBloqueados titulo={`${reporte.nombre} no disponible`} motivo={motivo} accion={volver} />;
+    return <ReportesBloqueados tono="espera" titulo={`${reporte.nombre} aún no se publica`} motivo={motivo} accion={volver} />;
   }
   if (!medio) {
-    return <ReportesBloqueados titulo="Medio no encontrado" motivo="Este medio no forma parte de los medios instalados de la campaña." accion={volver} />;
+    return <ReportesBloqueados tono="busqueda" titulo="No encontramos este medio" motivo="Este medio no forma parte de los medios instalados de la campaña." accion={volver} />;
   }
   return <Testigo campana={campana} reporte={reporte} medio={medio} />;
 }

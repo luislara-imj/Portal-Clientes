@@ -29,7 +29,7 @@ export function PaginaCampana({ fase, migasExtra = [], controles, acciones, chil
   const campana = useCampanaDeRuta();
   if (!campana) {
     return (
-      <AppShell titulo="Campaña no encontrada" migas={[{ label: 'Mis campañas', href: '#/campanas' }, { label: 'No encontrada' }]}>
+      <AppShell titulo="Campaña no encontrada" migas={[{ label: 'Mis campañas', href: '#/campanas' }, { label: 'Campaña no encontrada' }]}>
         <NoEncontrada />
       </AppShell>
     );

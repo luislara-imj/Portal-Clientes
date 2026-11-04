@@ -9,7 +9,7 @@
   position: static;
   display: flex;
   flex-direction: column;
-  gap: var(--ui-space-24);
+  gap: var(--ui-space-16);
   min-width: 0;
 }
 
@@ -17,14 +17,18 @@
 .cot-datos {
   display: flex;
   flex-direction: column;
-  gap: var(--ui-space-12);
+  gap: var(--ui-space-10);
   margin: 0;
 }
 
 .cot-dato {
-  display: flex;
-  flex-direction: column;
-  gap: var(--ui-space-4);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "icono dt"
+    "icono dd";
+  align-items: center;
+  gap: var(--ui-space-2) var(--ui-space-12);
   min-width: 0;
 }
 
@@ -43,7 +47,7 @@
 
 /* Resumen: montos arriba, acciones al fondo */
 .cot-resumen {
-  gap: var(--ui-space-16);
+  gap: var(--ui-space-12);
 }
 
 .cot-resumen__montos { min-width: 0; }
@@ -105,6 +109,11 @@
 }
 
 .cot-plaza__titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-4) var(--ui-space-12);
   margin: 0;
   padding: var(--ui-space-8) var(--ui-space-16);
   background: var(--ui-color-bg-fill-tertiary-default);
@@ -128,7 +137,7 @@
   .cot-principal,
   .cot-lateral {
     /* 24 (arriba) + 64 (header) + 24 (separación) + 24 (abajo) */
-    height: calc(100vh - var(--ui-space-24) * 3 - var(--ui-space-64));
+    height: calc(100vh - var(--ui-space-24) * 3 - var(--ui-space-64) - var(--pg-pie, 0px));
     min-height: 420px;
     box-sizing: border-box;
   }
@@ -158,38 +167,173 @@
   }
 }
 
+/* Color de cada tipo de medio (gráfico de categorías): familia azul de OBP según la guía de color de Órbita
+   (all-colors solo para categorías; sin violeta, magenta ni naranja, que tienen otro significado). */
+.cot-color--sitios { --cot-color: var(--ui-color-bg-fill-brand-default); }
+.cot-color--camiones { --cot-color: var(--ui-color-bg-fill-all-colors-azure); }
+.cot-color--indoor { --cot-color: var(--ui-color-bg-fill-all-colors-cyan); }
+.cot-color--vallas { --cot-color: color-mix(in srgb, var(--ui-color-bg-fill-brand-default) 55%, var(--ui-color-bg-surface-default)); }
+.cot-color--riders { --cot-color: color-mix(in srgb, var(--ui-color-bg-fill-all-colors-azure) 50%, var(--ui-color-bg-surface-default)); }
+
+.cot-etiqueta {
+  font: var(--ui-font-body-xs-semibold);
+  color: var(--ui-color-text-secondary);
+}
+
+/* Encabezado: folio, campaña, etiquetas y distribución de la inversión sobre un degradado de marca. */
+.cot-hero {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  padding: var(--ui-space-20);
+  border-radius: var(--ui-radius-16);
+  background: linear-gradient(135deg, var(--ui-color-bg-surface-brand-default), var(--ui-color-bg-surface-default) 75%);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+}
+
+.cot-hero__texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+.cot-hero__folio {
+  font: var(--ui-font-body-xs-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ui-color-text-brand-default);
+  overflow-wrap: anywhere;
+}
+
+.cot-hero__titulo {
+  margin: 0;
+  font: var(--ui-font-heading-h3);
+  color: var(--ui-color-text-primary);
+}
+
+.cot-hero__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-6);
+  margin: var(--ui-space-8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cot-hero__chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  padding: var(--ui-space-4) var(--ui-space-10);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-default);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  font: var(--ui-font-body-xs-medium);
+  color: var(--ui-color-text-secondary);
+}
+
+.cot-hero__chips svg { color: var(--ui-color-icon-brand-default); }
+
+.cot-distribucion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-6);
+}
+
+.cot-distribucion__barra {
+  display: flex;
+  gap: var(--ui-space-2);
+  height: var(--ui-space-10);
+  overflow: hidden;
+  border-radius: var(--ui-radius-control-pill);
+}
+
+.cot-distribucion__barra > span {
+  flex-basis: 0;
+  min-width: var(--ui-space-4);
+  background: var(--cot-color);
+}
+
+/* Tarjetas de tipo: ícono de color, nombre, % de la inversión, monto y barra de participación. */
 .cot-tarjeta {
   flex: 1;
   width: 100%;
   gap: var(--ui-space-4);
 }
 
+.cot-tarjeta__cabeza {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+.cot-tarjeta__icono {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-size-control-xs);
+  height: var(--ui-size-control-xs);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--cot-color);
+  color: var(--ui-color-icon-on-color);
+}
+
 .cot-tarjeta__nombre {
-  font: var(--ui-font-heading-h4);
-  letter-spacing: var(--ui-type-heading-h4-tracking);
+  flex: 1;
+  min-width: 0;
+  font: var(--ui-font-body-md-semibold);
   overflow-wrap: anywhere;
 }
 
-.cot-tarjeta__medios {
+.cot-tarjeta__pct {
+  font: var(--ui-font-body-xs-semibold);
   color: var(--ui-color-text-secondary);
-  font: var(--ui-font-body-sm-regular);
-  letter-spacing: var(--ui-type-body-sm-tracking);
+  font-variant-numeric: tabular-nums;
 }
 
 .cot-tarjeta__monto {
   margin-top: var(--ui-space-8);
-  font: var(--ui-font-body-md-semibold);
-  letter-spacing: var(--ui-type-body-md-tracking);
+  font: var(--ui-font-heading-h4);
   font-variant-numeric: tabular-nums;
 }
 
-.cot-tarjeta__plazas {
-  color: var(--ui-color-text-tertiary);
+.cot-tarjeta__medios {
+  color: var(--ui-color-text-secondary);
   font: var(--ui-font-body-xs-regular);
-  letter-spacing: var(--ui-type-body-xs-tracking);
 }
 
-/* Lista simple de medios de una plaza (identificador, línea secundaria y precio con descuento). */
+.cot-tarjeta__barra {
+  display: block;
+  height: var(--ui-space-4);
+  margin-top: var(--ui-space-8);
+  overflow: hidden;
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-secondary-default);
+}
+
+.cot-tarjeta__barra > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--cot-color);
+}
+
+.cot-cabecera__titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  margin: 0;
+  font: var(--ui-font-body-lg-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.cot-cabecera__titulo svg { color: var(--ui-color-icon-brand-default); }
+
+/* Medios de una plaza: miniatura, identificador, nombre, etiquetas de servicio e importe. */
 .cot-medios {
   margin: 0;
   padding: 0;
@@ -198,10 +342,8 @@
 
 .cot-medio {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--ui-space-4) var(--ui-space-16);
+  align-items: center;
+  gap: var(--ui-space-12) var(--ui-space-16);
   padding: var(--ui-space-12) var(--ui-space-16);
 }
 
@@ -209,11 +351,20 @@
   border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
 }
 
+.cot-medio__miniatura {
+  position: relative;
+  flex: none;
+  width: 88px;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--ui-radius-8);
+}
+
 .cot-medio__texto {
   display: flex;
   flex: 1 1 200px;
   flex-direction: column;
-  gap: var(--ui-space-4);
+  gap: var(--ui-space-2);
   min-width: 0;
 }
 
@@ -230,18 +381,96 @@
   overflow-wrap: anywhere;
 }
 
+.cot-medio__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-4) var(--ui-space-12);
+  margin-top: var(--ui-space-4);
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-tertiary);
+}
+
+.cot-medio__chips > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+}
+
+.cot-medio__precios {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--ui-space-2);
+}
+
 .cot-medio__precio {
-  font: var(--ui-font-body-sm-semibold);
-  letter-spacing: var(--ui-type-body-sm-tracking);
+  font: var(--ui-font-body-md-bold);
+  letter-spacing: var(--ui-type-body-md-tracking);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+.cot-medio__lista {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .cot-medio { flex-wrap: wrap; }
+  .cot-medio__miniatura { width: 64px; }
+  .cot-medio__precios { flex-direction: row; align-items: baseline; gap: var(--ui-space-8); margin-left: calc(64px + var(--ui-space-12)); }
+}
+
+/* Datos de la cotización: ícono a la izquierda, etiqueta y valor. */
+.cot-dato__icono {
+  grid-area: icono;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-size-control-xs);
+  height: var(--ui-size-control-xs);
+  border-radius: var(--ui-radius-8);
+  background: var(--ui-color-bg-surface-brand-default);
+  color: var(--ui-color-icon-brand-default);
+}
+
+.cot-dato dt { grid-area: dt; }
+.cot-dato dd { grid-area: dd; }
+
+/* Total con IVA destacado en un bloque de marca. */
+.cot-total {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-12) var(--ui-space-16);
+  border-radius: var(--ui-radius-12);
+  background: var(--ui-color-bg-fill-brand-default);
+  color: var(--ui-color-text-text-on-color);
+}
+
+.cot-total__etiqueta { font: var(--ui-font-body-xs-semibold); opacity: 0.85; }
+
+.cot-total__monto {
+  font: var(--ui-font-heading-h3);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.cot-total__ahorro {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+  font: var(--ui-font-body-xs-medium);
+  opacity: 0.9;
 }
 
 /* Lista de montos (cierre y modal) */
 .cot-montos {
   display: flex;
   flex-direction: column;
-  gap: var(--ui-space-8);
+  gap: var(--ui-space-6);
   margin: 0;
 }
 
@@ -268,6 +497,9 @@
   overflow-wrap: anywhere;
 }
 
+.cot-monto--ahorro dt,
+.cot-monto--ahorro dd { color: var(--ui-color-text-success-default); }
+
 .cot-monto--total {
   padding-top: var(--ui-space-12);
   border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
@@ -284,20 +516,15 @@
   letter-spacing: var(--ui-type-heading-h4-tracking);
 }
 
-.cot-lista {
-  display: flex;
-  flex-direction: column;
-  gap: var(--ui-space-4);
-  margin: 0;
-  padding-left: var(--ui-space-16);
-  color: var(--ui-color-text-secondary);
-  font: var(--ui-font-body-sm-regular);
-  letter-spacing: var(--ui-type-body-sm-tracking);
-}
-
 .cot-acciones {
   display: flex;
   flex-direction: column;
+  gap: var(--ui-space-8);
+}
+
+.cot-acciones__fila {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--ui-space-8);
 }
 
@@ -333,4 +560,231 @@
   flex-direction: column;
   gap: var(--ui-space-16);
   padding: var(--ui-space-8);
+}
+
+/* Modal "Qué incluye tu campaña": conceptos con ícono, barra de condiciones de pago y aclaraciones. */
+.ci {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+}
+
+.ci-intro {
+  margin: 0;
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.ci-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ci-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-12);
+  padding: var(--ui-space-10) var(--ui-space-12);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-12);
+  background: var(--ui-color-bg-surface-default);
+}
+
+.ci-item__icono {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-size-control-sm);
+  height: var(--ui-size-control-sm);
+  border-radius: var(--ui-radius-10);
+  background: var(--ui-color-bg-surface-brand-default);
+  color: var(--ui-color-icon-brand-default);
+}
+
+.ci-item__texto {
+  flex: 1;
+  font: var(--ui-font-body-sm-medium);
+  color: var(--ui-color-text-primary);
+}
+
+.ci-item__check { flex: none; color: var(--ui-color-icon-success-default); }
+
+.ci-bloque {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-10);
+  padding: var(--ui-space-16);
+  border-radius: var(--ui-radius-16);
+  background: var(--ui-color-bg-surface-secondary-default);
+}
+
+.ci-bloque__titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  margin: 0;
+  font: var(--ui-font-body-md-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.ci-bloque__titulo svg { color: var(--ui-color-icon-brand-default); }
+
+/* Barra de pago: cada parte con su porcentaje; la primera en azul de marca y la segunda en verde. */
+.ci-pago {
+  display: flex;
+  gap: var(--ui-space-4);
+  height: var(--ui-space-28);
+  overflow: hidden;
+  border-radius: var(--ui-radius-control-pill);
+}
+
+.ci-pago__parte {
+  display: flex;
+  flex-basis: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--ui-color-text-text-on-color);
+  font: var(--ui-font-body-xs-bold);
+}
+
+.ci-pago__parte--0 { background: var(--ui-color-bg-fill-brand-default); }
+.ci-pago__parte--1 { background: var(--ui-color-bg-fill-success-default); }
+.ci-pago__parte--2 { background: var(--ui-color-bg-fill-warning-default); }
+
+.ci-pago__pasos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-8) var(--ui-space-24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.ci-pago__pasos li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+}
+
+.ci-pago__pasos strong { color: var(--ui-color-text-primary); }
+
+.ci-pago__punto {
+  width: var(--ui-space-8);
+  height: var(--ui-space-8);
+  border-radius: var(--ui-radius-control-pill);
+}
+
+.ci-texto {
+  margin: 0;
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.ci-aclaraciones {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-10);
+  padding: var(--ui-space-12) var(--ui-space-16);
+  border-radius: var(--ui-radius-12);
+  background: var(--ui-color-bg-surface-info-default);
+  color: var(--ui-color-icon-info-default);
+}
+
+.ci-aclaraciones > svg { flex: none; margin-top: var(--ui-space-2); }
+
+.ci-aclaraciones ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-primary);
+}
+
+/* Barra inferior con el total: solo existe en celular. */
+.cot-barra-movil { display: none; }
+
+/* Celular: primero lo cotizado (portada, tipos y medios), luego datos y resumen; el total y Aceptar
+   quedan fijos abajo como barra de app. Tipos en dos columnas y precios del medio bajo su texto. */
+@media (max-width: 600px) {
+  .pg:has(.cot-barra-movil) { padding-bottom: 0; }
+
+  .cot > .cot-lateral { order: 1; }
+
+  .cot-barra-movil {
+    position: sticky;
+    bottom: 0;
+    z-index: var(--ui-z-sticky, 100);
+    order: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ui-space-12);
+    margin: 0 calc(var(--ui-space-16) * -1);
+    padding: var(--ui-space-12) calc(var(--ui-space-16) + env(safe-area-inset-right)) calc(var(--ui-space-12) + env(safe-area-inset-bottom)) calc(var(--ui-space-16) + env(safe-area-inset-left));
+    border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+    border-radius: var(--ui-radius-16) var(--ui-radius-16) 0 0;
+    background: var(--ui-color-bg-surface-default);
+    box-shadow: var(--ui-shadow-5);
+  }
+
+  .cot-barra-movil__textos {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    font: var(--ui-font-body-xs-regular);
+    color: var(--ui-color-text-secondary);
+  }
+
+  .cot-barra-movil__textos strong {
+    font: var(--ui-font-heading-h5);
+    color: var(--ui-color-text-brand-default);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .cot-barra-movil .ui-button { flex: none; min-width: 128px; }
+
+  .cot-principal.ui-card { padding: var(--ui-space-12); }
+
+  /* Tipos: carrusel horizontal que se desliza con el dedo y se ajusta a cada tarjeta. */
+  .cot-rejilla {
+    grid-template-columns: none;
+    grid-auto-columns: 72%;
+    grid-auto-flow: column;
+    gap: var(--ui-space-8);
+    margin: 0 calc(var(--ui-space-12) * -1);
+    padding: var(--ui-space-2) var(--ui-space-12) var(--ui-space-4);
+    overflow-x: auto;
+    scroll-padding-inline: var(--ui-space-12);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .cot-rejilla::-webkit-scrollbar { display: none; }
+  .cot-rejilla > li { scroll-snap-align: start; }
+  .cot-tarjeta__monto { font: var(--ui-font-heading-h5); }
+
+  .cot-medio {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    align-items: start;
+    gap: var(--ui-space-4) var(--ui-space-12);
+    padding: var(--ui-space-12);
+  }
+
+  .cot-medio__precios {
+    grid-column: 2;
+    flex-wrap: wrap;
+    margin-left: 0;
+  }
 }

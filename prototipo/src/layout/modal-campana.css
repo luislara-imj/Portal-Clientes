@@ -1,0 +1,182 @@
+/* Modal de secciones de una campaña: botones cuadrados con ícono. Solo tokens --ui-*. */
+
+.cm-cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+}
+
+.cm-contexto {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-12);
+}
+
+.cm-vigencia {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  font: var(--ui-font-body-xs-medium);
+  color: var(--ui-color-text-secondary);
+}
+
+.cm-opciones {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--ui-space-12);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 600px) {
+  .cm-opciones { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Botón cuadrado: ícono arriba y nombre abajo. */
+.cm-opcion {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-8);
+  box-sizing: border-box;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: var(--ui-space-8);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-16);
+  background: var(--ui-color-bg-surface-default);
+  color: var(--ui-color-text-primary);
+  font: inherit;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color var(--ui-motion-fast) ease-out, box-shadow var(--ui-motion-fast) ease-out, transform var(--ui-motion-fast) ease-out;
+}
+
+.cm-opcion:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.cm-opcion:not(.is-bloqueada):hover {
+  border-color: var(--ui-color-border-brand);
+  box-shadow: var(--ui-shadow-3);
+  transform: translateY(-2px);
+}
+
+.cm-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-48);
+  height: var(--ui-space-48);
+  border-radius: var(--ui-radius-12);
+  background: var(--ui-color-bg-surface-brand-default);
+  color: var(--ui-color-icon-brand-default);
+}
+
+.cm-nombre {
+  font: var(--ui-font-body-sm-semibold);
+  line-height: 1.2;
+}
+
+/* Donde va la campaña: botón relleno de marca. */
+.cm-opcion.is-actual {
+  border-color: var(--ui-color-bg-fill-brand-default);
+  background: var(--ui-color-bg-fill-brand-default);
+  color: var(--ui-color-text-text-on-color);
+  box-shadow: var(--ui-shadow-3);
+}
+
+.cm-opcion.is-actual .cm-icono {
+  background: color-mix(in srgb, var(--ui-color-bg-surface-default) 20%, transparent);
+  color: var(--ui-color-icon-on-color);
+}
+
+.cm-opcion.is-actual:hover { background: var(--ui-color-bg-fill-brand-hover); }
+
+/* Completada: ícono verde. */
+.cm-opcion.is-consulta .cm-icono {
+  background: var(--ui-color-bg-surface-success-default);
+  color: var(--ui-color-icon-success-default);
+}
+
+/* Bloqueada: gris, borde punteado y candado; no se eleva. */
+.cm-opcion.is-bloqueada {
+  border-style: dashed;
+  background: var(--ui-color-bg-surface-secondary-default);
+  color: var(--ui-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.cm-opcion.is-bloqueada .cm-icono {
+  background: var(--ui-color-bg-fill-tertiary-default);
+  color: var(--ui-color-icon-disabled);
+}
+
+/* Marca en la esquina: candado (bloqueada) o check (completada). */
+.cm-marca {
+  position: absolute;
+  top: var(--ui-space-8);
+  right: var(--ui-space-8);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-20);
+  height: var(--ui-space-20);
+  border-radius: var(--ui-radius-control-pill);
+  color: var(--ui-color-icon-on-color);
+}
+
+.cm-marca--candado { background: var(--ui-color-icon-tertiary-default); }
+.cm-marca--check { background: var(--ui-color-bg-fill-success-default); }
+
+/* Motivo de la sección bloqueada que se pasó o tocó. Reserva su alto para que el modal no salte. */
+.cm-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ui-space-8);
+  min-height: var(--ui-space-40);
+  margin: 0;
+  padding: var(--ui-space-8) var(--ui-space-12);
+  border-radius: var(--ui-radius-12);
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-secondary);
+  opacity: 0;
+  transition: opacity var(--ui-motion-fast) ease-out;
+}
+
+.cm-aviso.is-visible {
+  background: var(--ui-color-bg-surface-warning-default);
+  opacity: 1;
+}
+
+.cm-aviso svg {
+  flex: none;
+  margin-top: var(--ui-space-4);
+  color: var(--ui-color-icon-warning-default);
+}
+
+.cm-aviso strong { color: var(--ui-color-text-primary); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cm-opcion,
+  .cm-aviso { transition: none; }
+  .cm-opcion:not(.is-bloqueada):hover { transform: none; }
+}
+
+/* Celular: tres botones por fila y la segunda fila (Instalación, Reportes) centrada, sin hueco al final. */
+@media (max-width: 600px) {
+  .cm-opciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .cm-opciones > li { width: calc((100% - var(--ui-space-12) * 2) / 3); }
+  .cm-secciones--grande .cm-opciones > li { width: calc((100% - var(--ui-space-8) * 2) / 3); }
+}

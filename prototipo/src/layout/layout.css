@@ -1,5 +1,18 @@
 /* Maquetación de las pantallas: solo grid, flex, gaps, paddings y tipografía con tokens --ui-*. */
 
+/* Marco de las pantallas con sesión: página y pie de página; el pie queda al fondo aunque haya poco
+   contenido. --pg-pie es su alto y lo restan las pantallas que se ajustan al alto de la ventana. */
+.pg-marco {
+  --pg-pie: var(--ui-space-40);
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.pg-marco > .pg { flex: 1 0 auto; }
+
 /* Contenedor de página: ocupa todo el ancho de la ventana, padding 24 (16 en móvil).
    Las columnas laterales (acciones, datos, resumen) tienen ancho fijo; crece la columna principal. */
 .pg {
@@ -133,7 +146,7 @@
 .mc-kpi.is-destacada {
   border-color: var(--ui-color-icon-all-colors-blue);
   background: var(--ui-color-icon-all-colors-blue);
-  color: #ffffff;
+  color: var(--ui-color-text-text-on-color);
 }
 
 .mc-kpi-cabecera {
@@ -144,7 +157,7 @@
   color: var(--ui-color-icon-all-colors-blue);
 }
 
-.mc-kpi.is-destacada .mc-kpi-cabecera { color: #ffffff; }
+.mc-kpi.is-destacada .mc-kpi-cabecera { color: var(--ui-color-text-text-on-color); }
 
 .mc-kpi-titulo {
   margin: 0;
@@ -162,10 +175,10 @@
 .mc-kpi-detalle {
   margin: 0;
   font: var(--ui-font-body-xs-regular);
-  color: var(--ui-color-text-brand-default, #2d49a1);
+  color: var(--ui-color-text-brand-default);
 }
 
-.mc-kpi.is-destacada .mc-kpi-detalle { color: #ffffff; }
+.mc-kpi.is-destacada .mc-kpi-detalle { color: var(--ui-color-text-text-on-color); }
 
 /* Encabezado de campaña */
 .enc {
@@ -198,6 +211,35 @@
   color: inherit;
   text-decoration: none;
   border-radius: var(--ui-radius-control-sm);
+}
+
+/* Logo OBP by IMJ Media: siempre en el topbar, separado del título por una línea. La versión oscura
+   solo cambia el texto (gris claro) para que se lea en OBP Dark. */
+.hdr-marca {
+  align-items: center;
+  height: var(--ui-space-32);
+  padding-right: var(--ui-space-16);
+  border-right: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: 0;
+}
+
+.hdr-marca img { display: block; height: 100%; width: auto; }
+.hdr-marca__oscuro { display: none !important; }
+[data-theme="dark"] .hdr-marca__claro { display: none !important; }
+[data-theme="dark"] .hdr-marca__oscuro { display: block !important; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hdr-marca__claro { display: none !important; }
+  :root:not([data-theme="light"]) .hdr-marca__oscuro { display: block !important; }
+}
+
+/* Celular: el logo se queda; el botón Volver se oculta (las migas siguen llevando atrás) para dar
+   espacio al título. */
+@media (max-width: 600px) {
+  .hdr-marca { height: var(--ui-space-24); padding-right: var(--ui-space-8); }
+  .enc-izq { gap: var(--ui-space-8); }
+  .enc-izq > .ui-tooltip-anchor:has(.ui-icon-button),
+  .enc-izq > .ui-icon-button { display: none; }
 }
 
 .hdr-logo:focus-visible,
@@ -241,9 +283,58 @@
   color: var(--ui-color-text-tertiary);
 }
 
+/* Logo de la empresa del cliente junto al usuario (si lo cargó en Configuración). */
+.hdr-usuario-logo {
+  max-width: 88px;
+  height: var(--ui-space-28);
+  margin-right: var(--ui-space-4);
+  padding-right: var(--ui-space-12);
+  border-right: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  object-fit: contain;
+}
+
+/* Tarjeta del usuario arriba del menú. */
+.hdr-perfil {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-12);
+  margin: calc(var(--ui-space-4) * -1) calc(var(--ui-space-4) * -1) var(--ui-space-8);
+  padding: var(--ui-space-12);
+  border-radius: var(--ui-radius-12);
+  background: var(--ui-color-bg-surface-brand-default);
+}
+
+.hdr-perfil__textos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.hdr-perfil__textos strong {
+  font: var(--ui-font-body-md-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.hdr-perfil__textos > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.hdr-perfil__empresa {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  margin-top: var(--ui-space-2);
+  font: var(--ui-font-body-xs-semibold);
+  color: var(--ui-color-text-brand-default);
+}
+
+.hdr-perfil__empresa img { max-width: 48px; height: var(--ui-space-16); object-fit: contain; }
+
 .hdr-menu {
   display: flex;
   flex-direction: column;
+  gap: var(--ui-space-2);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -252,12 +343,13 @@
 .hdr-menu-opcion {
   display: flex;
   align-items: center;
-  gap: var(--ui-space-8);
+  gap: var(--ui-space-10);
+  box-sizing: border-box;
   width: 100%;
-  min-height: var(--ui-size-control-md);
-  padding: var(--ui-space-8) var(--ui-space-12);
+  min-height: var(--ui-size-control-lg);
+  padding: var(--ui-space-6) var(--ui-space-8);
   border: 0;
-  border-radius: var(--ui-radius-control-sm);
+  border-radius: var(--ui-radius-10);
   background: transparent;
   color: var(--ui-color-text-primary);
   font: var(--ui-font-body-sm-medium);
@@ -265,9 +357,48 @@
   cursor: pointer;
 }
 
-.hdr-menu-opcion:hover { background: var(--ui-color-bg-fill-hover); }
+button.hdr-menu-opcion:hover { background: var(--ui-color-bg-fill-hover); }
+.hdr-menu-opcion--switch { cursor: default; }
 
-.hdr-usuario-anchor .ui-popover { width: 240px; }
+.hdr-menu-icono {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-size-control-xs);
+  height: var(--ui-size-control-xs);
+  border-radius: var(--ui-radius-8);
+  background: var(--ui-color-bg-surface-secondary-default);
+  color: var(--ui-color-icon-secondary-default);
+}
+
+.hdr-menu-textos {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.hdr-menu-textos small {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-tertiary);
+}
+
+.hdr-menu-flecha { color: var(--ui-color-icon-tertiary-default); }
+
+.hdr-menu-separador {
+  height: var(--ui-stroke-width-1);
+  margin: var(--ui-space-6) 0;
+  background: var(--ui-color-border-subtle);
+}
+
+.hdr-menu-opcion--salir { color: var(--ui-color-text-danger-default); }
+.hdr-menu-opcion--salir .hdr-menu-icono {
+  background: var(--ui-color-bg-surface-danger-default);
+  color: var(--ui-color-icon-danger-default);
+}
+
+.hdr-usuario-anchor .ui-popover { width: 300px; }
 
 .enc-izq {
   display: flex;
@@ -300,6 +431,37 @@
   }
 
   .hdr-usuario-textos { display: none; }
+  .hdr-usuario-logo { display: none; }
+}
+
+/* Celular: la cabecera se vuelve barra de app pegada arriba y de borde a borde (respeta la muesca);
+   título más chico y migas en una sola línea deslizable, sin repetir la página actual (ya es el título). */
+@media (max-width: 600px) {
+  .enc-cabecera {
+    top: 0;
+    gap: var(--ui-space-8) var(--ui-space-12);
+    min-height: var(--ui-space-56);
+    margin: calc(var(--ui-space-16) * -1) calc(var(--ui-space-16) * -1) 0;
+    padding: calc(var(--ui-space-8) + env(safe-area-inset-top)) calc(var(--ui-space-12) + env(safe-area-inset-right)) var(--ui-space-8) calc(var(--ui-space-12) + env(safe-area-inset-left));
+    border-radius: 0 0 var(--ui-radius-16) var(--ui-radius-16);
+    box-shadow: var(--ui-shadow-2);
+  }
+
+  .enc-titulo { font: var(--ui-font-heading-h5); }
+  .enc-nota { display: none; }
+  .enc-migas { margin-top: 0; }
+
+  .enc-migas .ui-breadcrumbs__list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .enc-migas .ui-breadcrumbs__list::-webkit-scrollbar { display: none; }
+  .enc-migas .ui-breadcrumbs__item { flex: none; white-space: nowrap; }
+  .enc-migas .ui-breadcrumbs__item:last-child:not(:first-child) { display: none; }
+  .enc-migas .ui-breadcrumbs__item:nth-last-child(2) .ui-breadcrumbs__chevron { display: none; }
+  .hdr-usuario { padding: var(--ui-space-4); }
 }
 
 .enc-icono {
@@ -310,7 +472,7 @@
   padding: var(--ui-space-8);
   border-radius: 9999px;
   background: var(--ui-color-bg-surface-brand-default);
-  color: var(--ui-color-icon-all-colors-blue, #3658c1);
+  color: var(--ui-color-icon-all-colors-blue);
 }
 
 .enc-titulos {
@@ -334,10 +496,11 @@
   text-overflow: ellipsis;
 }
 
+/* Subtítulo de la página de inicio (en lugar de migas): texto de apoyo, no enlace. */
 .enc-subtitulo {
-  margin: 0;
-  font: var(--ui-font-body-xs-bold, 700 12px/17.5px var(--ui-font-family-ui));
-  color: var(--ui-color-text-brand-default, #2d49a1);
+  margin: var(--ui-space-2) 0 0;
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -481,3 +644,88 @@
   padding: 0;
   list-style: none;
 }
+
+/* Pie de página: derechos a la izquierda y enlaces legales y de ayuda a la derecha. */
+.pg-pie {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-8) var(--ui-space-24);
+  box-sizing: border-box;
+  min-height: var(--pg-pie);
+  padding: 0 var(--ui-space-24);
+  border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  font: var(--ui-font-body-xs-regular);
+  letter-spacing: var(--ui-type-body-xs-tracking);
+  color: var(--ui-color-text-tertiary);
+}
+
+.pg-pie__legal { margin: 0; }
+
+.pg-pie__enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-4) var(--ui-space-20);
+}
+
+.pg-pie__enlace {
+  padding: 0;
+  border: 0;
+  border-radius: var(--ui-radius-2);
+  background: none;
+  color: var(--ui-color-text-secondary);
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+.pg-pie__enlace:hover { color: var(--ui-color-text-link-hover); text-decoration: underline; }
+
+.pg-pie__enlace:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+/* Celular: centrado en dos renglones (enlaces arriba, derechos abajo) y respeta la barra del sistema. */
+@media (max-width: 600px) {
+  .pg-pie {
+    flex-direction: column-reverse;
+    justify-content: center;
+    padding: var(--ui-space-16) var(--ui-space-16) calc(var(--ui-space-16) + env(safe-area-inset-bottom));
+    text-align: center;
+  }
+
+  .pg-pie__enlaces { justify-content: center; gap: var(--ui-space-4) var(--ui-space-16); }
+}
+
+/* Pantalla de error inesperado (LimiteErrores): logo arriba y el estado de error centrado sobre el
+   fondo de la página, sin tarjeta. */
+.err-pagina {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-24);
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--ui-space-32) var(--ui-space-16);
+}
+
+.err-pagina__logo {
+  display: flex;
+  height: var(--ui-space-32);
+  padding-right: 0;
+  border-right: 0;
+}
+
+.err-pagina > .ev {
+  flex: none;
+  width: min(640px, 100%);
+  min-height: 0;
+  padding: 0;
+}
+
+/* Aviso sin conexión: franja bajo la cabecera mientras el navegador no tiene internet. */
+.pg-sin-conexion { animation: ev-entrada var(--ui-motion-base) ease-out; }

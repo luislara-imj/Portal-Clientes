@@ -1,14 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Checkbox, FilterGroup, FilterPanel, Switch, TabPanel, Tabs } from '../orbita';
+import { Checkbox, FilterGroup, FilterPanel, Switch, TabPanel, Tabs } from '../orbita';
 import { useToastUnaVez } from '../layout/useToastUnaVez.js';
 import { BarraBusqueda, FiltrosActivos } from '../layout/BarraFiltros.jsx';
 import { useStore } from '../store/index.js';
 import { NOMBRE_TIPO, PLAZAS, TIPOS } from '../data/catalogos.js';
 import { PaginaCampana } from '../layout/PaginaCampana.jsx';
+import { EstadoVacio } from '../layout/EstadoVacio.jsx';
 import { rutaCampana } from '../layout/campanas.js';
 import { ResumenPropuesta } from './propuesta/ResumenPropuesta.jsx';
 import { GrupoPlaza } from './propuesta/GrupoPlaza.jsx';
+import { DetalleMedio } from './propuesta/DetalleMedio.jsx';
+import { ResumenDetalle } from './propuesta/ResumenDetalle.jsx';
+import { resumenPorTipo } from './propuesta/sumatoria.js';
+import { ICONO_TIPO } from './propuesta/DatosMedio.jsx';
 import '../layout/layout.css';
 import './propuesta/propuesta.css';
 
@@ -84,6 +89,14 @@ function ContenidoPropuesta({ campana, vista }) {
   const [filtros, setFiltros] = useState(SIN_FILTROS);
   const [panelAbierto, setPanelAbierto] = useState(false);
   const [texto, setTexto] = useState('');
+  const [detalleId, setDetalleId] = useState(null);
+  const [resumenAbierto, setResumenAbierto] = useState(false);
+
+  // Sumatoria de la selección por tipo de medio (hoja Resumen del Excel); se recalcula al incluir o quitar.
+  const resumen = useMemo(
+    () => resumenPorTipo(TIPOS, medios, (m) => seleccionado(respuestas[m.id])),
+    [medios, respuestas]
+  );
 
   const porTipo = useMemo(() => {
     const mapa = Object.fromEntries(TIPOS.map((t) => [t, []]));
@@ -108,6 +121,15 @@ function ContenidoPropuesta({ campana, vista }) {
   const grupos = gruposCon(filtros);
   const contar = (f) => gruposCon(f).reduce((n, g) => n + g.visibles.length, 0);
   const visibles = contar(filtros);
+
+  // Detalle del medio: anterior y siguiente recorren los medios visibles del tipo, en el orden de la pantalla.
+  const recorrido = grupos.flatMap((g) => g.visibles);
+  const detalle = detalleId ? medios.find((m) => m.id === detalleId) : null;
+  const posicion = recorrido.findIndex((m) => m.id === detalleId);
+  const irA = (paso) => {
+    const siguiente = recorrido[posicion + paso];
+    if (siguiente) setDetalleId(siguiente.id);
+  };
 
   const limpiarFiltros = () => {
     setFiltros(SIN_FILTROS);
@@ -140,13 +162,24 @@ function ContenidoPropuesta({ campana, vista }) {
 
   let contenido;
   if (delTipo.length === 0) {
-    contenido = <p className="pp-vacio pg-texto">Esta propuesta no incluye medios de este tipo.</p>;
+    contenido = (
+      <EstadoVacio
+        tamano="compacto"
+        icono={ICONO_TIPO[tipo] ?? 'billboard'}
+        titulo={`Sin ${NOMBRE_TIPO[tipo].toLowerCase()} en esta propuesta`}
+        descripcion="Revisa los otros tipos de medio en las pestañas de arriba."
+      />
+    );
   } else if (grupos.length === 0) {
     contenido = (
-      <div className="pp-vacio">
-        <p className="pg-texto">Ningún medio coincide con los filtros.</p>
-        <Button variant="secondary" size="xs" onClick={limpiarFiltros}>Limpiar filtros</Button>
-      </div>
+      <EstadoVacio
+        tamano="compacto"
+        tono="busqueda"
+        icono="billboard"
+        titulo="Ningún medio coincide"
+        descripcion={`No hay medios que coincidan con ${[texto && `«${texto}»`, activos > 0 && 'los filtros elegidos'].filter(Boolean).join(' y ')}.`}
+        acciones={[{ label: 'Limpiar búsqueda y filtros', icono: 'broom', variant: 'secondary', onClick: limpiarFiltros }]}
+      />
     );
   } else {
     contenido = grupos.map((g) => (
@@ -161,6 +194,7 @@ function ContenidoPropuesta({ campana, vista }) {
         editable={editable}
         onResponder={onResponder}
         onResponderTodos={onResponderTodos}
+        onVerDetalles={setDetalleId}
       />
     ));
   }
@@ -206,21 +240,71 @@ function ContenidoPropuesta({ campana, vista }) {
       }}
     />
     <aside className="mc-lateral">
-      <ResumenPropuesta progreso={progreso} cot={cot} onConfirmar={() => s.confirmarSeleccion(codigo)} onIrCotizacion={irACotizacion} />
+      <ResumenPropuesta
+        progreso={progreso}
+        resumen={resumen}
+        tipoActivo={tipo}
+        onIrTipo={setTipo}
+        onVerResumen={() => setResumenAbierto(true)}
+        onConfirmar={() => s.confirmarSeleccion(codigo)}
+        onIrCotizacion={irACotizacion}
+      />
     </aside>
+    <DetalleMedio
+      medio={detalle}
+      valor={detalle ? respuestas[detalle.id] : undefined}
+      readOnly={!editable}
+      onResponder={onResponder}
+      onClose={() => setDetalleId(null)}
+      posicion={posicion + 1}
+      total={posicion >= 0 ? recorrido.length : 0}
+      onAnterior={() => irA(-1)}
+      onSiguiente={() => irA(1)}
+    />
+    <ResumenDetalle
+      open={resumenAbierto}
+      onClose={() => setResumenAbierto(false)}
+      resumen={resumen}
+      puedeConfirmar={progreso.puedeConfirmar}
+      onConfirmar={() => {
+        s.confirmarSeleccion(codigo);
+        setResumenAbierto(false);
+      }}
+    />
     </div>
   );
 }
 
-// Propuesta de medios: el cliente selecciona los medios que quiere (Sí / No) y confirma su selección.
+// Propuesta de medios: el cliente incluye los medios que quiere, consulta el detalle de cada uno en un drawer
+// y ve la sumatoria de su selección (como la hoja Resumen del Excel) antes de confirmar.
 // La vista (tarjetas o tabla) vive aquí porque su Switch está en el encabezado y el contenido la usa.
+// Antes de "Propuesta lista" la propuesta se está armando: estado de espera en vez de la lista vacía.
+function PropuestaSegunFase({ campana, vista }) {
+  const s = useStore();
+  const fase = s.fasesDeCampana(campana.codigo).find((f) => f.clave === 'propuesta');
+  if (fase?.estado === 'bloqueada' || campana.medios.length === 0) {
+    return (
+      <EstadoVacio
+        tarjeta
+        tamano="pagina"
+        tono="espera"
+        icono="billboard"
+        titulo="Estamos preparando tu propuesta"
+        descripcion="Tu ejecutivo de IMJ está eligiendo los mejores medios para tu campaña. Te avisaremos cuando esté lista para revisarla."
+        nota="¿Tienes algo que agregar al brief? Escríbele a tu ejecutivo."
+      />
+    );
+  }
+  return <ContenidoPropuesta campana={campana} vista={vista} />;
+}
+
 export default function Propuesta() {
   const [vistaElegida, setVistaElegida] = useState(null);
   const vista = vistaElegida ?? 'tarjetas';
   const controles = <Switch size="md" label="Vista" options={OPCIONES_VISTA} value={vista} onChange={setVistaElegida} />;
   return (
     <PaginaCampana fase="propuesta" controles={controles}>
-      {(campana) => <ContenidoPropuesta campana={campana} vista={vista} />}
+      {(campana) => <PropuestaSegunFase campana={campana} vista={vista} />}
     </PaginaCampana>
   );
 }

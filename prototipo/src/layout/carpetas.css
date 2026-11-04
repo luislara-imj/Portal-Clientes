@@ -14,59 +14,56 @@
 
 .cp-rejilla--tarjetas { gap: var(--ui-space-16); }
 
+/* Carpetas (nivel 1): columnas más anchas para que el nombre de la marca quepa. El azul de OBP se toma aquí,
+   fuera de la carpeta (que fuerza el tema oscuro), para que sea el azul de marca del tema de la página. */
+.cp-rejilla:not(.cp-rejilla--tarjetas) {
+  --cp-azul: var(--ui-color-bg-fill-brand-default);
+
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+}
+
 /* ---------- Carpeta (nivel 1) ----------
-   Tarjeta cuadrada con anillo oscuro: arriba la zona de color de la marca con hojas/artes
-   de fondo; abajo el cuerpo oscuro (SVG) cuyo borde superior sube en curva hacia la derecha.
-   Oscura en ambos temas (tokens --ui-color-*-folder*). */
+   Carpeta oscura (data-theme="dark" en el elemento: los tokens toman su valor oscuro en ambos temas):
+   parte trasera con pestaña en el azul de OBP (--cp-azul), hojas con los artes asomando y un frente
+   de vidrio esmerilado con estado, nombre, campañas activas, conteo y asa. */
 .cp-carpeta {
-  --cp-color: var(--ui-color-bg-fill-brand-default);
   --cp-blanco: var(--ui-color-bg-folder-paper);
-  --cp-radio: 28px;
 
   position: relative;
   display: block;
   box-sizing: border-box;
   width: 100%;
-  max-width: 240px;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border: 4px solid var(--ui-color-bg-folder-ring);
-  border-radius: var(--cp-radio);
-  background: var(--ui-color-bg-folder-body);
-  box-shadow: var(--ui-shadow-3);
+  max-width: 280px;
+  aspect-ratio: 11 / 10;
   color: var(--ui-color-text-folder);
   text-decoration: none;
-  transition: transform var(--ui-motion-fast) ease-out, box-shadow var(--ui-motion-fast) ease-out;
+  border-radius: var(--ui-radius-24);
+  transition: transform var(--ui-motion-fast) ease-out, filter var(--ui-motion-fast) ease-out;
+  filter: drop-shadow(0 6px 14px color-mix(in srgb, var(--ui-color-bg-folder-ring) 35%, transparent));
 }
 
-.cp-carpeta--brand { --cp-color: var(--ui-color-bg-fill-brand-default); }
-.cp-carpeta--danger { --cp-color: var(--ui-color-bg-fill-danger-default); }
-.cp-carpeta--success { --cp-color: var(--ui-color-bg-fill-success-default); }
-.cp-carpeta--warning { --cp-color: var(--ui-color-bg-fill-warning-default); }
-.cp-carpeta--info { --cp-color: var(--ui-color-bg-fill-info-default); }
-
-/* Zona de color: llega por debajo del cuerpo para que la curva no deje huecos. */
-.cp-zona {
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 62%;
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--cp-color) 75%, var(--cp-blanco)) 0%,
-    var(--cp-color) 70%
-  );
-}
-
-/* Hojas: hasta 3, en la mitad derecha, ancladas abajo (la base queda tras el cuerpo). */
-.cp-hojas {
+/* Parte trasera con pestaña: azul de OBP. */
+.cp-trasera {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--cp-azul);
+  pointer-events: none;
+}
+
+/* Hojas: hasta 3, dentro de la parte trasera; asoman por arriba del frente (la base queda detrás del vidrio). */
+.cp-hojas {
+  position: absolute;
+  inset: 21% 4% 0 4%;
+  overflow: hidden;
+  border-radius: var(--ui-radius-16) var(--ui-radius-16) 0 0;
 }
 
 .cp-hoja {
   position: absolute;
-  top: 18%;
-  width: 30%;
+  top: 5%;
+  width: 32%;
   aspect-ratio: 3 / 4;
   display: flex;
   flex-direction: column;
@@ -81,9 +78,9 @@
   transition: transform var(--ui-motion-fast) ease-out;
 }
 
-.cp-hoja--1 { left: 42%; transform: rotate(-14deg); }
-.cp-hoja--2 { left: 53%; transform: rotate(-4deg); }
-.cp-hoja--3 { left: 64%; transform: rotate(8deg); }
+.cp-hoja--1 { left: 14%; transform: rotate(-10deg); }
+.cp-hoja--2 { left: 34%; transform: rotate(-1deg); }
+.cp-hoja--3 { left: 54%; transform: rotate(8deg); }
 
 .cp-hoja-img {
   position: absolute;
@@ -105,25 +102,54 @@
 .cp-hoja-linea:nth-child(2) { width: 80%; }
 .cp-hoja-linea:nth-child(3) { width: 60%; }
 
-/* Cuerpo oscuro con la curva (pestaña) hacia la derecha. */
-.cp-forma {
+/* Frente de vidrio esmerilado: cubre la parte baja y difumina las hojas que quedan detrás. */
+.cp-frente {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  fill: var(--ui-color-bg-folder-body);
-  pointer-events: none;
-}
-
-.cp-cuerpo {
-  position: absolute;
-  inset: 55% 0 0 0;
+  inset: 44% 0 0 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  gap: var(--ui-space-2);
+  justify-content: space-between;
   box-sizing: border-box;
-  padding: var(--ui-space-8) var(--ui-space-16) var(--ui-space-12);
+  padding: var(--ui-space-12) var(--ui-space-16) var(--ui-space-20);
+  border-radius: var(--ui-radius-24);
+  background: color-mix(in srgb, color-mix(in srgb, var(--cp-azul) 45%, var(--ui-color-bg-folder-body)) 78%, transparent);
+  border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) color-mix(in srgb, var(--ui-color-text-folder) 14%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  backdrop-filter: blur(14px) saturate(120%);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ui-color-text-folder) 8%, transparent);
+}
+
+/* Pastilla de estado arriba a la derecha (como la fecha del diseño de referencia). */
+.cp-estado {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-end;
+  gap: var(--ui-space-6);
+  padding: var(--ui-space-4) var(--ui-space-10);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) color-mix(in srgb, var(--ui-color-text-folder) 16%, transparent);
+  border-radius: var(--ui-radius-control-pill);
+  background: color-mix(in srgb, var(--ui-color-text-folder) 10%, transparent);
+  color: var(--ui-color-text-folder);
+  font: var(--ui-font-body-xs-medium);
+  white-space: nowrap;
+}
+
+.cp-estado--pendiente svg { color: var(--ui-color-icon-warning-default); }
+.cp-estado--listo svg { color: var(--ui-color-icon-success-default); }
+.cp-estado--neutro svg { color: var(--ui-color-text-folder-secondary); }
+
+.cp-cuerpo {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+.cp-textos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
   min-width: 0;
 }
 
@@ -140,31 +166,35 @@
   color: var(--ui-color-text-folder-secondary);
 }
 
-.cp-pie {
-  display: flex;
-  align-items: center;
-  gap: var(--ui-space-6);
-  margin-top: var(--ui-space-4);
-  font: var(--ui-font-body-xs-regular);
-  color: var(--ui-color-text-folder-secondary);
+.cp-total {
+  flex: none;
+  font: var(--ui-font-body-sm-medium);
+  color: var(--ui-color-text-folder);
+  white-space: nowrap;
 }
 
-/* Pastilla "Ejemplo" dentro de la zona de color, arriba a la izquierda. */
-.cp-ejemplo {
+/* Asa centrada abajo. */
+.cp-asa {
   position: absolute;
-  top: var(--ui-space-16);
-  left: var(--ui-space-16);
-  z-index: 1;
+  bottom: var(--ui-space-8);
+  left: 50%;
+  width: 18%;
+  height: var(--ui-space-4);
+  border-radius: var(--ui-radius-control-pill);
+  background: color-mix(in srgb, var(--ui-color-text-folder) 22%, transparent);
+  transform: translateX(-50%);
 }
 
-a.cp-carpeta:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--ui-shadow-4);
-}
+a.cp-carpeta:hover { transform: translateY(-4px); }
 
-a.cp-carpeta:hover .cp-hoja--1 { transform: translateX(-4px) rotate(-20deg); }
-a.cp-carpeta:hover .cp-hoja--2 { transform: rotate(-5deg); }
-a.cp-carpeta:hover .cp-hoja--3 { transform: translateX(4px) rotate(14deg); }
+a.cp-carpeta:hover .cp-hoja--1 { transform: translate(-6px, -4px) rotate(-16deg); }
+a.cp-carpeta:hover .cp-hoja--2 { transform: translateY(-6px) rotate(-2deg); }
+a.cp-carpeta:hover .cp-hoja--3 { transform: translate(6px, -4px) rotate(14deg); }
+
+a.cp-carpeta:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
 
 .cp-carpeta.is-ejemplo { cursor: default; }
 
@@ -217,14 +247,13 @@ a.cp-carpeta:hover .cp-hoja--3 { transform: translateX(4px) rotate(14deg); }
   text-overflow: ellipsis;
 }
 
-/* Pie: nombre y vigencia a la izquierda, botón "Fases" a la derecha (rejilla de 2 columnas). */
+/* Cuerpo: nombre y vigencia. */
 .cp-tarjeta-cuerpo {
   display: grid;
-  flex: 1;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "nombre pie"
-    "fecha  pie";
+    "nombre"
+    "fecha";
   align-content: center;
   align-items: center;
   column-gap: var(--ui-space-12);
@@ -264,127 +293,91 @@ a.cp-carpeta:hover .cp-hoja--3 { transform: translateX(4px) rotate(14deg); }
   background: var(--ui-color-bg-fill-brand-default);
 }
 
-.cp-tarjeta-pie {
-  grid-area: pie;
+/* Campañas de una marca: los artes suelen ser 16:9, así que la columna es más ancha que la de las carpetas. */
+.cp-rejilla--campanas { grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); }
+
+.cp-tarjeta--boton .cp-tarjeta-imagen { aspect-ratio: 16 / 9; }
+
+/* Tarjeta de campaña: la parte de arriba (arte, nombre, vigencia) y "Ver campaña" abren el modal de
+   secciones (ModalCampana); en medio va el ejecutivo de IMJ con sus enlaces. */
+.cp-tarjeta--boton {
+  transition: box-shadow var(--ui-motion-fast) ease-out, transform var(--ui-motion-fast) ease-out, border-color var(--ui-motion-fast) ease-out;
+}
+
+.cp-tarjeta--boton:hover {
+  border-color: var(--ui-color-border-brand);
+  box-shadow: var(--ui-shadow-4);
+  transform: translateY(-2px);
+}
+
+.cp-tarjeta-principal {
   display: flex;
-  justify-content: flex-end;
-}
-
-/* Tarjeta estrecha (columnas angostas): el botón baja a su propia fila, alineado a la izquierda. */
-@container cp-tarjeta (max-width: 260px) {
-  .cp-tarjeta-cuerpo {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "nombre"
-      "fecha"
-      "pie";
-  }
-
-  .cp-tarjeta-pie {
-    justify-content: flex-start;
-    padding-top: var(--ui-space-8);
-  }
-}
-
-/* Botón "Fases": píldora oscura en tema claro y clara en tema oscuro, para contrastar con la tarjeta. */
-.cp-tarjeta .cp-tarjeta-boton {
-  --_bg: var(--ui-color-bg-folder-boton);
-  --_bg-hover: color-mix(in srgb, var(--ui-color-bg-folder-boton) 85%, var(--ui-color-text-folder-boton));
-  --_bg-pressed: var(--_bg-hover);
-  --_bg-disabled: var(--ui-color-bg-folder-boton);
-  --_border: transparent;
-  --_fg: var(--ui-color-text-folder-boton);
-  --_fg-disabled: var(--ui-color-text-folder-boton);
-  --_icon: var(--ui-color-text-folder-boton);
-  --_icon-disabled: var(--ui-color-text-folder-boton);
-
-  height: var(--ui-space-40);
-  padding: 0 var(--ui-space-16);
+  flex-direction: column;
+  gap: var(--cp-tarjeta-marco);
+  padding: 0;
   border: 0;
-  border-radius: var(--ui-radius-control-pill);
-  font: var(--ui-font-body-sm-semibold);
+  border-radius: calc(var(--cp-tarjeta-radio) - var(--ui-space-8));
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
-.cp-tarjeta .cp-tarjeta-boton:focus-visible {
+.cp-tarjeta-principal:focus-visible,
+.cp-tarjeta-abrir:focus-visible {
   outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
   outline-offset: var(--ui-focus-ring-offset);
 }
 
-.cp-tarjeta .cp-tarjeta-boton:disabled {
-  opacity: 0.5;
-}
+.cp-tarjeta--boton .cp-tarjeta-imagen,
+.cp-tarjeta--boton .cp-tarjeta-nombre { display: block; }
 
-@media (prefers-reduced-motion: reduce) {
-  .cp-tarjeta .cp-tarjeta-boton { transition: none; }
-}
+.cp-tarjeta--boton .cp-tarjeta-fecha { display: flex; }
 
-/* El Popover se posiciona contra la tarjeta (ancla estática) y toma su ancho, para que en
-   columnas estrechas o en la primera columna no se salga de la pantalla. */
-.cp-tarjeta-pie .ui-popover-anchor { position: static; }
-
-.cp-tarjeta-pie .ui-popover {
-  left: 0;
-  right: 0;
-  width: auto;
-  max-width: none;
-  transform: none;
-}
-
-/* Lista de fases dentro del Popover. */
-.cp-fases {
-  display: flex;
-  flex-direction: column;
-  gap: var(--ui-space-2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.cp-fase {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ui-space-12);
-  min-height: var(--ui-size-control-md);
-  padding: var(--ui-space-8) var(--ui-space-12);
-  border-radius: var(--ui-radius-8);
-  color: var(--ui-color-text-primary);
-  text-decoration: none;
-  font: var(--ui-font-body-sm-semibold);
-}
-
-a.cp-fase:hover { background: var(--ui-color-bg-surface-hover); }
-
-.cp-fase-nombre {
-  min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.cp-fase-estado {
+/* "Ver campaña": píldora oscura a todo el ancho (contrasta con la tarjeta en ambos temas).
+   La flecha avanza al pasar el cursor por la tarjeta. */
+.cp-tarjeta-abrir {
   display: inline-flex;
-  flex: none;
   align-items: center;
-  gap: var(--ui-space-4);
-  font: var(--ui-font-body-sm-regular);
-  color: var(--ui-color-text-secondary);
+  justify-content: center;
+  gap: var(--ui-space-8);
+  width: 100%;
+  height: var(--ui-space-40);
+  margin-top: auto;
+  border: 0;
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-folder-boton);
+  color: var(--ui-color-text-folder-boton);
+  font: var(--ui-font-body-sm-semibold);
+  cursor: pointer;
 }
 
-.cp-fase-check { color: var(--ui-color-icon-success-default); }
-
-.cp-fase.is-bloqueada {
-  color: var(--ui-color-text-disabled);
-  cursor: not-allowed;
+.cp-tarjeta-abrir__flecha {
+  transition: transform var(--ui-motion-fast) ease-out;
 }
 
-.cp-fase.is-bloqueada .cp-fase-estado { color: var(--ui-color-text-disabled); }
+.cp-tarjeta--boton:hover .cp-tarjeta-abrir__flecha { transform: translateX(3px); }
 
 @media (prefers-reduced-motion: reduce) {
   .cp-carpeta,
-  .cp-hoja { transition: none; }
+  .cp-hoja,
+  .cp-tarjeta--boton,
+  .cp-tarjeta-abrir__flecha { transition: none; }
+  .cp-tarjeta--boton:hover { transform: none; }
+  .cp-tarjeta--boton:hover .cp-tarjeta-abrir__flecha { transform: none; }
   a.cp-carpeta:hover { transform: none; }
-  a.cp-carpeta:hover .cp-hoja--1 { transform: rotate(-14deg); }
-  a.cp-carpeta:hover .cp-hoja--2 { transform: rotate(-4deg); }
+  a.cp-carpeta:hover .cp-hoja--1 { transform: rotate(-10deg); }
+  a.cp-carpeta:hover .cp-hoja--2 { transform: rotate(-1deg); }
   a.cp-carpeta:hover .cp-hoja--3 { transform: rotate(8deg); }
+}
+
+/* Celular: las carpetas ocupan todo el ancho y son más bajas, para ver más de una por pantalla. */
+@media (max-width: 600px) {
+  .cp-rejilla:not(.cp-rejilla--tarjetas) { gap: var(--ui-space-16); }
+
+  .cp-carpeta {
+    max-width: none;
+    aspect-ratio: 3 / 2;
+  }
 }

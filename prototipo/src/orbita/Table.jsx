@@ -105,7 +105,10 @@ export function Table({
             {rows.length === 0 && (
               <tr className="ui-table__row">
                 <td className="ui-table__td ui-table__empty" colSpan={columns.length + (selectable ? 1 : 0)}>
-                  {emptyMessage}
+                  <span className="ui-table__empty-contenido">
+                    <span className="ui-table__empty-icono" aria-hidden="true"><Icon name="inbox" size={20} /></span>
+                    {emptyMessage}
+                  </span>
                 </td>
               </tr>
             )}

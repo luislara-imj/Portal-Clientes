@@ -8,7 +8,7 @@
 .tt {
   position: relative;
   /* 24 (arriba) + 64 (header) + 24 (separación) + 24 (abajo) */
-  height: calc(100vh - var(--ui-space-24) * 3 - var(--ui-space-64));
+  height: calc(100vh - var(--ui-space-24) * 3 - var(--ui-space-64) - var(--pg-pie, 0px));
   min-height: 480px;
   min-width: 0;
 }

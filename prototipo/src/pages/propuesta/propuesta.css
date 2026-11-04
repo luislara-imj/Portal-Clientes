@@ -97,6 +97,10 @@
 /* El margen baja el inicio del panel hasta el borde superior del panel blanco (bajo las pestañas). */
 .pp-cuerpo > .mc-lateral { position: static; display: flex; flex-direction: column; margin-top: 42px; }
 .pp-cuerpo > .mc-lateral > * { flex: 1; }
+@media (min-width: 1025px) {
+  .pp-cuerpo > .mc-lateral { height: calc(100vh - var(--ui-space-24) * 3 - var(--ui-space-64) - var(--pg-pie, 0px) - 42px); min-height: 378px; }
+  .pp-cuerpo > .mc-lateral > * { min-height: 0; }
+}
 
 .pp-panel {
   display: flex;
@@ -170,15 +174,6 @@
   gap: var(--ui-space-8);
 }
 
-.pp-vacio {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--ui-space-8);
-  margin: 0;
-  padding: var(--ui-space-24) 0;
-}
-
 /* Vista tabla: "¿Lo incluyes?" y la clave quedan fijas; el resto se desplaza dentro del contenedor. */
 .pp-tabla { padding: 0; border: 0; }
 
@@ -193,6 +188,23 @@
 .pp-tabla .ui-table__table .is-key:first-child + .is-key { left: var(--pp-col-incluye); }
 
 .pp-clave { font: var(--ui-font-body-sm-bold); letter-spacing: var(--ui-type-body-sm-tracking); }
+
+.pp-clave--enlace {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ui-color-text-link-default);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pp-clave--enlace:hover { color: var(--ui-color-text-link-hover); text-decoration: underline; }
+
+.pp-clave--enlace:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+  border-radius: var(--ui-radius-4);
+}
 
 .pp-recorte {
   display: inline-block;
@@ -210,24 +222,21 @@
   }
 }
 
-/* Vista tarjetas: rejilla y tarjeta de campaña (cp-rejilla--tarjetas, cp-tarjeta en carpetas.css).
-   Aquí solo lo propio del medio: rejilla, imagen 16:9, clave completa, selección, precio e interacción. */
+/* Vista tarjetas: rejilla y marco de la tarjeta de campaña (cp-rejilla--tarjetas, cp-tarjeta en carpetas.css).
+   Aquí lo propio del medio: imagen 16:9 que abre el detalle, clave, datos clave y dos acciones
+   (Incluir / Detalles). */
 
-/* Interactiva: cursor de mano y elevación suave; en consulta no hay hover. */
+.pp-rejilla {
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+}
+
 .pp-tarjeta {
-  transition: box-shadow var(--ui-motion-fast) ease-out, border-color var(--ui-motion-fast) ease-out;
+  transition: box-shadow var(--ui-motion-fast) ease-out, border-color var(--ui-motion-fast) ease-out, background-color var(--ui-motion-fast) ease-out;
 }
 
-.pp-tarjeta--interactiva { cursor: pointer; }
+.pp-tarjeta:hover { box-shadow: var(--ui-shadow-4); }
 
-.pp-tarjeta--interactiva:hover { box-shadow: var(--ui-shadow-4); }
-
-.pp-tarjeta:focus-visible {
-  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
-  outline-offset: var(--ui-focus-ring-offset);
-}
-
-/* Sí: borde de marca de 2 px (el segundo píxel va por dentro para no mover el contenido) y fondo sutil. */
+/* Incluido: borde de marca de 2 px (el segundo píxel va por dentro para no mover el contenido) y fondo sutil. */
 .cp-tarjeta.pp-tarjeta--si {
   border-color: var(--ui-color-border-brand);
   background: var(--ui-color-bg-surface-brand-default);
@@ -236,39 +245,68 @@
     var(--ui-shadow-3);
 }
 
-.cp-tarjeta.pp-tarjeta--si.pp-tarjeta--interactiva:hover {
+.cp-tarjeta.pp-tarjeta--si:hover {
   box-shadow:
     inset 0 0 0 calc(var(--ui-stroke-width-2) - var(--ui-stroke-width-1)) var(--ui-color-border-brand),
     var(--ui-shadow-4);
 }
 
-/* Rejilla de medios: columnas de 280 px mínimo para que la clave se lea completa. */
-.pp-rejilla {
-  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+/* Imagen: botón que abre el detalle; al pasar el cursor aparece "Ver detalles". */
+.cp-tarjeta-imagen.pp-tarjeta-imagen {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  font: inherit;
 }
 
-/* Ilustración del medio en 16:9 a todo el ancho (la tarjeta de campaña sigue en 1:1). */
-.cp-tarjeta-imagen.pp-tarjeta-imagen {
-  aspect-ratio: 16 / 9;
+.pp-tarjeta-imagen:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
 }
 
 .pp-tarjeta-imagen .im {
   position: absolute;
   inset: 0;
   object-fit: cover;
+  transition: transform var(--ui-motion-base) ease-out;
 }
 
-/* Clave completa: salta de línea en lugar de cortarse con ellipsis. */
-.cp-tarjeta-nombre.pp-tarjeta-clave {
-  overflow: visible;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  text-overflow: clip;
+.pp-tarjeta-imagen:hover .im { transform: scale(1.04); }
+
+.pp-tarjeta-ver {
+  position: absolute;
+  bottom: var(--ui-space-12);
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  padding: var(--ui-space-6) var(--ui-space-12);
+  border-radius: var(--ui-radius-control-pill);
+  background: color-mix(in srgb, var(--ui-color-bg-fill-default) 90%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--ui-shadow-2);
+  color: var(--ui-color-text-brand-default);
+  font: var(--ui-font-body-xs-semibold);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, var(--ui-space-4));
+  transition: opacity var(--ui-motion-fast) ease-out, transform var(--ui-motion-fast) ease-out;
+  pointer-events: none;
 }
 
-/* Check de selección: misma posición que el badge de estatus de la campaña (12 px);
-   contorno blanco de 2 px (icon-on-color: blanco en ambos temas) para distinguirse sobre
-   cualquier ilustración. */
+.pp-tarjeta-imagen:hover .pp-tarjeta-ver,
+.pp-tarjeta-imagen:focus-visible .pp-tarjeta-ver {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Check de selección: contorno blanco de 2 px para distinguirse sobre cualquier ilustración. */
 .pp-tarjeta-check {
   position: absolute;
   top: var(--ui-space-12);
@@ -284,16 +322,14 @@
   background: var(--ui-color-bg-fill-brand-default);
   color: var(--ui-color-icon-on-color);
   pointer-events: none;
+  animation: pp-check-pop var(--ui-motion-base) cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Plaza o nombre en una sola línea con ellipsis (el punto de marca lo pone cp-tarjeta-fecha). */
-.pp-tarjeta-plaza-texto {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+@keyframes pp-check-pop {
+  from { transform: scale(0.4); opacity: 0; }
 }
 
-/* Precio con descuento: Tag de marca (accent) de Órbita; solo visual (la tarjeta es el control). */
+/* Precio con descuento: Tag de marca (accent); solo visual. */
 .pp-tarjeta-precio {
   position: absolute;
   top: var(--ui-space-12);
@@ -301,34 +337,254 @@
   pointer-events: none;
 }
 
-/* Tarjeta seleccionada: el tag del precio pasa a superficie blanca para no confundirse con el fondo de marca. */
 .pp-tarjeta--si .pp-tarjeta-precio { background: var(--ui-color-bg-fill-default); }
 
-@media (prefers-reduced-motion: reduce) {
-  .pp-tarjeta { transition: none; }
+.pp-tarjeta-cuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  padding: 0 var(--ui-space-4);
 }
 
-/* Tarjeta lateral "Propuesta de medios" (estilo de Acciones pendientes) */
+/* Clave completa: salta de línea en lugar de cortarse. */
+.pp-tarjeta-clave {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font: var(--ui-font-body-lg-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.pp-tarjeta-nombre {
+  margin: 0;
+  overflow: hidden;
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-secondary);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pp-tarjeta-datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-4);
+  margin: var(--ui-space-8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pp-tarjeta-datos li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+  max-width: 100%;
+  padding: var(--ui-space-2) var(--ui-space-8);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-secondary-default);
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-xs-medium);
+}
+
+.pp-tarjeta-datos li span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pp-tarjeta-datos svg { flex: none; color: var(--ui-color-icon-brand-default); }
+
+.pp-tarjeta--si .pp-tarjeta-datos li { background: var(--ui-color-bg-surface-default); }
+
+/* Acciones: Incluir ocupa el espacio y Detalles queda a la derecha. */
+.pp-tarjeta-acciones {
+  display: flex;
+  gap: var(--ui-space-8);
+  padding: var(--ui-space-4);
+}
+
+.pp-tarjeta-acciones > :first-child { flex: 1; }
+
+.pp-tarjeta-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  font: var(--ui-font-body-sm-semibold);
+  color: var(--ui-color-text-secondary);
+}
+
+.pp-tarjeta-estado--si { color: var(--ui-color-text-brand-default); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-tarjeta,
+  .pp-tarjeta-imagen .im,
+  .pp-tarjeta-ver { transition: none; }
+  .pp-tarjeta-check { animation: none; }
+}
+
+/* Tarjeta lateral "Tu selección" (estilo de Acciones pendientes): sumatoria que se actualiza al incluir medios.
+   El cuerpo se desplaza si no cabe; la acción de confirmar queda siempre visible abajo. */
 .pp-lateral {
   display: flex;
   flex-direction: column;
-  gap: var(--ui-space-16);
+  gap: var(--ui-space-12);
+  min-height: 0;
 }
 
-.pp-lateral__datos {
+.pp-lateral__cuerpo {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: var(--ui-space-12);
-  padding-top: var(--ui-space-12);
+  gap: var(--ui-space-16);
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0 calc(var(--ui-space-8) * -1);
+  padding: var(--ui-space-12) var(--ui-space-8) var(--ui-space-4);
   border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
 }
 
-.pp-lateral .pp-dato--avance { min-width: 0; }
+.pp-lateral__bloque {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+}
+
+.pp-lateral__fila {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ui-space-8);
+}
+
+.pp-lateral__cuenta {
+  font: var(--ui-font-body-sm-regular);
+  color: var(--ui-color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.pp-lateral__cuenta strong {
+  font: var(--ui-font-body-lg-bold);
+  color: var(--ui-color-text-primary);
+}
+
+.pp-lateral__grande {
+  font: var(--ui-font-heading-h4);
+  color: var(--ui-color-text-brand-default);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.pp-lateral__ahorro {
+  font: var(--ui-font-body-xs-medium);
+  color: var(--ui-color-text-success-default);
+}
+
+.pp-lateral__ahorro s { color: var(--ui-color-text-tertiary); }
+
+.pp-lateral__kpis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-8);
+}
+
+.pp-lateral__kpi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-8) var(--ui-space-12);
+  border-radius: var(--ui-radius-12);
+  background: var(--ui-color-bg-surface-secondary-default);
+}
+
+.pp-lateral__kpi .pp-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-4);
+}
+
+.pp-lateral__kpi .pp-etiqueta svg { color: var(--ui-color-icon-brand-default); }
+
+.pp-lateral__kpi strong {
+  font: var(--ui-font-body-lg-bold);
+  color: var(--ui-color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.pp-lateral__tipos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pp-lateral__tipo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ui-space-8);
+  width: 100%;
+  padding: var(--ui-space-6) var(--ui-space-8);
+  border: 0;
+  border-radius: var(--ui-radius-8);
+  background: none;
+  color: var(--ui-color-text-primary);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.pp-lateral__tipo:hover { background: var(--ui-color-bg-surface-hover); }
+.pp-lateral__tipo.is-activo { background: var(--ui-color-bg-surface-brand-default); }
+
+.pp-lateral__tipo:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: 0;
+}
+
+.pp-lateral__tipo-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-size-control-xs);
+  height: var(--ui-size-control-xs);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-secondary-default);
+  color: var(--ui-color-icon-tertiary-default);
+}
+
+.pp-lateral__tipo.con-seleccion .pp-lateral__tipo-icono {
+  background: var(--ui-color-bg-fill-brand-default);
+  color: var(--ui-color-icon-on-color);
+}
+
+.pp-lateral__tipo-nombre {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font: var(--ui-font-body-sm-medium);
+}
+
+.pp-lateral__tipo-nombre small {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.pp-lateral__tipo-monto {
+  font: var(--ui-font-body-sm-semibold);
+  color: var(--ui-color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.pp-lateral__tipo.con-seleccion .pp-lateral__tipo-monto { color: var(--ui-color-text-primary); }
 
 .pp-lateral__accion {
   display: flex;
   flex-direction: column;
   gap: var(--ui-space-8);
+  padding-top: var(--ui-space-12);
+  border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
   text-align: center;
 }
 
@@ -345,7 +601,7 @@
 
   .pp.mc-principal {
     /* 24 (arriba) + 64 (header) + 24 (separación) + 24 (abajo) */
-    height: calc(100vh - var(--ui-space-24) * 3 - var(--ui-space-64));
+    height: calc(100vh - var(--ui-space-24) * 3 - var(--ui-space-64) - var(--pg-pie, 0px));
     min-height: 420px;
   }
 
@@ -366,5 +622,62 @@
     /* Aire para el anillo de foco y las sombras al desplazar */
     margin: calc(var(--ui-space-4) * -1);
     padding: var(--ui-space-4);
+  }
+}
+
+/* Barra compacta de "Tu selección": solo existe en celular. */
+.pp-lateral__movil { display: none; }
+
+/* Celular: "Tu selección" se vuelve barra inferior fija de app (cuenta, inversión, Resumen y la acción
+   principal); la sumatoria completa se consulta en el drawer de Resumen. */
+@media (max-width: 600px) {
+  .pg:has(.pp-cuerpo) { padding-bottom: 0; }
+
+  .pp-cuerpo > .mc-lateral {
+    position: sticky;
+    bottom: 0;
+    z-index: var(--ui-z-sticky, 100);
+    order: 1;
+    margin: 0 calc(var(--ui-space-16) * -1);
+  }
+
+  .pp-lateral.mc-acciones {
+    gap: var(--ui-space-8);
+    padding: var(--ui-space-12) calc(var(--ui-space-16) + env(safe-area-inset-right)) calc(var(--ui-space-12) + env(safe-area-inset-bottom)) calc(var(--ui-space-16) + env(safe-area-inset-left));
+    border-width: var(--ui-stroke-width-1) 0 0;
+    border-radius: var(--ui-radius-16) var(--ui-radius-16) 0 0;
+    box-shadow: var(--ui-shadow-5);
+  }
+
+  .pp-lateral .mc-acciones-cabecera,
+  .pp-lateral__cuerpo,
+  .pp-lateral__ayuda,
+  .pp-lateral__confirmada { display: none; }
+
+  .pp-lateral__movil {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ui-space-12);
+  }
+
+  .pp-lateral__movil-textos {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .pp-lateral__movil-textos strong { color: var(--ui-color-text-primary); }
+
+  .pp-lateral__movil-monto {
+    font: var(--ui-font-heading-h5);
+    color: var(--ui-color-text-brand-default);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .pp-lateral__accion {
+    padding-top: 0;
+    border-top: 0;
   }
 }

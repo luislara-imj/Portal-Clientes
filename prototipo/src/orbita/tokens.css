@@ -7,7 +7,8 @@
  */
 
 /* ---------- Colores OBP Light ---------- */
-:root {
+:root,
+[data-theme="light"] {
   color-scheme: light;
   --ui-color-bg-canvas-default: #f7f8fa;
   --ui-color-bg-canvas-inverse: #1e1f21;

@@ -101,3 +101,43 @@
   flex-direction: column;
   gap: var(--ui-space-8);
 }
+
+/* Celular: hoja inferior de app (alto según el contenido, máximo casi toda la pantalla) con agarradera. */
+@media (max-width: 600px) {
+  .ui-filter-panel__capa { align-items: flex-end; }
+
+  .ui-filter-panel {
+    width: 100%;
+    height: auto;
+    max-height: calc(100% - var(--ui-space-24) - env(safe-area-inset-top));
+    overflow: hidden;
+    border-left: 0;
+    border-radius: var(--ui-radius-16) var(--ui-radius-16) 0 0;
+    animation: ui-filter-panel-hoja var(--ui-motion-base) cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ui-filter-panel::before {
+    content: "";
+    position: absolute;
+    top: var(--ui-space-6);
+    left: 50%;
+    width: var(--ui-space-40);
+    height: var(--ui-space-4);
+    border-radius: var(--ui-radius-control-pill);
+    background: var(--ui-color-border-default);
+    transform: translateX(-50%);
+  }
+
+  .ui-filter-panel__cabecera { padding-top: var(--ui-space-20); }
+  .ui-filter-panel__titulo { font: var(--ui-font-heading-h5); }
+  .ui-filter-panel__cuerpo { min-height: 0; overflow-y: auto; }
+  .ui-filter-panel__pie { padding-bottom: calc(var(--ui-space-16) + env(safe-area-inset-bottom)); }
+}
+
+@keyframes ui-filter-panel-hoja {
+  from { transform: translateY(var(--ui-space-48)); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-filter-panel { animation: none !important; }
+}

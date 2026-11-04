@@ -9,7 +9,7 @@ import { formatoFecha } from './formato.js';
 
 export const redondear = (n) => Math.round((n + Number.EPSILON) * 100) / 100;
 
-const FASES_ACCION_CLIENTE = ['Propuesta lista', 'En selección', 'Cotización lista'];
+export const FASES_ACCION_CLIENTE = ['Propuesta lista', 'En selección', 'Cotización lista'];
 
 // --- Propuesta --------------------------------------------------------------
 

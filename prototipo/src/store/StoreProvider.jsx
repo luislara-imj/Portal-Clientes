@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useState } from 'react';
-import { CAMPANA_FLUJO, SEMILLA, campanaFija, medioFijo } from '../data/semilla.js';
+import { CAMPANA_FLUJO, SEMILLA, campanaFija, medioFijo, perfilInicial } from '../data/semilla.js';
 import { PLANTILLAS_REPORTE } from '../data/catalogos.js';
 import { reducer } from './reglas.js';
 import { almacenPorDefecto, cargarEstado, guardarEstado } from './persistencia.js';
@@ -39,11 +39,15 @@ export function StoreProvider({ children, almacen, reloj = Date.now, intervaloMs
     return () => clearInterval(id);
   }, [enCurso, reloj, intervaloMs]);
 
+  const perfil = estado.perfil ?? perfilInicial();
   const valor = useMemo(() => ({
     estado,
     ahora,
     semilla: SEMILLA,
-    cliente: SEMILLA.cliente,
+    // Cliente que se muestra en el portal (header, cotización, PDF): sale del perfil editable.
+    cliente: { nombre: perfil.usuario.nombre, empresa: perfil.empresa.nombreComercial || perfil.empresa.razonSocial },
+    perfil,
+    guardarPerfil: (nuevo) => dispatch({ type: 'guardarPerfil', perfil: nuevo }),
     campanas: SEMILLA.campanas,
     campana: (codigo) => campanaFija(codigo),
     medio: (codigo, medioId) => medioFijo(codigo, medioId),
@@ -69,7 +73,7 @@ export function StoreProvider({ children, almacen, reloj = Date.now, intervaloMs
     reportes: (codigo) => reportes(estado, codigo),
     resumenCampana: (codigo, t = ahora) => resumenCampana(estado, codigo, t),
     indicadores: (t = ahora) => indicadores(estado, t)
-  }), [estado, ahora, reloj]);
+  }), [estado, ahora, reloj, perfil]);
 
   return <StoreContext.Provider value={valor}>{children}</StoreContext.Provider>;
 }

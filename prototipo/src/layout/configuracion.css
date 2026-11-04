@@ -1,0 +1,192 @@
+/* Configuración de la cuenta (Drawer): vista previa, perfil y empresa. Solo tokens --ui-*. */
+.cfg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  padding: var(--ui-space-16);
+}
+
+/* Vista previa del chip del usuario en la barra superior. */
+.cfg-vista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+  padding: var(--ui-space-16);
+  border-radius: var(--ui-radius-16);
+  background: linear-gradient(135deg, var(--ui-color-bg-surface-brand-default), var(--ui-color-bg-surface-secondary-default));
+}
+
+.cfg-vista__etiqueta {
+  font: var(--ui-font-body-xs-semibold);
+  color: var(--ui-color-text-brand-default);
+}
+
+.cfg-vista__chip {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--ui-space-10);
+  padding: var(--ui-space-8) var(--ui-space-12);
+  border-radius: var(--ui-radius-12);
+  background: var(--ui-color-bg-surface-default);
+  box-shadow: var(--ui-shadow-2);
+}
+
+.cfg-vista__logo {
+  max-width: 96px;
+  height: var(--ui-space-28);
+  object-fit: contain;
+  padding-right: var(--ui-space-10);
+  border-right: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+}
+
+.cfg-vista__textos {
+  display: flex;
+  flex-direction: column;
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-tertiary);
+}
+
+.cfg-vista__textos strong {
+  font: var(--ui-font-body-xs-bold);
+  color: var(--ui-color-text-primary);
+}
+
+/* Secciones */
+.cfg-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-16);
+  padding: var(--ui-space-16);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-surface-card);
+  background: var(--ui-color-bg-surface-default);
+}
+
+.cfg-seccion__titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  margin: 0;
+  font: var(--ui-font-body-lg-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.cfg-seccion__titulo svg { color: var(--ui-color-icon-brand-default); }
+
+.cfg-campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-12) var(--ui-space-16);
+}
+
+.cfg-campo--ancho { grid-column: 1 / -1; }
+
+@media (max-width: 600px) {
+  .cfg-campos { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Carga de imagen: vista previa a la izquierda, textos y botones a la derecha. */
+.cfg-imagen {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-16);
+}
+
+.cfg-imagen__vista {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  background: var(--ui-color-bg-surface-secondary-default);
+  cursor: pointer;
+}
+
+.cfg-imagen__vista--foto {
+  width: var(--ui-space-80);
+  height: var(--ui-space-80);
+  border-radius: var(--ui-radius-control-pill);
+}
+
+.cfg-imagen__vista--foto img,
+.cfg-imagen__vista--foto .ui-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.cfg-imagen__vista--logo {
+  width: 136px;
+  height: var(--ui-space-80);
+  border-radius: var(--ui-radius-12);
+  background: var(--ui-color-bg-surface-default);
+}
+
+.cfg-imagen__vista--logo img {
+  max-width: calc(100% - var(--ui-space-16));
+  max-height: calc(100% - var(--ui-space-16));
+  object-fit: contain;
+}
+
+.cfg-imagen__vista:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+.cfg-imagen__vacio { color: var(--ui-color-icon-tertiary-default); }
+
+.cfg-imagen__camara {
+  position: absolute;
+  right: calc(var(--ui-space-2) * -1);
+  bottom: calc(var(--ui-space-2) * -1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-24);
+  height: var(--ui-space-24);
+  border: var(--ui-stroke-width-2) var(--ui-stroke-style-solid) var(--ui-color-bg-surface-default);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-fill-brand-default);
+  color: var(--ui-color-icon-on-color);
+}
+
+.cfg-imagen__textos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  min-width: 0;
+}
+
+.cfg-imagen__textos strong {
+  font: var(--ui-font-body-sm-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.cfg-imagen__ayuda {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.cfg-imagen__ayuda.is-error { color: var(--ui-color-text-danger-default); }
+
+.cfg-imagen__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-8);
+  margin-top: var(--ui-space-4);
+}
+
+.cfg-pie {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ui-space-12);
+}
+
+/* Celular: Cancelar y Guardar ocupan el ancho del pie, mitad y mitad. */
+@media (max-width: 600px) {
+  .cfg-pie > * { flex: 1; }
+}

@@ -152,12 +152,21 @@ const COLUMNAS = {
 /**
  * Columnas para <Table> de un tipo de medio.
  * renderSiNo(m): nodo del Switch Sí / No de la fila.
+ * onVerDetalles(id): la clave se vuelve un enlace que abre el detalle del medio.
  */
-export function columnasDe(tipo, renderSiNo) {
+export function columnasDe(tipo, renderSiNo, onVerDetalles) {
   const def = COLUMNAS[tipo];
+  const clave = (m) =>
+    onVerDetalles ? (
+      <button type="button" className="pp-clave pp-clave--enlace" onClick={() => onVerDetalles(m.id)} title="Ver detalles">
+        {claveDe(m)}
+      </button>
+    ) : (
+      <span className="pp-clave">{claveDe(m)}</span>
+    );
   return [
     { key: 'incluye', header: '¿Lo incluyes?', sticky: true, render: renderSiNo },
-    { key: 'clave', header: def.clave, sticky: true, render: (m) => <span className="pp-clave">{claveDe(m)}</span> },
+    { key: 'clave', header: def.clave, sticky: true, render: clave },
     ...def.resto
   ];
 }

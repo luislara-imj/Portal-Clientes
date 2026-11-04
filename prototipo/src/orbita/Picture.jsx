@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Icon } from './Icon.jsx';
 import { cx } from './cx.js';
 import './Picture.css';
@@ -8,8 +9,12 @@ import './Picture.css';
  * Sin src: fondo bg/fill/tertiary con ícono `image` 32 (icon/disabled).
  * onClick: la imagen se vuelve botón (p. ej. abrir Lightbox; pasa `label`).
  * fill: ocupa el alto del contenedor en lugar de usar la proporción.
+ * vacio: nodo que reemplaza el ícono cuando no hay imagen. Si la imagen no carga se muestra lo mismo.
  */
-export function Picture({ src, alt = '', ratio = '16:9', radius = 'sm', shadow = false, stroke = false, onClick, label, fill = false, className }) {
+export function Picture({ src, alt = '', ratio = '16:9', radius = 'sm', shadow = false, stroke = false, onClick, label, fill = false, vacio, className }) {
+  // Imagen rota: se recuerda qué src falló para mostrar el vacío en su lugar.
+  const [fallida, setFallida] = useState(null);
+  const mostrar = src && fallida !== src;
   const classes = cx(
     'ui-picture',
     `ui-picture--${ratio === '1:1' ? 'square' : 'wide'}`,
@@ -20,11 +25,11 @@ export function Picture({ src, alt = '', ratio = '16:9', radius = 'sm', shadow =
     onClick && 'ui-picture--button ui-focus-ring',
     className
   );
-  const content = src ? (
-    <img className="ui-picture__img" src={src} alt={onClick ? '' : alt} />
+  const content = mostrar ? (
+    <img className="ui-picture__img" src={src} alt={onClick ? '' : alt} onError={() => setFallida(src)} />
   ) : (
     <span className="ui-picture__empty" role={onClick || !alt ? undefined : 'img'} aria-label={onClick ? undefined : alt || undefined}>
-      <Icon name="image" size={32} />
+      {vacio ?? <Icon name="image" size={32} />}
     </span>
   );
   if (onClick) {

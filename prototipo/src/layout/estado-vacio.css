@@ -1,0 +1,167 @@
+/* Estados vacíos y de error (EstadoVacio). Solo tokens --ui-*.
+   El tono cambia los colores de la ilustración: --ev-fondo (círculo), --ev-anillo (halo) y --ev-icono. */
+.ev {
+  --ev-fondo: var(--ui-color-bg-surface-brand-default);
+  --ev-icono: var(--ui-color-icon-brand-default);
+  --ev-marca-fondo: var(--ui-color-bg-fill-brand-default);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-16);
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--ui-space-40) var(--ui-space-16);
+  text-align: center;
+  animation: ev-entrada var(--ui-motion-base) ease-out;
+}
+
+.ev--bloqueado,
+.ev--espera {
+  --ev-fondo: var(--ui-color-bg-surface-secondary-default);
+  --ev-icono: var(--ui-color-icon-tertiary-default);
+  --ev-marca-fondo: var(--ui-color-icon-tertiary-default);
+}
+
+.ev--espera { --ev-marca-fondo: var(--ui-color-icon-warning-default); }
+
+.ev--error {
+  --ev-fondo: var(--ui-color-bg-surface-danger-default);
+  --ev-icono: var(--ui-color-icon-danger-default);
+  --ev-marca-fondo: var(--ui-color-icon-danger-default);
+}
+
+/* Pantalla: ocupa el alto disponible y centra el contenido. */
+.ev--pagina {
+  flex: 1;
+  min-height: min(440px, 60vh);
+  padding: var(--ui-space-48) var(--ui-space-24);
+}
+
+.ev--compacto {
+  gap: var(--ui-space-12);
+  padding: var(--ui-space-24) var(--ui-space-12);
+}
+
+/* Ilustración: círculo con el ícono, halo de dos anillos y marca en la esquina. */
+.ev-ilustracion {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  padding: var(--ui-space-12);
+  border-radius: var(--ui-radius-control-pill);
+  background: radial-gradient(circle, var(--ev-fondo) 55%, transparent 56%), radial-gradient(circle, transparent 66%, var(--ev-fondo) 67%, transparent 70%);
+}
+
+.ev-ilustracion::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--ui-stroke-width-1) dashed var(--ui-color-border-default);
+  border-radius: inherit;
+}
+
+.ev-circulo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-80);
+  height: var(--ui-space-80);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ev-fondo);
+  color: var(--ev-icono);
+  box-shadow: inset 0 0 0 var(--ui-space-8) var(--ui-color-bg-surface-default);
+}
+
+.ev-marca {
+  position: absolute;
+  right: var(--ui-space-4);
+  bottom: var(--ui-space-4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-32);
+  height: var(--ui-space-32);
+  border: var(--ui-stroke-width-2) var(--ui-stroke-style-solid) var(--ui-color-bg-surface-default);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ev-marca-fondo);
+  color: var(--ui-color-icon-on-color);
+  box-shadow: var(--ui-shadow-2);
+}
+
+.ev--compacto .ev-ilustracion { padding: var(--ui-space-8); }
+.ev--compacto .ev-circulo { width: var(--ui-space-56); height: var(--ui-space-56); box-shadow: inset 0 0 0 var(--ui-space-6) var(--ui-color-bg-surface-default); }
+.ev--compacto .ev-marca { width: var(--ui-space-24); height: var(--ui-space-24); right: 0; bottom: 0; }
+
+/* Textos */
+.ev-textos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ui-space-6);
+  max-width: 52ch;
+}
+
+.ev-codigo {
+  font: var(--ui-font-heading-h1);
+  letter-spacing: var(--ui-type-heading-h1-tracking);
+  color: var(--ui-color-text-brand-default);
+  font-variant-numeric: tabular-nums;
+}
+
+.ev-titulo {
+  margin: 0;
+  font: var(--ui-font-heading-h4);
+  letter-spacing: var(--ui-type-heading-h4-tracking);
+  color: var(--ui-color-text-primary);
+}
+
+.ev-descripcion {
+  margin: 0;
+  font: var(--ui-font-body-sm-regular);
+  letter-spacing: var(--ui-type-body-sm-tracking);
+  color: var(--ui-color-text-secondary);
+}
+
+.ev--compacto .ev-titulo { font: var(--ui-font-body-md-semibold); letter-spacing: normal; }
+.ev--compacto .ev-descripcion { font: var(--ui-font-body-xs-regular); }
+
+.ev-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ui-space-8) var(--ui-space-12);
+}
+
+.ev-nota {
+  margin: 0;
+  max-width: 52ch;
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-tertiary);
+}
+
+/* En tarjeta de pantalla: la tarjeta crece y centra el estado. */
+.ev-tarjeta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+@keyframes ev-entrada {
+  from { opacity: 0; transform: translateY(var(--ui-space-8)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ev { animation: none; }
+}
+
+/* Celular: menos aire y acciones a lo ancho. */
+@media (max-width: 600px) {
+  .ev--pagina { min-height: min(400px, 60vh); padding: var(--ui-space-32) var(--ui-space-8); }
+  .ev-titulo { font: var(--ui-font-heading-h5); }
+  .ev--pagina .ev-acciones,
+  .ev--seccion .ev-acciones { flex-direction: column; align-self: stretch; }
+  .ev--pagina .ev-acciones .ui-button,
+  .ev--seccion .ev-acciones .ui-button { width: 100%; }
+}

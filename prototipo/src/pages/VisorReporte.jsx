@@ -17,7 +17,7 @@ import './reportes/reportes.css';
 export default function VisorReporte() {
   const { codigo, periodo } = useParams();
   const s = useStore();
-  const nombre = s.reportes(codigo)?.lista.find((r) => r.id === periodo)?.nombre ?? periodo;
+  const nombre = s.reportes(codigo)?.lista.find((r) => r.id === periodo)?.nombre ?? 'Reporte no encontrado';
   return (
     <PaginaCampana fase="reportes" migasExtra={[{ label: nombre }]}>
       {(campana) => <ContenidoVisor campana={campana} periodo={periodo} />}
@@ -54,13 +54,13 @@ function ContenidoVisor({ campana, periodo }) {
   const plazas = useMemo(() => agruparPorPlazaYTipo(medios), [medios]);
 
   if (!reporte) {
-    return <ReportesBloqueados titulo="Reporte no encontrado" motivo="No existe un reporte para este periodo." accion={volver} />;
+    return <ReportesBloqueados tono="busqueda" titulo="No encontramos este reporte" motivo="No existe un reporte para este periodo. Revisa la lista de reportes de tu campaña." accion={volver} />;
   }
   if (!publicado) {
     const motivo = fase?.estado === 'bloqueada'
       ? fase.motivo
       : reporte.publicacion ? `Se publica el ${fechaCorta(reporte.publicacion)}.` : reporte.motivo;
-    return <ReportesBloqueados titulo={reporte.nombre} motivo={motivo} accion={volver} />;
+    return <ReportesBloqueados tono="espera" titulo={`${reporte.nombre} aún no se publica`} motivo={motivo} accion={volver} />;
   }
 
   const periodoTexto = reporte.periodoInicio && reporte.periodoFin

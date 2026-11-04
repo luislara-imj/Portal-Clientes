@@ -69,9 +69,3 @@ export const MARCAS_EJEMPLO = [
     ]
   }
 ];
-
-// Clave de color de Órbita para la carpeta en la posición `indice` (rota cada 5).
-const COLORES_MARCA = ['brand', 'danger', 'success', 'warning', 'info'];
-export function colorDeMarca(indice) {
-  return COLORES_MARCA[indice % COLORES_MARCA.length];
-}

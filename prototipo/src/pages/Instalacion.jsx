@@ -1,7 +1,10 @@
 import { useRef, useState } from 'react';
 import { Accordion, Card, Divider, Icon } from '../orbita';
+import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/index.js';
 import { PaginaCampana } from '../layout/PaginaCampana.jsx';
+import { EstadoVacio } from '../layout/EstadoVacio.jsx';
+import { rutaCampana } from '../layout/campanas.js';
 import { agrupar, resumir } from './instalacion/pasos.js';
 import {
   ICONO_PLAZA, ICONO_TIPO, Marcador, PanelLineaDeTiempo, TarjetaAvance, TarjetaSitio, textosMedio, useEsMovil
@@ -9,16 +12,19 @@ import {
 import '../layout/layout.css';
 import './instalacion/Instalacion.css';
 
-// Fase bloqueada (antes de aceptar la cotización): candado y motivo, sin columnas.
-function Bloqueada({ motivo }) {
+// Fase bloqueada (antes de aceptar la cotización): estado vacío común con candado y acceso a la cotización.
+function Bloqueada({ motivo, onIrCotizacion }) {
   return (
-    <Card as="section" padding="lg" className="ins-bloqueada" aria-labelledby="ins-bloq-t">
-      <span className="ins-bloqueada__icono">
-        <Icon name="lock" size={24} />
-      </span>
-      <h2 id="ins-bloq-t" className="pg-subtitulo">Instalación bloqueada</h2>
-      <p className="pg-texto">{motivo}</p>
-    </Card>
+    <EstadoVacio
+      tarjeta
+      tamano="pagina"
+      tono="bloqueado"
+      icono="tools"
+      titulo="La instalación aún no empieza"
+      descripcion={motivo}
+      acciones={onIrCotizacion ? [{ label: 'Ir a la cotización', icono: 'invoice', onClick: onIrCotizacion }] : []}
+      nota="En cuanto aceptes la cotización, aquí verás el avance de cada medio."
+    />
   );
 }
 
@@ -204,16 +210,22 @@ function Recorrido({ codigo, inst }) {
 
 function ContenidoInstalacion({ codigo }) {
   const s = useStore();
+  const navigate = useNavigate();
   const fase = s.fasesDeCampana(codigo).find((f) => f.clave === 'instalacion');
-  if (!fase || fase.estado === 'bloqueada') return <Bloqueada motivo={fase?.motivo || 'Acepta la cotización para iniciar la instalación.'} />;
+  if (!fase || fase.estado === 'bloqueada') return <Bloqueada motivo={fase?.motivo || 'Acepta la cotización para iniciar la instalación.'} onIrCotizacion={() => navigate(rutaCampana(codigo, 'cotizacion'))} />;
 
   const inst = s.instalacion(codigo);
   if (!inst || inst.total === 0) {
     return (
-      <Card as="section" padding="lg" aria-labelledby="ins-vacio-t">
-        <h2 id="ins-vacio-t" className="pg-subtitulo">Sin medios en instalación</h2>
-        <p className="pg-texto">Los medios aparecerán aquí cuando OBP programe su instalación.</p>
-      </Card>
+      <EstadoVacio
+        tarjeta
+        tamano="pagina"
+        tono="espera"
+        icono="tools"
+        titulo="Aún no hay medios programados"
+        descripcion="Los medios aparecerán aquí cuando OBP programe su instalación."
+        nota="Si tienes dudas sobre las fechas, contacta a tu ejecutivo de IMJ."
+      />
     );
   }
 

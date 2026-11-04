@@ -1,0 +1,102 @@
+/* Ejecutivo de IMJ responsable de la campaña (portada y tarjetas). Solo tokens --ui-*. */
+.ej {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-16);
+  min-width: 0;
+  padding: var(--ui-space-12) var(--ui-space-16);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-16);
+  background: var(--ui-color-bg-surface-secondary-default);
+}
+
+.ej-foto {
+  flex: none;
+  width: var(--ui-space-64);
+  height: var(--ui-space-64);
+  object-fit: cover;
+  border: var(--ui-stroke-width-2) var(--ui-stroke-style-solid) var(--ui-color-bg-surface-default);
+  border-radius: var(--ui-radius-control-pill);
+  box-shadow: var(--ui-shadow-2);
+}
+
+.ej-textos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.ej-etiqueta {
+  font: var(--ui-font-body-xs-semibold);
+  color: var(--ui-color-text-brand-default);
+}
+
+.ej-nombre {
+  overflow: hidden;
+  font: var(--ui-font-body-lg-semibold);
+  color: var(--ui-color-text-primary);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ej-puesto {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.ej-contacto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-4) var(--ui-space-16);
+  margin-top: var(--ui-space-4);
+}
+
+.ej-enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  min-width: 0;
+  border-radius: var(--ui-radius-4);
+  font: var(--ui-font-body-sm-medium);
+  color: var(--ui-color-text-link-default);
+  text-decoration: none;
+}
+
+.ej-enlace span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ej-enlace svg { flex: none; }
+
+.ej-enlace:hover { color: var(--ui-color-text-link-hover); text-decoration: underline; }
+
+.ej-enlace:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+/* Compacto (tarjeta de campaña): foto chica y contacto en dos líneas. */
+.ej--compacto {
+  gap: var(--ui-space-10);
+  padding: var(--ui-space-8) var(--ui-space-10);
+  border-radius: var(--ui-radius-12);
+}
+
+.ej--compacto .ej-foto {
+  width: var(--ui-space-40);
+  height: var(--ui-space-40);
+}
+
+.ej--compacto .ej-etiqueta { font: var(--ui-font-body-xs-medium); color: var(--ui-color-text-tertiary); }
+.ej--compacto .ej-nombre { font: var(--ui-font-body-sm-semibold); }
+
+.ej--compacto .ej-contacto {
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-2);
+}
+
+.ej--compacto .ej-enlace { font: var(--ui-font-body-xs-medium); }

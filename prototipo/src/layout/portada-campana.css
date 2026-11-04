@@ -1,0 +1,159 @@
+/* Portada de campaña única: arriba el arte 16:9 y la cabecera; abajo las secciones a todo el ancho.
+   Ocupa el ancho del topbar y exactamente el alto libre de la ventana (24 + header 64 + 24 + 24): no hay scroll.
+   Solo tokens --ui-*. */
+.pg:has(.pc) { padding-bottom: var(--ui-space-24); }
+
+.pc {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "arte cabecera"
+    "secciones secciones";
+  gap: var(--ui-space-24) var(--ui-space-40);
+  box-sizing: border-box;
+  height: calc(100vh - var(--ui-space-24) * 3 - var(--ui-space-64) - var(--pg-pie, 0px));
+  min-height: 520px;
+  padding: var(--ui-space-24);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: 28px;
+  background: var(--ui-color-bg-surface-default);
+  box-shadow: var(--ui-shadow-3);
+}
+
+/* Zona del arte: mide su alto y ancho para que el arte sea el 16:9 más grande que quepa. */
+.pc-arte-zona {
+  grid-area: arte;
+  min-width: 0;
+  min-height: 0;
+  container-type: size;
+}
+
+.pc-arte {
+  position: relative;
+  width: min(100cqw, 100cqh * 16 / 9);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--ui-radius-24);
+  background: var(--ui-color-bg-surface-secondary-default);
+}
+
+.pc-cabecera {
+  grid-area: cabecera;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--ui-space-8);
+  min-width: 0;
+}
+
+.pc-nombre {
+  margin: 0;
+  font: var(--ui-font-heading-h1);
+  font-size: clamp(28px, 2.6vw, 44px);
+  line-height: 1.15;
+  color: var(--ui-color-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.pc-vigencia {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  font: var(--ui-font-body-md-medium);
+  color: var(--ui-color-text-secondary);
+}
+
+.pc-vigencia svg { color: var(--ui-color-icon-brand-default); }
+
+.pc-ejecutivo { margin-top: var(--ui-space-12); max-width: 100%; }
+
+.pc-pregunta {
+  margin: var(--ui-space-16) 0 0;
+  font: var(--ui-font-heading-h4);
+  color: var(--ui-color-text-primary);
+}
+
+.pc-secciones { grid-area: secciones; min-width: 0; }
+
+/* Secciones en grande (SeccionesCampana grande). */
+.cm-secciones--grande {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-12);
+}
+
+.cm-secciones--grande .cm-opciones { gap: var(--ui-space-16); }
+
+.cm-secciones--grande .cm-opcion {
+  aspect-ratio: auto;
+  min-height: 0;
+  height: clamp(140px, 22vh, 220px);
+  gap: var(--ui-space-8);
+  padding: var(--ui-space-20) var(--ui-space-12);
+  border-radius: var(--ui-radius-24);
+}
+
+.cm-secciones--grande .cm-icono {
+  flex: none;
+  width: clamp(var(--ui-space-48), 8vh, var(--ui-space-80));
+  height: clamp(var(--ui-space-48), 8vh, var(--ui-space-80));
+  margin-bottom: var(--ui-space-8);
+  border-radius: var(--ui-radius-24);
+}
+
+.cm-secciones--grande .cm-icono svg { width: 36px; height: 36px; }
+
+.cm-secciones--grande .cm-nombre { font: var(--ui-font-body-lg-semibold); }
+
+.cm-estado-texto {
+  font: var(--ui-font-body-xs-medium);
+  color: var(--ui-color-text-secondary);
+}
+
+.cm-opcion.is-consulta .cm-estado-texto { color: var(--ui-color-text-success-default); }
+.cm-opcion.is-actual .cm-estado-texto { color: var(--ui-color-text-text-on-color); opacity: 0.85; }
+.cm-opcion.is-bloqueada .cm-estado-texto { color: var(--ui-color-text-disabled); }
+
+.cm-secciones--grande .cm-marca {
+  top: var(--ui-space-12);
+  right: var(--ui-space-12);
+  width: var(--ui-space-24);
+  height: var(--ui-space-24);
+}
+
+/* Tablet y celular: todo en una columna; el arte 16:9 a todo el ancho. Aquí sí puede haber scroll
+   si la pantalla es muy baja, pero los tamaños se ajustan para que en lo común quepa. */
+@media (max-width: 1024px) {
+  .pc {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "arte"
+      "cabecera"
+      "secciones";
+    gap: var(--ui-space-16);
+    height: auto;
+    min-height: 0;
+  }
+
+  .pc-arte-zona { container-type: inline-size; }
+  .pc-arte { width: 100%; }
+  .pc-pregunta { margin-top: var(--ui-space-8); }
+}
+
+@media (max-width: 600px) {
+  .pc { padding: var(--ui-space-12); border-radius: var(--ui-radius-24); }
+  .pc-arte { border-radius: var(--ui-radius-16); }
+  .pc-nombre { font: var(--ui-font-heading-h3); }
+  .pc-vigencia { font: var(--ui-font-body-sm-medium); }
+  .pc-pregunta { font: var(--ui-font-body-md-semibold); }
+  .cm-secciones--grande .cm-opciones { gap: var(--ui-space-8); }
+  .cm-secciones--grande .cm-icono { width: var(--ui-space-40); height: var(--ui-space-40); }
+  .cm-secciones--grande .cm-nombre { font: var(--ui-font-body-xs-semibold); }
+  .cm-secciones--grande .cm-opcion { height: auto; aspect-ratio: 1 / 1; padding: var(--ui-space-8); }
+  .cm-secciones--grande .cm-icono { margin-bottom: 0; }
+  .cm-secciones--grande .cm-icono svg { width: 20px; height: 20px; }
+  .cm-estado-texto { display: none; }
+}

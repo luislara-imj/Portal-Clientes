@@ -1,0 +1,144 @@
+/* Drawer de Órbita: panel lateral derecho (anatomía del panel de filtros, más ancho). */
+.ui-drawer__capa {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-layer-dialog-modal);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ui-drawer__fondo {
+  position: absolute;
+  inset: 0;
+  background: var(--ui-color-bg-overlay-default);
+  animation: ui-drawer-fondo var(--ui-motion-base) ease-out;
+}
+
+.ui-drawer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(480px, 100%);
+  height: 100%;
+  background: var(--ui-color-bg-canvas-default);
+  border-left: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+  box-shadow: var(--ui-shadow-5);
+  animation: ui-drawer-entrada 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ui-drawer--lg { width: min(640px, 100%); }
+
+.ui-drawer__cabecera {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-12);
+  padding: var(--ui-space-16);
+  background: var(--ui-color-bg-surface-default);
+  border-bottom: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+}
+
+.ui-drawer__icono {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-32);
+  height: var(--ui-space-32);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-brand-default);
+  color: var(--ui-color-icon-brand-default);
+}
+
+.ui-drawer__titulos {
+  flex: 1;
+  min-width: 0;
+}
+
+.ui-drawer__titulo {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font: var(--ui-font-heading-h5);
+  color: var(--ui-color-text-primary);
+}
+
+.ui-drawer__subtitulo {
+  margin: var(--ui-space-2) 0 0;
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.ui-drawer__acciones {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-4);
+}
+
+.ui-drawer__cuerpo {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ui-drawer__pie {
+  padding: var(--ui-space-12) var(--ui-space-16);
+  background: var(--ui-color-bg-surface-default);
+  border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+}
+
+@keyframes ui-drawer-entrada {
+  from { transform: translateX(48px); opacity: 0; filter: blur(2px); }
+  to { transform: none; opacity: 1; filter: none; }
+}
+
+@keyframes ui-drawer-fondo {
+  from { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-drawer,
+  .ui-drawer__fondo { animation: none; }
+}
+
+/* Celular: el drawer sube desde abajo como hoja de app, casi a pantalla completa, con su agarradera. */
+@media (max-width: 600px) {
+  .ui-drawer__capa { align-items: flex-end; }
+
+  .ui-drawer,
+  .ui-drawer--lg {
+    width: 100%;
+    height: calc(100% - var(--ui-space-24) - env(safe-area-inset-top));
+    overflow: hidden;
+    border-left: 0;
+    border-radius: var(--ui-radius-16) var(--ui-radius-16) 0 0;
+    animation-name: ui-drawer-hoja;
+  }
+
+  .ui-drawer::before {
+    content: "";
+    position: absolute;
+    top: var(--ui-space-6);
+    left: 50%;
+    z-index: 1;
+    width: var(--ui-space-40);
+    height: var(--ui-space-4);
+    border-radius: var(--ui-radius-control-pill);
+    background: var(--ui-color-border-default);
+    transform: translateX(-50%);
+  }
+
+  .ui-drawer__cabecera { padding-top: var(--ui-space-20); }
+  .ui-drawer__pie { padding-bottom: calc(var(--ui-space-12) + env(safe-area-inset-bottom)); }
+}
+
+@keyframes ui-drawer-hoja {
+  from { transform: translateY(var(--ui-space-48)); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* Celular: sin el ícono de la cabecera, el título tiene más espacio. */
+@media (max-width: 600px) {
+  .ui-drawer__icono { display: none; }
+  .ui-drawer__cabecera { gap: var(--ui-space-8); }
+}

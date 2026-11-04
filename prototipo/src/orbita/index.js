@@ -37,3 +37,4 @@ export { useFocusTrap } from './useFocusTrap.js';
 export { cx } from './cx.js';
 export { FileDropzone, FileItem } from './FileUploader.jsx';
 export { FilterPanel, FilterGroup } from './FilterPanel.jsx';
+export { Drawer } from './Drawer.jsx';

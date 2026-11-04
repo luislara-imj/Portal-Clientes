@@ -1,32 +1,4 @@
-/* Artes de la campaña (Google Drive simulado): fila en tarjetas y modal. */
-.ar-fila-bloque {
-  display: flex;
-  flex-direction: column;
-  gap: var(--ui-space-8);
-}
-
-.ar-fila {
-  display: flex;
-  align-items: center;
-  gap: var(--ui-space-8);
-  min-width: 0;
-  cursor: pointer;
-}
-
-.ar-fila__icono { flex: none; color: var(--ui-color-icon-secondary-default); }
-
-.ar-fila__texto {
-  flex: 1;
-  min-width: 0;
-  font: var(--ui-font-body-sm-semibold);
-  color: var(--ui-color-text-primary);
-}
-
-.ar-fila__estado { font: var(--ui-font-body-sm-regular); }
-.ar-fila__estado.is-pendiente { color: var(--ui-color-text-warning-default); }
-.ar-fila__estado.is-listo { color: var(--ui-color-text-success-default); }
-
-.ar-fila__boton { flex: none; }
+/* Artes de la campaña (Google Drive simulado): modal. */
 
 /* Modal */
 .ar-modal {
@@ -36,78 +8,529 @@
   min-width: 0;
 }
 
+/* Color por familia de formato: archivos, chips y etiquetas. */
+.ar-formato--ai,
+.ar-arte--ai { --ar-color: var(--ui-color-bg-fill-all-colors-orange); --ar-suave: var(--ui-color-bg-surface-all-colors-orange); }
+.ar-formato--psd,
+.ar-arte--psd { --ar-color: var(--ui-color-bg-fill-all-colors-azure); --ar-suave: var(--ui-color-bg-surface-all-colors-azure); }
+.ar-formato--imagen,
+.ar-arte--imagen { --ar-color: var(--ui-color-bg-fill-all-colors-green); --ar-suave: var(--ui-color-bg-surface-all-colors-green); }
+.ar-formato--video,
+.ar-arte--video { --ar-color: var(--ui-color-bg-fill-all-colors-blue); --ar-suave: var(--ui-color-bg-surface-all-colors-blue); }
+.ar-formato--comprimido,
+.ar-arte--comprimido { --ar-color: var(--ui-color-icon-secondary-default); --ar-suave: var(--ui-color-bg-fill-tertiary-default); }
+
+/* Creando la carpeta */
 .ar-creando {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: var(--ui-space-16);
+  padding: var(--ui-space-24);
+  border-radius: var(--ui-radius-16);
+  background: var(--ui-color-bg-surface-secondary-default);
+}
+
+.ar-creando__textos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+}
+
+.ar-creando__textos strong {
+  font: var(--ui-font-body-md-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.ar-creando__textos span {
+  display: inline-flex;
+  align-items: center;
   gap: var(--ui-space-8);
-  padding: var(--ui-space-32) var(--ui-space-16);
-  font: var(--ui-font-body-sm-medium);
+  font: var(--ui-font-body-sm-regular);
   color: var(--ui-color-text-secondary);
 }
 
+/* Tarjeta de Drive: logo de Google Drive con punto de conexión, nombre con estado, ruta y enlace.
+   El logo es un SVG con los colores de la marca de Google (assets/google-drive.svg). */
 .ar-drive {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--ui-space-8) var(--ui-space-16);
+  gap: var(--ui-space-12);
   min-width: 0;
+  padding: var(--ui-space-12) var(--ui-space-16);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-16);
+  background: linear-gradient(90deg, var(--ui-color-bg-surface-brand-default), var(--ui-color-bg-surface-secondary-default) 60%);
+}
+
+.ar-drive__logo {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-space-48);
+  height: var(--ui-space-48);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-12);
+  background: var(--ui-color-bg-folder-paper);
+  box-shadow: var(--ui-shadow-1);
+}
+
+.ar-drive__logo img { width: 28px; height: auto; }
+
+.ar-drive__logo--cargando { animation: ar-pulso 1.2s ease-in-out infinite; }
+
+@keyframes ar-pulso {
+  50% { opacity: 0.55; }
+}
+
+/* Punto verde de conexión en la esquina del logo. */
+.ar-drive__punto {
+  position: absolute;
+  right: calc(var(--ui-space-4) * -1);
+  bottom: calc(var(--ui-space-4) * -1);
+  width: var(--ui-space-12);
+  height: var(--ui-space-12);
+  border: var(--ui-stroke-width-2) var(--ui-stroke-style-solid) var(--ui-color-bg-surface-default);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-fill-success-default);
 }
 
 .ar-drive__textos {
   display: flex;
-  flex: 1 1 16rem;
+  flex: 1;
   flex-direction: column;
   gap: var(--ui-space-4);
   min-width: 0;
+}
+
+.ar-drive__titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  font: var(--ui-font-body-md-semibold);
+  color: var(--ui-color-text-primary);
 }
 
 .ar-drive__estado {
   display: inline-flex;
   align-items: center;
-  gap: var(--ui-space-6);
-  font: var(--ui-font-body-xs-semibold);
+  gap: var(--ui-space-4);
+  padding: var(--ui-space-2) var(--ui-space-8);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-success-default);
   color: var(--ui-color-text-success-default);
+  font: var(--ui-font-body-xs-semibold);
 }
 
-.ar-drive__carpeta {
+.ar-drive__carpeta { flex: none; color: var(--ui-color-icon-tertiary-default); }
+
+.ar-drive__ruta {
   display: flex;
   align-items: center;
-  gap: var(--ui-space-8);
+  gap: var(--ui-space-2) var(--ui-space-4);
   min-width: 0;
+  font: var(--ui-font-body-xs-medium);
+  color: var(--ui-color-text-secondary);
 }
 
-.ar-drive__icono { flex: none; color: var(--ui-color-icon-secondary-default); }
+.ar-drive__seg {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ui-space-4);
+  white-space: nowrap;
+}
 
-.ar-drive__nombre {
+/* El segmento largo (código de la campaña) se recorta con "…"; la ruta completa está en el title. */
+.ar-drive__seg.is-largo { flex: 0 1 auto; min-width: 6ch; }
+
+.ar-drive__seg.is-largo .ar-drive__texto-seg {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  font: var(--ui-font-body-sm-medium);
-  color: var(--ui-color-text-primary);
 }
+
+.ar-drive__seg.is-ultimo { font: var(--ui-font-body-xs-bold); color: var(--ui-color-text-primary); }
+.ar-drive__sep { flex: none; color: var(--ui-color-icon-tertiary-default); }
 
 .ar-drive__abrir {
   display: inline-flex;
   flex: none;
   align-items: center;
-  gap: var(--ui-space-4);
-  border-radius: var(--ui-radius-4);
-  font: var(--ui-font-body-sm-semibold);
+  gap: var(--ui-space-6);
+  height: var(--ui-size-control-xs);
+  padding: 0 var(--ui-space-12);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-default);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-default);
+  font: var(--ui-font-body-xs-semibold);
   color: var(--ui-color-text-link-default);
   text-decoration: none;
+  white-space: nowrap;
 }
 
-.ar-drive__abrir:hover { color: var(--ui-color-text-link-hover); text-decoration: underline; }
+.ar-drive__abrir:hover { border-color: var(--ui-color-border-brand); background: var(--ui-color-bg-surface-brand-default); }
 .ar-drive__abrir:active { color: var(--ui-color-text-link-pressed); }
 
-.ar-lista {
+@media (max-width: 600px) {
+  .ar-drive { flex-wrap: wrap; }
+  .ar-drive__logo { width: var(--ui-space-40); height: var(--ui-space-40); }
+  .ar-drive__textos { flex-basis: calc(100% - var(--ui-space-40) - var(--ui-space-12)); }
+  .ar-drive__abrir { margin-left: calc(var(--ui-space-40) + var(--ui-space-12)); }
+}
+
+/* Zona de carga: borde punteado de marca, ícono de nube en círculo y chips de formatos. */
+.ui-dropzone.ar-dropzone {
+  gap: var(--ui-space-10);
+  padding: var(--ui-space-32) var(--ui-space-16) var(--ui-space-24);
+  border: var(--ui-stroke-width-2) dashed var(--ui-color-border-default);
+  border-radius: var(--ui-radius-16);
+  background: var(--ui-color-bg-surface-default);
+  transition: border-color var(--ui-motion-fast) ease-out, background-color var(--ui-motion-fast) ease-out;
+}
+
+.ui-dropzone.ar-dropzone:hover { border-color: var(--ui-color-border-brand); }
+
+.ui-dropzone.ar-dropzone.is-hover {
+  border-color: var(--ui-color-border-brand);
+  background: var(--ui-color-bg-surface-brand-default);
+}
+
+.ui-dropzone.ar-dropzone.is-error { border-color: var(--ui-color-border-danger); }
+
+.ar-dropzone .ui-dropzone__icono {
+  box-sizing: content-box;
+  padding: var(--ui-space-16);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-brand-default);
+  color: var(--ui-color-icon-brand-default);
+  transition: transform var(--ui-motion-base) ease-out;
+}
+
+.ar-dropzone.is-hover .ui-dropzone__icono {
+  background: var(--ui-color-bg-fill-brand-default);
+  color: var(--ui-color-icon-on-color);
+  transform: translateY(-4px);
+}
+
+.ar-dropzone .ui-dropzone__titulo { font: var(--ui-font-body-lg-semibold); }
+
+.ar-formatos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--ui-space-6);
+  margin: var(--ui-space-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ar-formato {
+  padding: var(--ui-space-2) var(--ui-space-8);
+  border-radius: var(--ui-radius-6);
+  background: var(--ar-suave);
+  color: var(--ui-color-text-primary);
+  font: var(--ui-font-body-xs-bold);
+  letter-spacing: 0.03em;
+}
+
+.ar-formato::before {
+  content: "";
+  display: inline-block;
+  width: var(--ui-space-6);
+  height: var(--ui-space-6);
+  margin-right: var(--ui-space-4);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ar-color);
+  vertical-align: middle;
+}
+
+/* Zona compacta (ya hay artes): una barra con ícono, textos y botón. */
+.ui-dropzone.ar-dropzone--compacta {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "icono titulo boton"
+    "icono ayuda  boton";
+  align-items: center;
+  gap: var(--ui-space-2) var(--ui-space-12);
+  padding: var(--ui-space-12) var(--ui-space-16);
+  text-align: left;
+}
+
+.ar-dropzone--compacta .ui-dropzone__icono {
+  grid-area: icono;
+  padding: var(--ui-space-10);
+}
+
+.ar-dropzone--compacta .ui-dropzone__titulo { grid-area: titulo; font: var(--ui-font-body-md-semibold); }
+.ar-dropzone--compacta .ui-dropzone__ayuda { grid-area: ayuda; }
+.ar-dropzone--compacta .ui-button { grid-area: boton; }
+
+@media (max-width: 480px) {
+  .ui-dropzone.ar-dropzone--compacta {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "icono titulo"
+      "icono ayuda"
+      "boton boton";
+  }
+}
+
+/* Lista de artes */
+.ar-seccion {
   display: flex;
   flex-direction: column;
   gap: var(--ui-space-8);
+}
+
+.ar-seccion__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ui-space-4) var(--ui-space-12);
+}
+
+.ar-seccion__titulo {
+  margin: 0;
+  font: var(--ui-font-body-md-semibold);
+  color: var(--ui-color-text-primary);
+}
+
+.ar-seccion__titulo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+}
+
+.ar-seccion__cuenta {
+  min-width: var(--ui-space-20);
+  padding: 0 var(--ui-space-6);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-brand-default);
+  color: var(--ui-color-text-brand-default);
+  font: var(--ui-font-body-xs-bold);
+  text-align: center;
+}
+
+.ar-seccion__resumen {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  font: var(--ui-font-body-xs-medium);
+  color: var(--ui-color-text-success-default);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Avance general cuando se suben varios archivos a la vez. */
+.ar-subidas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-6);
+  padding: var(--ui-space-10) var(--ui-space-12);
+  border-radius: var(--ui-radius-12);
+  background: var(--ui-color-bg-surface-brand-default);
+}
+
+.ar-subidas__texto {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  font: var(--ui-font-body-sm-medium);
+  color: var(--ui-color-text-primary);
+}
+
+.ar-subidas__mensaje { flex: 1; }
+
+.ar-subidas__texto strong {
+  font: var(--ui-font-body-sm-bold);
+  color: var(--ui-color-text-brand-default);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Buscador y filtros por formato (aparecen con 6 artes o más). */
+.ar-herramientas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-8);
+}
+
+/* Una sola fila; si no caben, se desplaza en horizontal (sin barra visible). */
+.ar-filtros {
+  display: flex;
+  gap: var(--ui-space-6);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ar-filtros::-webkit-scrollbar { display: none; }
+
+.ar-filtro {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  height: var(--ui-size-control-xs);
+  padding: 0 var(--ui-space-10);
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ui-color-bg-surface-default);
+  color: var(--ui-color-text-secondary);
+  font: var(--ui-font-body-xs-semibold);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ar-filtro::before {
+  content: "";
+  width: var(--ui-space-6);
+  height: var(--ui-space-6);
+  border-radius: var(--ui-radius-control-pill);
+  background: var(--ar-color, var(--ui-color-icon-tertiary-default));
+}
+
+.ar-filtro span {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.ar-filtro:hover { border-color: var(--ui-color-border-default); }
+
+.ar-filtro[aria-pressed="true"] {
+  border-color: var(--ui-color-border-brand);
+  background: var(--ui-color-bg-surface-brand-default);
+  color: var(--ui-color-text-brand-default);
+}
+
+.ar-filtro:focus-visible {
+  outline: var(--ui-focus-ring-width) var(--ui-stroke-style-solid) var(--ui-focus-ring-color);
+  outline-offset: var(--ui-focus-ring-offset);
+}
+
+/* Lista compacta con alto máximo: con decenas de artes se desplaza por dentro y el modal no crece. */
+.ar-lista {
+  max-height: 336px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle);
+  border-radius: var(--ui-radius-12);
+  list-style: none;
+}
+
+/* En celular el modal ya se desplaza: la lista crece para no tener dos scrolls anidados. */
+@media (max-width: 600px) {
+  .ar-lista { max-height: none; overflow: visible; }
+}
+
+.ar-lista > li + li { border-top: var(--ui-stroke-width-1) var(--ui-stroke-style-solid) var(--ui-color-border-subtle); }
+
+.ar-fila-arte {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-12);
+  min-height: var(--ui-space-56);
+  padding: var(--ui-space-8) var(--ui-space-8) var(--ui-space-8) var(--ui-space-12);
+}
+
+.ar-fila-arte:hover { background: var(--ui-color-bg-surface-hover); }
+
+/* Ficha del formato: ícono y extensión sobre el color de su familia. */
+.ar-fila-arte__ficha {
+  display: inline-flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  width: var(--ui-space-40);
+  height: var(--ui-space-40);
+  border-radius: var(--ui-radius-10);
+  background: var(--ar-suave);
+  color: var(--ar-color);
+}
+
+.ar-fila-arte__ficha span {
+  font-size: 9px;
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.ar-fila-arte__textos {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.ar-fila-arte__nombre {
+  overflow: hidden;
+  font: var(--ui-font-body-sm-semibold);
+  color: var(--ui-color-text-primary);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ar-fila-arte__meta {
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.ar-fila-arte__subida {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  font: var(--ui-font-body-xs-medium);
+  color: var(--ui-color-text-brand-default);
+  font-variant-numeric: tabular-nums;
+}
+
+.ar-fila-arte__subida > :first-child { flex: 1; }
+
+.ar-fila-arte.is-cargando { background: var(--ui-color-bg-surface-secondary-default); }
+
+.ar-lista__vacia { list-style: none; }
+
+/* Consejos cuando aún no hay artes */
+.ar-consejos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-8) var(--ui-space-16);
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.ar-consejos li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-8);
+  font: var(--ui-font-body-xs-regular);
+  color: var(--ui-color-text-secondary);
+}
+
+.ar-consejos svg { color: var(--ui-color-icon-brand-default); }
+
+/* Pie del modal: cuántos artes hay en Drive. */
+.ar-pie {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-6);
+  font: var(--ui-font-body-sm-medium);
+  color: var(--ui-color-text-secondary);
+}
+
+.ar-pie--listo { color: var(--ui-color-text-success-default); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ar-drive__logo--cargando { animation: none; }
+  .ui-dropzone.ar-dropzone,
+  .ar-dropzone .ui-dropzone__icono { transition: none; }
+  .ar-dropzone.is-hover .ui-dropzone__icono { transform: none; }
 }

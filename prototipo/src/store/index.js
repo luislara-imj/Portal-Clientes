@@ -4,7 +4,7 @@ export {
   aceptarCotizacion, avanzar, reiniciar, seleccionEditable, mediosSi
 } from './reglas.js';
 export {
-  cotizacion, fasesDeCampana, indicadores, instalacion, progresoPropuesta, reportes, resumenCampana, redondear
+  FASES_ACCION_CLIENTE, cotizacion, fasesDeCampana, indicadores, instalacion, progresoPropuesta, reportes, resumenCampana, redondear
 } from './selectores.js';
 export { CLAVE_ALMACEN, cargarEstado, guardarEstado, esEstadoValido } from './persistencia.js';
 export {
